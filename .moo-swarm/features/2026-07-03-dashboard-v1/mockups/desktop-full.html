@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mockup: Desktop Full Layout (Light) — Halo Dashboard v1</title>
+<style>
+  /* ========== TOKENS (light) ========== */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: #ffffff;
+    color: #0f172a;
+    line-height: 1.5;
+    padding: 2rem 1.5rem;
+    max-width: 1240px;
+    margin: 0 auto;
+  }
+
+  /* ========== GRID ========== */
+  .site-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-areas:
+      "header    header    header"
+      "projects  pipeline  cron"
+      "issues    issues    issues"
+      "spending  agents    agents"
+      "footer    footer    footer";
+    gap: 1.5rem;
+  }
+
+  /* ========== HEADER ========== */
+  header { grid-area: header; }
+  .halo-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 0; border-bottom: 1px solid #e2e8f0; margin-bottom: 0.5rem;
+  }
+  .halo-header .brand { display: flex; align-items: center; gap: 0.75rem; }
+  .halo-header h1 { font-size: 1.5rem; font-weight: 700; }
+  .halo-header .tagline { color: #64748b; font-size: 0.9rem; margin-top: 0.1rem; }
+  .halo-header .header-right { display: flex; align-items: center; gap: 1rem; }
+  .freshness-badge {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-size: 0.8rem; color: #64748b; background: #f1f5f9;
+    padding: 0.25rem 0.65rem; border-radius: 999px;
+  }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .status-dot.green { background: #22c55e; }
+  .status-dot.amber { background: #eab308; }
+  .status-dot.red { background: #ef4444; }
+  .status-dot.grey { background: #94a3b8; }
+  .theme-toggle {
+    background: none; border: 1px solid #e2e8f0; border-radius: 8px;
+    width: 44px; height: 44px; cursor: pointer; display: flex;
+    align-items: center; justify-content: center; font-size: 1.2rem;
+    transition: background 0.2s;
+  }
+  .theme-toggle:hover { background: #f1f5f9; }
+  .gh-link { color: #64748b; text-decoration: none; font-size: 0.85rem; }
+  .gh-link:hover { color: #3b82f6; }
+
+  /* ========== SECTION SHARED ========== */
+  section {
+    background: #f8fafc; border: 1px solid #e2e8f0;
+    border-radius: 10px; padding: 1.25rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  }
+  .section-header {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  .section-header h2 { font-size: 1rem; font-weight: 600; color: #0f172a; }
+  .section-header .data-age { font-size: 0.75rem; color: #94a3b8; }
+  .section-desc { font-size: 0.8rem; color: #64748b; margin-bottom: 0.75rem; }
+
+  /* ========== ACTIVE PROJECTS ========== */
+  #active-projects { grid-area: projects; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th { text-align: left; color: #64748b; font-weight: 500; padding: 0.4rem 0.5rem; border-bottom: 1px solid #e2e8f0; }
+  td { padding: 0.5rem; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  .health-cell { display: flex; align-items: center; gap: 0.35rem; }
+  .health-label { font-size: 0.8rem; }
+  .project-name a { color: #3b82f6; text-decoration: none; font-weight: 500; }
+  .project-name a:hover { text-decoration: underline; }
+  .project-stars { color: #94a3b8; font-size: 0.75rem; }
+  .status-tag {
+    display: inline-block; font-size: 0.75rem; padding: 0.1rem 0.5rem;
+    border-radius: 999px; background: #e2e8f0; color: #64748b;
+  }
+  .status-tag.active { background: #dcfce7; color: #166534; }
+  .status-tag.stalled { background: #fef9c3; color: #854d0e; }
+  .status-tag.dormant { background: #fee2e2; color: #991b1b; }
+
+  /* ========== PIPELINE ========== */
+  #pipeline-status { grid-area: pipeline; }
+  .pipeline-fallback { display: flex; flex-direction: column; gap: 0.6rem; }
+  .pipeline-stage {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.5rem 0.75rem; background: #ffffff; border-radius: 6px;
+    border: 1px solid #e2e8f0;
+  }
+  .stage-label { flex: 1; font-size: 0.85rem; }
+  .stage-emoji { font-size: 1.2rem; }
+  .stage-status { font-size: 0.75rem; display: flex; align-items: center; gap: 0.3rem; }
+  .stage-time { font-size: 0.7rem; color: #94a3b8; }
+  .badge-img { height: 20px; }
+
+  /* ========== CRON ========== */
+  #cron-jobs { grid-area: cron; }
+  .cron-table td:first-child { font-weight: 500; }
+
+  /* ========== ISSUES & PRS ========== */
+  #issues-prs { grid-area: issues; }
+  .filter-bar {
+    display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center;
+    margin-bottom: 1rem; background: #ffffff; padding: 0.65rem 0.75rem;
+    border-radius: 8px; border: 1px solid #e2e8f0;
+  }
+  .filter-bar select {
+    padding: 0.3rem 0.6rem; border: 1px solid #e2e8f0; border-radius: 6px;
+    font-size: 0.85rem; background: #ffffff; color: #0f172a;
+  }
+  .filter-bar .result-count { font-size: 0.8rem; color: #64748b; margin-left: auto; }
+  .sub-table { margin-top: 1rem; }
+  .sub-table h3 { font-size: 0.9rem; margin-bottom: 0.5rem; color: #64748b; }
+
+  /* ========== SPENDING ========== */
+  #spending-usage { grid-area: spending; }
+  .chart-placeholder {
+    width: 100%; height: 100px; background: #e2e8f0;
+    border-radius: 6px; display: flex; align-items: center;
+    justify-content: center; color: #94a3b8; font-size: 0.8rem;
+  }
+  .spending-stats { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+  .stat-card {
+    background: #ffffff; border-radius: 6px; padding: 0.5rem 0.75rem;
+    border: 1px solid #e2e8f0; flex: 1; min-width: 80px;
+  }
+  .stat-card .stat-value { font-size: 1.1rem; font-weight: 600; color: #0f172a; }
+  .stat-card .stat-label { font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.03em; }
+
+  /* ========== AGENT HEALTH ========== */
+  #agent-health { grid-area: agents; }
+  .agent-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+  .agent-card {
+    display: flex; align-items: center; gap: 0.65rem;
+    background: #ffffff; border-radius: 8px; padding: 0.65rem 0.75rem;
+    border: 1px solid #e2e8f0; transition: box-shadow 0.15s;
+  }
+  .agent-card:hover { box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+  .agent-emoji { font-size: 1.5rem; }
+  .agent-info { flex: 1; }
+  .agent-name { font-weight: 600; font-size: 0.9rem; }
+  .agent-role { font-size: 0.75rem; color: #64748b; }
+  .agent-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 0.1rem; }
+  .agent-status { font-size: 0.75rem; display: flex; align-items: center; gap: 0.25rem; }
+  .agent-last { font-size: 0.68rem; color: #94a3b8; }
+
+  /* ========== FOOTER ========== */
+  footer {
+    grid-area: footer;
+    border-top: 1px solid #e2e8f0; padding-top: 1.25rem;
+    display: flex; justify-content: space-between; font-size: 0.8rem; color: #94a3b8;
+  }
+  footer a { color: #64748b; text-decoration: none; }
+  footer a:hover { color: #3b82f6; }
+  footer nav { display: flex; gap: 1rem; }
+
+  /* ========== LABEL BADGES ========== */
+  .label {
+    display: inline-block; font-size: 0.68rem; padding: 0.08rem 0.4rem;
+    border-radius: 999px; background: #e2e8f0; color: #475569; margin-right: 0.2rem;
+  }
+  .label.bug { background: #fee2e2; color: #991b1b; }
+  .label.enhancement { background: #dbeafe; color: #1e40af; }
+  .label.docs { background: #f0fdf4; color: #166534; }
+  .label.ux { background: #f3e8ff; color: #6b21a8; }
+  .label.wontfix { background: #fef9c3; color: #854d0e; }
+
+  /* Data pending placeholder */
+  .data-pending {
+    border: 1px dashed #cbd5e1; border-radius: 8px; padding: 1.5rem 1rem;
+    text-align: center; color: #94a3b8; font-size: 0.85rem;
+    background: rgba(0,0,0,0.02);
+  }
+  .data-pending .big-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+
+  /* Status dot sizes */
+  .dot-sm { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+  .dot-sm.green { background: #22c55e; }
+  .dot-sm.red { background: #ef4444; }
+  .dot-sm.amber { background: #eab308; }
+  .dot-sm.grey { background: #94a3b8; }
+
+  /* Responsive note */
+  .responsive-note {
+    background: #fef9c3; border: 1px solid #eab308; border-radius: 8px;
+    padding: 0.5rem 0.75rem; margin-bottom: 1rem;
+    font-size: 0.85rem; color: #854d0e;
+  }
+
+  /* Label note for mockup */
+  .mockup-label {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: #1e293b; color: #f1f5f9; text-align: center;
+    padding: 0.3rem; font-size: 0.75rem; font-weight: 600;
+  }
+  body { padding-top: 2.5rem; }
+
+  /* Skeleton */
+  .skeleton { background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px; }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+</style>
+</head>
+<body>
+
+<div class="mockup-label">🖥️ DESKTOP LIGHT — Halo Dashboard v1 Mockup (resize to see grid)</div>
+
+<div class="site-grid">
+
+<!-- ===== HEADER ===== -->
+<header>
+  <div class="halo-header">
+    <div class="brand">
+      <div>
+        <h1>Halo</h1>
+        <div class="tagline">Moo Swarm Status</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="freshness-badge" role="status" aria-live="polite">
+        <span class="status-dot green"></span>
+        updated 12 min ago
+      </span>
+      <a class="gh-link" href="https://github.com/moo-swarm" target="_blank" rel="noopener">github/moo-swarm →</a>
+      <button class="theme-toggle" aria-label="Switch to dark mode" title="Toggle theme">☀️</button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== ACTIVE PROJECTS ===== -->
+<section id="active-projects">
+  <div class="section-header">
+    <h2>Active Projects</h2>
+    <span class="data-age">updated 12m ago</span>
+  </div>
+  <p class="section-desc">Live projects in the swarm — hover the health dot for details.</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Project</th>
+        <th>Status</th>
+        <th>Last Update</th>
+        <th>Pipeline</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="project-name"><a href="#" target="_blank" rel="noopener">aeroplasty</a> <span class="project-stars">★ 3</span></td>
+        <td><span class="health-cell"><span class="status-dot green"></span><span class="health-label">Active</span></span></td>
+        <td>2h ago</td>
+        <td><span class="status-tag active">spec</span></td>
+      </tr>
+      <tr>
+        <td class="project-name"><a href="#" target="_blank" rel="noopener">halo</a> <span class="project-stars">★ 0</span></td>
+        <td><span class="health-cell"><span class="status-dot green"></span><span class="health-label">Active</span></span></td>
+        <td>12m ago</td>
+        <td><span class="status-tag active">build</span></td>
+      </tr>
+      <tr>
+        <td class="project-name"><a href="#" target="_blank" rel="noopener">qmd-weekly</a> <span class="project-stars">★ 1</span></td>
+        <td><span class="health-cell"><span class="status-dot amber"></span><span class="health-label">Stalled</span></span></td>
+        <td>14d ago</td>
+        <td><span class="status-tag stalled">idle</span></td>
+      </tr>
+      <tr>
+        <td class="project-name"><a href="#" target="_blank" rel="noopener">dream-routine</a> <span class="project-stars">★ 0</span></td>
+        <td><span class="health-cell"><span class="status-dot green"></span><span class="health-label">Active</span></span></td>
+        <td>6h ago</td>
+        <td><span class="status-tag active">research</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ===== PIPELINE STATUS ===== -->
+<section id="pipeline-status">
+  <div class="section-header">
+    <h2>Pipeline Status</h2>
+    <span class="data-age">updated 12m ago</span>
+  </div>
+  <p class="section-desc">The build chain from research to commit.</p>
+  <div class="pipeline-fallback">
+    <div class="pipeline-stage">
+      <span class="stage-emoji">🐍</span>
+      <span class="stage-label"><strong>Veles</strong> Research</span>
+      <img class="badge-img" src="https://img.shields.io/badge/passing-green" alt="passing">
+      <span class="stage-time">3h ago</span>
+    </div>
+    <div class="pipeline-stage">
+      <span class="stage-emoji">🐮</span>
+      <span class="stage-label"><strong>Moo</strong> Route</span>
+      <img class="badge-img" src="https://img.shields.io/badge/passing-green" alt="passing">
+      <span class="stage-time">2h ago</span>
+    </div>
+    <div class="pipeline-stage">
+      <span class="stage-emoji">🐉</span>
+      <span class="stage-label"><strong>Cmok</strong> Build</span>
+      <img class="badge-img" src="https://img.shields.io/badge/running-blue" alt="running">
+      <span class="stage-time">30m ago</span>
+    </div>
+    <div class="pipeline-stage">
+      <span class="stage-emoji">🚨</span>
+      <span class="stage-label"><strong>Bagnik</strong> QA</span>
+      <img class="badge-img" src="https://img.shields.io/badge/idle-grey" alt="idle">
+      <span class="stage-time">—</span>
+    </div>
+    <div class="pipeline-stage">
+      <span class="stage-emoji">🏚️</span>
+      <span class="stage-label"><strong>Zlydni</strong> Commit</span>
+      <img class="badge-img" src="https://img.shields.io/badge/idle-grey" alt="idle">
+      <span class="stage-time">—</span>
+    </div>
+  </div>
+  <p style="margin-top:0.5rem;font-size:0.75rem;color:#94a3b8;">← Mermaid.js flowchart renders here in production</p>
+</section>
+
+<!-- ===== CRON JOBS ===== -->
+<section id="cron-jobs">
+  <div class="section-header">
+    <h2>Regular Tasks</h2>
+    <span class="data-age">updated 12m ago</span>
+  </div>
+  <p class="section-desc">Scheduled jobs keeping the swarm humming.</p>
+  <table class="cron-table">
+    <thead>
+      <tr><th>Task</th><th>Schedule</th><th>Last Run</th><th></th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Self-improvement dispatch</td>
+        <td>09:00 daily</td>
+        <td>2026-07-03 09:00</td>
+        <td><span class="dot-sm green"></span></td>
+      </tr>
+      <tr>
+        <td>Dream routine</td>
+        <td>03:00 daily</td>
+        <td>2026-07-03 03:00</td>
+        <td><span class="dot-sm green"></span></td>
+      </tr>
+      <tr>
+        <td>QMD weekly digest</td>
+        <td>Sun 02:00</td>
+        <td>2026-06-29</td>
+        <td><span class="dot-sm green"></span></td>
+      </tr>
+      <tr>
+        <td>Pipeline monitor</td>
+        <td>hourly</td>
+        <td>2026-07-03 00:00</td>
+        <td><span class="dot-sm green"></span></td>
+      </tr>
+      <tr>
+        <td>Halo data export</td>
+        <td>hourly</td>
+        <td>2026-07-03 01:00</td>
+        <td><span class="dot-sm green"></span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ===== ISSUES & PRS ===== -->
+<section id="issues-prs">
+  <div class="section-header">
+    <h2>Issues &amp; Pull Requests</h2>
+    <span class="data-age">updated 12m ago</span>
+  </div>
+  <p class="section-desc">Open issues and PRs across all project repos. Filter by project or label.</p>
+
+  <div class="filter-bar">
+    <select aria-label="Filter by project">
+      <option value="all">All projects</option>
+      <option>aeroplasty</option>
+      <option>halo</option>
+      <option>dream-routine</option>
+    </select>
+    <select aria-label="Filter by label">
+      <option value="all">All labels</option>
+      <option>bug</option>
+      <option>enhancement</option>
+      <option>docs</option>
+      <option>ux</option>
+    </select>
+    <select aria-label="Filter by status">
+      <option value="open">Open</option>
+      <option>Closed</option>
+    </select>
+    <span class="result-count" aria-live="polite">Showing 5 of 5 issues</span>
+  </div>
+
+  <div class="sub-table">
+    <h3>Open Issues</h3>
+    <table>
+      <thead>
+        <tr><th>Issue</th><th>Project</th><th>Age</th><th>Labels</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><a href="#" target="_blank" rel="noopener">#12 Pipeline status stuck on "running"</a></td>
+          <td>aeroplasty</td>
+          <td>3d</td>
+          <td><span class="label bug">bug</span><span class="label">pipeline</span></td>
+        </tr>
+        <tr>
+          <td><a href="#" target="_blank" rel="noopener">#8 Add dark mode to pipeline diagram</a></td>
+          <td>halo</td>
+          <td>1d</td>
+          <td><span class="label enhancement">enhancement</span><span class="label ux">ux</span></td>
+        </tr>
+        <tr>
+          <td><a href="#" target="_blank" rel="noopener">#31 Dream routine logs too verbose</a></td>
+          <td>dream-routine</td>
+          <td>5d</td>
+          <td><span class="label">logging</span></td>
+        </tr>
+        <tr>
+          <td><a href="#" target="_blank" rel="noopener">#3 README needs architecture diagram</a></td>
+          <td>halo</td>
+          <td>7d</td>
+          <td><span class="label docs">docs</span></td>
+        </tr>
+        <tr>
+          <td><a href="#" target="_blank" rel="noopener">#15 Export script fails on encoding</a></td>
+          <td>aeroplasty</td>
+          <td>2d</td>
+          <td><span class="label bug">bug</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sub-table">
+    <h3>Open Pull Requests</h3>
+    <table>
+      <thead>
+        <tr><th>PR</th><th>Project</th><th>Author</th><th>Status</th><th>Age</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><a href="#" target="_blank" rel="noopener">#9 Section states prototype</a></td>
+          <td>halo</td>
+          <td>cmok</td>
+          <td><span class="dot-sm amber"></span> Draft</td>
+          <td>4h</td>
+        </tr>
+        <tr>
+          <td><a href="#" target="_blank" rel="noopener">#11 Fix encoding in export script</a></td>
+          <td>aeroplasty</td>
+          <td>veles</td>
+          <td><span class="dot-sm green"></span> Open</td>
+          <td>1d</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ===== SPENDING & USAGE ===== -->
+<section id="spending-usage">
+  <div class="section-header">
+    <h2>Spending &amp; Usage</h2>
+    <span class="data-age">updated 12m ago</span>
+  </div>
+  <p class="section-desc">OpenClaw token usage and cost for the last 14 days.</p>
+
+  <div class="chart-placeholder">
+    📊 Chart.js bar chart renders here (14-day daily token usage)
+  </div>
+
+  <div class="spending-stats">
+    <div class="stat-card">
+      <div class="stat-value">1,234,567</div>
+      <div class="stat-label">Tokens (7d)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">$2.45</div>
+      <div class="stat-label">Cost (7d)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">847</div>
+      <div class="stat-label">API Calls (7d)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">6/8</div>
+      <div class="stat-label">Active Agents</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== AGENT HEALTH ===== -->
+<section id="agent-health">
+  <div class="section-header">
+    <h2>Agent Health</h2>
+    <span class="data-age">updated 12m ago</span>
+  </div>
+  <p class="section-desc">Each agent's current status and recent activity.</p>
+  <div class="agent-grid">
+    <div class="agent-card">
+      <span class="agent-emoji">🐮</span>
+      <div class="agent-info">
+        <div class="agent-name">Moo</div>
+        <div class="agent-role">Orchestrator</div>
+      </div>
+      <div class="agent-meta">
+        <span class="agent-status"><span class="dot-sm green"></span> Active</span>
+        <span class="agent-last">2h ago · 12 sessions</span>
+      </div>
+    </div>
+    <div class="agent-card">
+      <span class="agent-emoji">🐍</span>
+      <div class="agent-info">
+        <div class="agent-name">Veles</div>
+        <div class="agent-role">Research</div>
+      </div>
+      <div class="agent-meta">
+        <span class="agent-status"><span class="dot-sm green"></span> Active</span>
+        <span class="agent-last">4h ago · 8 sessions</span>
+      </div>
+    </div>
+    <div class="agent-card">
+      <span class="agent-emoji">🐉</span>
+      <div class="agent-info">
+        <div class="agent-name">Cmok</div>
+        <div class="agent-role">Build</div>
+      </div>
+      <div class="agent-meta">
+        <span class="agent-status"><span class="dot-sm amber"></span> Busy</span>
+        <span class="agent-last">30m ago · 22 sessions</span>
+      </div>
+    </div>
+    <div class="agent-card">
+      <span class="agent-emoji">🚨</span>
+      <div class="agent-info">
+        <div class="agent-name">Bagnik</div>
+        <div class="agent-role">QA</div>
+      </div>
+      <div class="agent-meta">
+        <span class="agent-status"><span class="dot-sm green"></span> Active</span>
+        <span class="agent-last">1h ago · 5 sessions</span>
+      </div>
+    </div>
+    <div class="agent-card">
+      <span class="agent-emoji">🏚️</span>
+      <div class="agent-info">
+        <div class="agent-name">Zlydni</div>
+        <div class="agent-role">Commit</div>
+      </div>
+      <div class="agent-meta">
+        <span class="agent-status"><span class="dot-sm grey"></span> Idle</span>
+        <span class="agent-last">12h ago · 0 sessions</span>
+      </div>
+    </div>
+    <div class="agent-card">
+      <span class="agent-emoji">🧶</span>
+      <div class="agent-info">
+        <div class="agent-name">Mokash</div>
+        <div class="agent-role">Docs</div>
+      </div>
+      <div class="agent-meta">
+        <span class="agent-status"><span class="dot-sm green"></span> Active</span>
+        <span class="agent-last">10m ago · 4 sessions</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <p>Generated: 2026-07-03 01:00 UTC · <span data-tooltip="Export host: lex-agent-swarm">v1.0</span></p>
+  <nav>
+    <a href="https://github.com/moo-swarm" target="_blank" rel="noopener">GitHub</a>
+    <a href="#" target="_blank" rel="noopener">Docs</a>
+    <a href="#" target="_blank" rel="noopener">Contributing</a>
+  </nav>
+</footer>
+
+</div><!-- /.site-grid -->
+
+</body>
+</html>

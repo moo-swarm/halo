@@ -1,0 +1,312 @@
+{
+  "updated_at": "2026-07-03T00:00:00Z",
+  "refresh_interval": 3600,
+  "projects": [
+    {
+      "name": "halo",
+      "description": "Moo Swarm live status dashboard",
+      "status": "active",
+      "health": "green",
+      "repo_url": "https://github.com/moo-swarm/halo",
+      "stars": 0,
+      "open_issues": 2,
+      "last_updated": "2026-07-03",
+      "pipeline_stage": "build"
+    },
+    {
+      "name": "aeroplasty",
+      "description": "Pipeline orchestration and agent routing",
+      "status": "active",
+      "health": "green",
+      "repo_url": "https://github.com/moo-swarm/aeroplasty",
+      "stars": 3,
+      "open_issues": 3,
+      "last_updated": "2026-07-02",
+      "pipeline_stage": "spec"
+    },
+    {
+      "name": "dream-routine",
+      "description": "Nightly self-reflection and log analysis",
+      "status": "active",
+      "health": "green",
+      "repo_url": "https://github.com/moo-swarm/dream-routine",
+      "stars": 0,
+      "open_issues": 1,
+      "last_updated": "2026-07-02",
+      "pipeline_stage": "research"
+    },
+    {
+      "name": "qmd-weekly",
+      "description": "Weekly QMD summary generation",
+      "status": "active",
+      "health": "yellow",
+      "repo_url": "https://github.com/moo-swarm/qmd-weekly",
+      "stars": 1,
+      "open_issues": 0,
+      "last_updated": "2026-06-19",
+      "pipeline_stage": "idle"
+    },
+    {
+      "name": "telegram-connector",
+      "description": "Telegram integration for agent communications",
+      "status": "active",
+      "health": "green",
+      "repo_url": "https://github.com/moo-swarm/telegram-connector",
+      "stars": 2,
+      "open_issues": 1,
+      "last_updated": "2026-06-30",
+      "pipeline_stage": "test"
+    }
+  ],
+  "pipeline": [
+    {
+      "agent": "veles",
+      "emoji": "🐍",
+      "role": "Research",
+      "status": "pass",
+      "last_run": "2026-07-02T22:00:00Z",
+      "badge_url": "https://img.shields.io/badge/passing-green",
+      "workflow_url": "https://github.com/moo-swarm/aeroplasty/actions"
+    },
+    {
+      "agent": "moo",
+      "emoji": "🐮",
+      "role": "Route",
+      "status": "pass",
+      "last_run": "2026-07-02T23:00:00Z",
+      "badge_url": "https://img.shields.io/badge/passing-green",
+      "workflow_url": "https://github.com/moo-swarm/aeroplasty/actions"
+    },
+    {
+      "agent": "cmok",
+      "emoji": "🐉",
+      "role": "Build",
+      "status": "running",
+      "last_run": "2026-07-02T23:30:00Z",
+      "badge_url": "https://img.shields.io/badge/running-blue",
+      "workflow_url": "https://github.com/moo-swarm/halo/actions"
+    },
+    {
+      "agent": "bagnik",
+      "emoji": "🚨",
+      "role": "QA",
+      "status": "pass",
+      "last_run": "2026-07-02T21:00:00Z",
+      "badge_url": "https://img.shields.io/badge/passing-green",
+      "workflow_url": "https://github.com/moo-swarm/aeroplasty/actions"
+    },
+    {
+      "agent": "zlydni",
+      "emoji": "🏚️",
+      "role": "Commit",
+      "status": "idle",
+      "last_run": null,
+      "badge_url": "https://img.shields.io/badge/idle-grey",
+      "workflow_url": "https://github.com/moo-swarm/halo/actions"
+    }
+  ],
+  "issues": [
+    {
+      "project": "aeroplasty",
+      "number": 3,
+      "title": "Pipeline visualisation breaks on dark mode",
+      "labels": ["bug", "ui"],
+      "created_at": "2026-06-30T15:30:00Z",
+      "url": "https://github.com/moo-swarm/aeroplasty/issues/3"
+    },
+    {
+      "project": "halo",
+      "number": 8,
+      "title": "Add dark mode to pipeline diagram",
+      "labels": ["enhancement", "ux"],
+      "created_at": "2026-07-01T10:00:00Z",
+      "url": "https://github.com/moo-swarm/halo/issues/8"
+    },
+    {
+      "project": "dream-routine",
+      "number": 31,
+      "title": "Dream routine logs too verbose",
+      "labels": ["enhancement", "logging"],
+      "created_at": "2026-06-28T08:15:00Z",
+      "url": "https://github.com/moo-swarm/dream-routine/issues/31"
+    },
+    {
+      "project": "halo",
+      "number": 3,
+      "title": "README needs architecture diagram",
+      "labels": ["docs"],
+      "created_at": "2026-06-26T14:00:00Z",
+      "url": "https://github.com/moo-swarm/halo/issues/3"
+    },
+    {
+      "project": "aeroplasty",
+      "number": 15,
+      "title": "Export script fails on encoding",
+      "labels": ["bug"],
+      "created_at": "2026-07-01T09:30:00Z",
+      "url": "https://github.com/moo-swarm/aeroplasty/issues/15"
+    },
+    {
+      "project": "telegram-connector",
+      "number": 7,
+      "title": "Rate limiting on long polling",
+      "labels": ["bug", "performance"],
+      "created_at": "2026-06-29T11:00:00Z",
+      "url": "https://github.com/moo-swarm/telegram-connector/issues/7"
+    }
+  ],
+  "prs": [
+    {
+      "project": "halo",
+      "number": 9,
+      "title": "Section states prototype",
+      "author": "cmok",
+      "status": "draft",
+      "created_at": "2026-07-02T20:00:00Z",
+      "url": "https://github.com/moo-swarm/halo/pull/9"
+    },
+    {
+      "project": "aeroplasty",
+      "number": 11,
+      "title": "Fix encoding in export script",
+      "author": "veles",
+      "status": "open",
+      "created_at": "2026-07-01T15:00:00Z",
+      "url": "https://github.com/moo-swarm/aeroplasty/pull/11"
+    },
+    {
+      "project": "dream-routine",
+      "number": 4,
+      "title": "Reduce log verbosity in dream routine",
+      "author": "cmok",
+      "status": "open",
+      "created_at": "2026-06-29T12:00:00Z",
+      "url": "https://github.com/moo-swarm/dream-routine/pull/4"
+    }
+  ],
+  "cron_jobs": [
+    {
+      "name": "self-improvement-dispatch",
+      "schedule": "0 9 * * *",
+      "schedule_human": "09:00 daily",
+      "last_run": "2026-07-02T09:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "dream-routine",
+      "schedule": "0 3 * * *",
+      "schedule_human": "03:00 daily",
+      "last_run": "2026-07-02T03:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "qmd-weekly-digest",
+      "schedule": "0 2 * * 0",
+      "schedule_human": "Sun 02:00",
+      "last_run": "2026-06-29T02:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "pipeline-monitor",
+      "schedule": "0 * * * *",
+      "schedule_human": "hourly",
+      "last_run": "2026-07-02T23:00:00Z",
+      "status": "ok"
+    },
+    {
+      "name": "halo-data-export",
+      "schedule": "0 * * * *",
+      "schedule_human": "hourly",
+      "last_run": "2026-07-03T00:00:00Z",
+      "status": "ok"
+    }
+  ],
+  "spending": {
+    "total_tokens_7d": 1234567,
+    "cost_7d": 2.45,
+    "cost_30d": 10.20,
+    "api_calls_7d": 847,
+    "active_agents_7d": 6,
+    "total_agents": 8,
+    "pricing_configured": true,
+    "data_source": "openclaw_jsonl",
+    "daily": [
+      { "date": "2026-06-20", "tokens": 92000, "cost": 0.18 },
+      { "date": "2026-06-21", "tokens": 105000, "cost": 0.21 },
+      { "date": "2026-06-22", "tokens": 88000, "cost": 0.17 },
+      { "date": "2026-06-23", "tokens": 112000, "cost": 0.22 },
+      { "date": "2026-06-24", "tokens": 96000, "cost": 0.19 },
+      { "date": "2026-06-25", "tokens": 130000, "cost": 0.26 },
+      { "date": "2026-06-26", "tokens": 180000, "cost": 0.35 },
+      { "date": "2026-06-27", "tokens": 145000, "cost": 0.29 },
+      { "date": "2026-06-28", "tokens": 99000, "cost": 0.20 },
+      { "date": "2026-06-29", "tokens": 121000, "cost": 0.24 },
+      { "date": "2026-06-30", "tokens": 108000, "cost": 0.22 },
+      { "date": "2026-07-01", "tokens": 142000, "cost": 0.28 },
+      { "date": "2026-07-02", "tokens": 135000, "cost": 0.27 },
+      { "date": "2026-07-03", "tokens": 61000, "cost": 0.12 }
+    ]
+  },
+  "agents": [
+    {
+      "name": "moo",
+      "emoji": "🐮",
+      "role": "Orchestrator",
+      "status": "active",
+      "last_active": "2026-07-02T22:30:00Z",
+      "sessions_24h": 12,
+      "tokens_24h": 45000
+    },
+    {
+      "name": "veles",
+      "emoji": "🐍",
+      "role": "Research",
+      "status": "active",
+      "last_active": "2026-07-02T20:00:00Z",
+      "sessions_24h": 8,
+      "tokens_24h": 32000
+    },
+    {
+      "name": "cmok",
+      "emoji": "🐉",
+      "role": "Build",
+      "status": "busy",
+      "last_active": "2026-07-02T23:30:00Z",
+      "sessions_24h": 22,
+      "tokens_24h": 78000
+    },
+    {
+      "name": "bagnik",
+      "emoji": "🚨",
+      "role": "QA",
+      "status": "active",
+      "last_active": "2026-07-02T21:00:00Z",
+      "sessions_24h": 5,
+      "tokens_24h": 15000
+    },
+    {
+      "name": "zlydni",
+      "emoji": "🏚️",
+      "role": "Commit",
+      "status": "idle",
+      "last_active": "2026-07-02T10:00:00Z",
+      "sessions_24h": 0,
+      "tokens_24h": 0
+    },
+    {
+      "name": "mokash",
+      "emoji": "🧶",
+      "role": "Docs",
+      "status": "active",
+      "last_active": "2026-07-02T23:50:00Z",
+      "sessions_24h": 4,
+      "tokens_24h": 8500
+    }
+  ],
+  "meta": {
+    "version": "1.0",
+    "generated_by": "moo-export-data.sh",
+    "export_host": "lex-agent-swarm",
+    "openclaw_version": "24.18.0"
+  }
+}

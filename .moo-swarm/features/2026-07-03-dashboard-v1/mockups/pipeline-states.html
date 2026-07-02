@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mockup: Pipeline States — Halo Dashboard v1</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { --bg: #ffffff; --surface: #f8fafc; --border: #e2e8f0; --text: #0f172a; --text-secondary: #64748b; --text-muted: #94a3b8; }
+  body {
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.5;
+    padding: 2rem; max-width: 1100px; margin: 0 auto;
+  }
+  h1 { margin-bottom: 0.3rem; }
+  .subtitle { color: var(--text-secondary); margin-bottom: 1.5rem; }
+
+  .example-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;
+  }
+  @media (max-width: 700px) { .example-grid { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.25rem;
+  }
+  .panel h2 { font-size: 0.9rem; margin-bottom: 0.5rem; }
+  .panel .tag {
+    font-size: 0.7rem; color: var(--text-muted); margin-bottom: 1rem;
+  }
+
+  /* ===== MERMAID-LIKE DIAGRAM (CSS-only) ===== */
+  .mermaid-viz {
+    display: flex; align-items: center; justify-content: center; gap: 0;
+    padding: 1rem 0; overflow-x: auto;
+  }
+  .mermaid-node {
+    display: flex; flex-direction: column; align-items: center; gap: 0.25rem;
+    min-width: 90px; padding: 0.6rem 0.5rem;
+    border-radius: 8px; border: 2px solid; position: relative;
+  }
+  .mermaid-node .emoji { font-size: 1.3rem; }
+  .mermaid-node .name { font-weight: 600; font-size: 0.8rem; }
+  .mermaid-node .role { font-size: 0.65rem; color: var(--text-secondary); }
+  .mermaid-node .status-row { font-size: 0.65rem; display: flex; align-items: center; gap: 0.25rem; }
+  .mermaid-node .time { font-size: 0.6rem; color: var(--text-muted); margin-top: 0.15rem; }
+
+  .mermaid-node.pass { background: #f0fdf4; border-color: #22c55e; }
+  .mermaid-node.fail { background: #fef2f2; border-color: #ef4444; }
+  .mermaid-node.running { background: #eff6ff; border-color: #3b82f6; }
+  .mermaid-node.idle { background: #f8fafc; border-color: #94a3b8; }
+
+  .mermaid-arrow {
+    display: flex; align-items: center; color: var(--text-muted);
+    font-size: 1.2rem; padding: 0 0.25rem;
+  }
+
+  /* ===== BADGE ROW (fallback) ===== */
+  .badge-row {
+    display: flex; flex-direction: column; gap: 0.4rem;
+  }
+  .badge-item {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.5rem 0.65rem; border-radius: 6px;
+    border: 1px solid var(--border); background: #ffffff;
+  }
+  .badge-item .emoji { font-size: 1rem; }
+  .badge-item .info { flex: 1; font-size: 0.8rem; }
+  .badge-item .info .agent-name { font-weight: 600; }
+  .badge-item .info .agent-role { color: var(--text-secondary); }
+  .badge-item .status { font-size: 0.75rem; display: flex; align-items: center; gap: 0.3rem; }
+  .badge-item .badge-img { height: 20px; }
+
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .status-dot.green { background: #22c55e; }
+  .status-dot.red { background: #ef4444; }
+  .status-dot.blue { background: #3b82f6; }
+  .status-dot.grey { background: #94a3b8; }
+
+  /* Label */
+  .label-dark { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.75rem; text-align: center; }
+
+  /* Annotation for mockup */
+  .mockup-banner {
+    background: #1e293b; color: #f1f5f9; text-align: center;
+    padding: 0.3rem; font-size: 0.75rem; font-weight: 600;
+    margin-bottom: 1rem; border-radius: 6px;
+  }
+
+  /* Dot sizes for badge row */
+  .dot-sm { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+  .dot-sm.green { background: #22c55e; }
+  .dot-sm.red { background: #ef4444; }
+  .dot-sm.blue { background: #3b82f6; }
+  .dot-sm.grey { background: #94a3b8; }
+
+  /* Color chips */
+  .legend { display: flex; gap: 1rem; justify-content: center; margin: 1rem 0; font-size: 0.75rem; color: var(--text-secondary); }
+  .legend span { display: flex; align-items: center; gap: 0.25rem; }
+</style>
+</head>
+<body>
+
+<div class="mockup-banner">🚦 PIPELINE STATES — All passing vs one failing</div>
+
+<h1>Pipeline Status Visualisations</h1>
+<p class="subtitle">Two layout approaches: Mermaid.js flowchart diagram (primary) and badge fallback row (degradation).</p>
+
+<div class="legend">
+  <span><span class="status-dot green"></span> Pass</span>
+  <span><span class="status-dot red"></span> Fail</span>
+  <span><span class="status-dot blue"></span> Running</span>
+  <span><span class="status-dot grey"></span> Idle</span>
+</div>
+
+<!-- ===== EXAMPLE 1: ALL PASSING ===== -->
+<h2 style="margin-bottom:0.75rem;">✅ All stages passing</h2>
+<div class="example-grid">
+  <!-- Mermaid approach -->
+  <div class="panel">
+    <h2>Mermaid.js Diagram</h2>
+    <p class="tag">Programmatic render from <code>data.swarm.pipeline[]</code></p>
+
+    <div class="mermaid-viz">
+      <div class="mermaid-node pass">
+        <span class="emoji">🐍</span>
+        <span class="name">Veles</span>
+        <span class="role">Research</span>
+        <span class="status-row">✅ Pass</span>
+        <span class="time">3h ago</span>
+      </div>
+      <span class="mermaid-arrow">→</span>
+      <div class="mermaid-node pass">
+        <span class="emoji">🐮</span>
+        <span class="name">Moo</span>
+        <span class="role">Route</span>
+        <span class="status-row">✅ Pass</span>
+        <span class="time">2h ago</span>
+      </div>
+      <span class="mermaid-arrow">→</span>
+      <div class="mermaid-node pass">
+        <span class="emoji">🐉</span>
+        <span class="name">Cmok</span>
+        <span class="role">Build</span>
+        <span class="status-row">✅ Pass</span>
+        <span class="time">1h ago</span>
+      </div>
+      <span class="mermaid-arrow">→</span>
+      <div class="mermaid-node pass">
+        <span class="emoji">🚨</span>
+        <span class="name">Bagnik</span>
+        <span class="role">QA</span>
+        <span class="status-row">✅ Pass</span>
+        <span class="time">45m ago</span>
+      </div>
+      <span class="mermaid-arrow">→</span>
+      <div class="mermaid-node pass">
+        <span class="emoji">🏚️</span>
+        <span class="name">Zlydni</span>
+        <span class="role">Commit</span>
+        <span class="status-row">✅ Pass</span>
+        <span class="time">30m ago</span>
+      </div>
+    </div>
+
+    <p class="label-dark">
+      ← Five nodes in a chain. All green (#22c55e) borders + checkmarks.
+      Mermaid.js renders as SVG but shown here as CSS mockup.
+    </p>
+  </div>
+
+  <!-- Badge fallback -->
+  <div class="panel">
+    <h2>Badge Row (Fallback)</h2>
+    <p class="tag">Shown when Mermaid.js CDN is unavailable or fails to render.</p>
+
+    <div class="badge-row">
+      <div class="badge-item">
+        <span class="emoji">🐍</span>
+        <div class="info"><span class="agent-name">Veles</span> <span class="agent-role">Research</span></div>
+        <span class="status"><span class="dot-sm green"></span> ✅ Pass — 3h ago</span>
+        <img class="badge-img" src="https://img.shields.io/badge/passing-brightgreen" alt="passing">
+      </div>
+      <div class="badge-item">
+        <span class="emoji">🐮</span>
+        <div class="info"><span class="agent-name">Moo</span> <span class="agent-role">Route</span></div>
+        <span class="status"><span class="dot-sm green"></span> ✅ Pass — 2h ago</span>
+        <img class="badge-img" src="https://img.shields.io/badge/passing-brightgreen" alt="passing">
+      </div>
+      <div class="badge-item">
+        <span class="emoji">🐉</span>
+        <div class="info"><span class="agent-name">Cmok</span> <span class="agent-role">Build</span></div>
+        <span class="status"><span class="dot-sm green"></span> ✅ Pass — 1h ago</span>
+        <img class="badge-img" src="https://img.shields.io/badge/passing-brightgreen" alt="passing">
+      </div>
+      <div class="badge-item">
+        <span class="emoji">🚨</span>
+        <div class="info"><span class="agent-name">Bagnik</span> <span class="agent-role">QA</span></div>
+        <span class="status"><span class="dot-sm green"></span> ✅ Pass — 45m ago</span>
+        <img class="badge-img" src="https://img.shields.io/badge/passing-brightgreen" alt="passing">
+      </div>
+      <div class="badge-item">
+        <span class="emoji">🏚️</span>
+        <div class="info"><span class="agent-name">Zlydni</span> <span class="agent-role">Commit</span></div>
+        <span class="status"><span class="dot-sm green"></span> ✅ Pass — 30m ago</span>
+        <img class="badge-img" src="https://img.shields.io/badge/passing-brightgreen" alt="passing">
+      </div>
+    </div>
+
+    <p class="label-dark">
+      ← shields.io badges + status text. Graceful degradation, no visual break if Mermaid fails.
+    </p>
+  </div>
+</div>
+
+<!-- ===== EXAMPLE 2: ONE FAILING ===== -->
+<h2 style="margin-bottom:0.75rem;">🔴 One stage failing (Cmok — Build)</h2>
+<div class="example-grid">
+  <!-- Mermaid approach -->
+  <div class="panel">
+    <h2>Mermaid.js Diagram</h2>
+    <p class="tag">The failing node has a red border, red dot, and ❌ icon.</p>
+
+    <div class="mermaid-viz">
+      <div class="mermaid-node pass">
+        <span class="emoji">🐍</span>
+        <span class="name">Veles</span>
+        <span class="role">Research</span>
+        <span class="status-row">✅ Pass</span>
+        <span class="time">3h ago</span>
+      </div>
+      <span class="mermaid-arrow">→</span>
+      <div class="mermaid-node pass">
+        <span class="emoji">🐮</span>
+        <span class="name">Moo</span>
+        <span class="role">Route</span>
+        <span class="status-row">✅ Pass</span>
+        <span class="time">2h ago</span>
+      </div>
+      <span class="mermaid-arrow">→</span>
+      <div class="mermaid-node fail" style="animation:pulse-alert 2s infinite;">
+        <span class="emoji">🐉</span>
+        <span class="name">Cmok</span>
+        <span class="role">Build</span>
+        <span class="status-row">❌ Failed</span>
+        <span class="time">30m ago</span>
+      </div>
+      <span class="mermaid-arrow">→</span>
+      <div class="mermaid-node idle">
+        <span class="emoji">🚨</span>
+        <span class="name">Bagnik</span>
+        <span class="role">QA</span>
+        <span class="status-row">⚪ Idle</span>
+        <span class="time">Blocked</span>
+      </div>
+      <span class="mermaid-arrow">→</span>
+      <div class="mermaid-node idle">
+        <span class="emoji">🏚️</span>
+        <span class="name">Zlydni</span>
+        <span class="role">Commit</span>
+        <span class="status-row">⚪ Idle</span>
+        <span class="time">Blocked</span>
+      </div>
+    </div>
+
+    <p class="label-dark">
+      ← Cmok node has red (#ef4444) border + ❌. Downstream stages show "Blocked" status.
+      Pulse animation on failing node.
+    </p>
+  </div>
+
+  <!-- Badge fallback -->
+  <div class="panel">
+    <h2>Badge Row (Fallback)</h2>
+    <p class="tag">Failing stage: red dot, ❌ label, shields.io "failing" badge.</p>
+
+    <div class="badge-row">
+      <div class="badge-item">
+        <span class="emoji">🐍</span>
+        <div class="info"><span class="agent-name">Veles</span> <span class="agent-role">Research</span></div>
+        <span class="status"><span class="dot-sm green"></span> ✅ Pass — 3h ago</span>
+        <img class="badge-img" src="https://img.shields.io/badge/passing-brightgreen" alt="passing">
+      </div>
+      <div class="badge-item">
+        <span class="emoji">🐮</span>
+        <div class="info"><span class="agent-name">Moo</span> <span class="agent-role">Route</span></div>
+        <span class="status"><span class="dot-sm green"></span> ✅ Pass — 2h ago</span>
+        <img class="badge-img" src="https://img.shields.io/badge/passing-brightgreen" alt="passing">
+      </div>
+      <div class="badge-item" style="background:#fef2f2;border-color:#ef4444;">
+        <span class="emoji">🐉</span>
+        <div class="info"><span class="agent-name">Cmok</span> <span class="agent-role">Build</span></div>
+        <span class="status"><span class="dot-sm red"></span> ❌ Failed — 30m ago</span>
+        <img class="badge-img" src="https://img.shields.io/badge/failing-red" alt="failing">
+      </div>
+      <div class="badge-item">
+        <span class="emoji">🚨</span>
+        <div class="info"><span class="agent-name">Bagnik</span> <span class="agent-role">QA</span></div>
+        <span class="status"><span class="dot-sm grey"></span> ⚪ Blocked — upstream failure</span>
+        <img class="badge-img" src="https://img.shields.io/badge/blocked-lightgrey" alt="blocked">
+      </div>
+      <div class="badge-item">
+        <span class="emoji">🏚️</span>
+        <div class="info"><span class="agent-name">Zlydni</span> <span class="agent-role">Commit</span></div>
+        <span class="status"><span class="dot-sm grey"></span> ⚪ Blocked — upstream failure</span>
+        <img class="badge-img" src="https://img.shields.io/badge/blocked-lightgrey" alt="blocked">
+      </div>
+    </div>
+
+    <p class="label-dark">
+      ← Failing row highlighted with light red background. Downstream: "blocked" status.
+    </p>
+  </div>
+</div>
+
+<!-- ===== DOWNSTREAM EFFECTS ===== -->
+<h2 style="margin:1.5rem 0 0.75rem;">Impact on downstream stages</h2>
+<div class="example-grid" style="grid-template-columns:1fr 1fr;">
+  <div class="panel">
+    <h2>Blocked propagation</h2>
+    <p class="tag">When Cmok fails, Bagnik and Zlydni show "Blocked" instead of "Idle".</p>
+    <div style="display:flex;flex-direction:column;gap:0.5rem;font-size:0.8rem;padding:0.5rem 0;">
+      <div>⬆️ Upstream: <span style="color:#22c55e;">Veles ✅</span> → <span style="color:#22c55e;">Moo ✅</span></div>
+      <div>❌ 🔴 <strong>Cmok failed</strong> at 30m ago</div>
+      <div>⬇️ Downstream: <span style="color:#94a3b8;">Bagnik ⚪ Blocked</span> → <span style="color:#94a3b8;">Zlydni ⚪ Blocked</span></div>
+    </div>
+  </div>
+  <div class="panel">
+    <h2>Recovery UX</h2>
+    <p class="tag">When Cmok passes again on next export, nodes return to green automatically.</p>
+    <div style="display:flex;flex-direction:column;gap:0.5rem;font-size:0.8rem;">
+      <div>✅ Pipeline self-heals. No manual intervention needed.</div>
+      <div>📝 Handoff log captures the failure timestamp for audit.</div>
+      <div>⏱️ Data freshness badge updates within 1h (next cron export).</div>
+    </div>
+  </div>
+</div>
+
+<hr style="margin:2rem 0;">
+<h2 style="margin-bottom:0.75rem;">Visual States Summary</h2>
+<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:0.75rem;margin-bottom:2rem;">
+  <div style="background:#f0fdf4;padding:0.6rem;border-radius:8px;border:2px solid #22c55e;text-align:center;font-size:0.85rem;">
+    🟢 <strong>Pass</strong><br><span style="font-size:0.7rem;color:var(--text-secondary)">Green border + ✅</span>
+  </div>
+  <div style="background:#fef2f2;padding:0.6rem;border-radius:8px;border:2px solid #ef4444;text-align:center;font-size:0.85rem;">
+    🔴 <strong>Fail</strong><br><span style="font-size:0.7rem;color:var(--text-secondary)">Red border + ❌</span>
+  </div>
+  <div style="background:#eff6ff;padding:0.6rem;border-radius:8px;border:2px solid #3b82f6;text-align:center;font-size:0.85rem;">
+    🔵 <strong>Running</strong><br><span style="font-size:0.7rem;color:var(--text-secondary)">Blue border + ⏳</span>
+  </div>
+  <div style="background:#f8fafc;padding:0.6rem;border-radius:8px;border:2px solid #94a3b8;text-align:center;font-size:0.85rem;">
+    ⚪ <strong>Idle</strong><br><span style="font-size:0.7rem;color:var(--text-secondary)">Grey border + ⚪</span>
+  </div>
+  <div style="background:#f0fdf4;padding:0.6rem;border-radius:8px;border:2px dashed #94a3b8;text-align:center;font-size:0.85rem;">
+    ⛔ <strong>Blocked</strong><br><span style="font-size:0.7rem;color:var(--text-secondary)">Dashed border + ⛔</span>
+  </div>
+</div>
+
+</body>
+</html>

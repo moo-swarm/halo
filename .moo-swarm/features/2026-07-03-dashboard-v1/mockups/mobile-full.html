@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mockup: Mobile Full Layout (Dark) — Halo Dashboard v1</title>
+<style>
+  /* ========== TOKENS (dark) ========== */
+  :root, [color-mode="dark"] {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --surface-elev: #334155;
+    --border: #334155;
+    --text: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --accent: #60a5fa;
+    --accent-hover: #93c5fd;
+    --success: #22c55e;
+    --warning: #eab308;
+    --danger: #ef4444;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    padding: 1rem;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .mockup-label {
+    background: var(--surface-elev); color: var(--text-secondary);
+    text-align: center; padding: 0.3rem; font-size: 0.7rem; font-weight: 600;
+    border-bottom: 1px solid var(--border); margin-bottom: 1rem; border-radius: 6px;
+  }
+
+  /* ========== MOBILE GRID (single column) ========== */
+  .mobile-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* ========== HEADER ========== */
+  .halo-header {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+    gap: 0.5rem;
+    padding-bottom: 0.75rem; border-bottom: 1px solid var(--border);
+  }
+  .halo-header h1 { font-size: 1.3rem; color: var(--text); }
+  .halo-header .tagline { color: var(--text-secondary); font-size: 0.8rem; }
+  .header-actions { display: flex; align-items: center; gap: 0.5rem; width: 100%; justify-content: flex-end; }
+  .freshness-badge {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    font-size: 0.75rem; color: var(--text-secondary); background: var(--surface);
+    padding: 0.2rem 0.55rem; border-radius: 999px;
+    white-space: nowrap;
+  }
+  .status-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+  .status-dot.green { background: var(--success); }
+  .status-dot.amber { background: var(--warning); }
+  .status-dot.red { background: var(--danger); }
+
+  .theme-toggle {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    width: 40px; height: 40px; cursor: pointer; display: flex;
+    align-items: center; justify-content: center; font-size: 1rem;
+  }
+
+  /* ========== SECTIONS ========== */
+  section {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1rem;
+  }
+  .section-header {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 0.75rem;
+  }
+  .section-header h2 { font-size: 0.9rem; font-weight: 600; }
+  .section-header .data-age { font-size: 0.7rem; color: var(--text-muted); }
+  .section-desc { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.75rem; }
+
+  /* Making tables work in mobile - stacked approach */
+  .mobile-table-stack { display: flex; flex-direction: column; gap: 0.5rem; }
+  .mobile-row {
+    background: var(--bg); border-radius: 8px; padding: 0.65rem 0.75rem;
+    border: 1px solid var(--border);
+  }
+  .mobile-row .row-primary {
+    display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
+  }
+  .mobile-row .row-primary .name { font-weight: 500; font-size: 0.85rem; }
+  .mobile-row .row-primary .name a { color: var(--accent); text-decoration: none; }
+  .mobile-row .row-secondary {
+    display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.35rem;
+    font-size: 0.75rem; color: var(--text-secondary);
+  }
+
+  .health-tag {
+    display: inline-block; font-size: 0.7rem; padding: 0.1rem 0.45rem;
+    border-radius: 999px;
+  }
+  .health-tag.active { background: rgba(34,197,94,0.15); color: #4ade80; }
+  .health-tag.stalled { background: rgba(234,179,8,0.15); color: #facc15; }
+
+  /* Pipeline (mobile) */
+  .pipeline-stack { display: flex; flex-direction: column; gap: 0.4rem; }
+  .pipe-item {
+    display: flex; align-items: center; gap: 0.5rem;
+    background: var(--bg); padding: 0.5rem 0.65rem; border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .pipe-item .emoji { font-size: 1rem; }
+  .pipe-item .pipe-label { flex: 1; font-size: 0.8rem; }
+  .pipe-item .pipe-badge { height: 16px; }
+  .pipe-item .pipe-time { font-size: 0.65rem; color: var(--text-muted); }
+
+  /* Agent cards (mobile) - single column */
+  .agent-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  .agent-card {
+    display: flex; align-items: center; gap: 0.6rem;
+    background: var(--bg); border-radius: 8px; padding: 0.6rem 0.7rem;
+    border: 1px solid var(--border);
+  }
+  .agent-card .emoji { font-size: 1.3rem; }
+  .agent-card .info { flex: 1; }
+  .agent-card .name { font-weight: 600; font-size: 0.85rem; }
+  .agent-card .role { font-size: 0.7rem; color: var(--text-secondary); }
+  .agent-card .meta { text-align: right; }
+  .agent-card .meta .status { font-size: 0.75rem; display: flex; align-items: center; gap: 0.25rem; justify-content: flex-end; }
+  .agent-card .meta .last { font-size: 0.65rem; color: var(--text-muted); }
+
+  /* Spending stats (mobile) */
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; }
+  .stat-card {
+    background: var(--bg); padding: 0.5rem 0.65rem; border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .stat-card .val { font-size: 1rem; font-weight: 600; }
+  .stat-card .lbl { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.03em; }
+
+  .chart-ph {
+    width: 100%; height: 80px; background: var(--bg);
+    border: 1px solid var(--border); border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;
+  }
+
+  /* Filter (mobile) */
+  .filter-stack { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 0.75rem; }
+  .filter-stack select {
+    padding: 0.4rem 0.5rem; background: var(--bg); color: var(--text);
+    border: 1px solid var(--border); border-radius: 6px; font-size: 0.8rem;
+  }
+  .filter-stack .count { font-size: 0.75rem; color: var(--text-muted); }
+
+  /* Labels */
+  .label {
+    display: inline-block; font-size: 0.62rem; padding: 0.08rem 0.35rem;
+    border-radius: 999px; background: var(--border); color: var(--text-muted); margin-right: 0.15rem;
+  }
+
+  /* Footer */
+  .footer {
+    border-top: 1px solid var(--border); padding-top: 0.75rem;
+    font-size: 0.7rem; color: var(--text-muted);
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;
+  }
+  .footer a { color: var(--text-secondary); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="mockup-label">📱 MOBILE DARK (< 768px) — Halo Dashboard v1</div>
+
+<div class="mobile-grid">
+
+<!-- HEADER -->
+<div class="halo-header">
+  <div>
+    <h1>Halo</h1>
+    <div class="tagline">Moo Swarm Status</div>
+  </div>
+  <div class="header-actions">
+    <span class="freshness-badge">
+      <span class="status-dot green"></span> updated 12m ago
+    </span>
+    <button class="theme-toggle" aria-label="Switch to light mode">🌙</button>
+  </div>
+</div>
+
+<!-- ACTIVE PROJECTS -->
+<section>
+  <div class="section-header">
+    <h2>Active Projects</h2>
+    <span class="data-age">12m ago</span>
+  </div>
+  <p class="section-desc">Live projects in the swarm.</p>
+  <div class="mobile-table-stack">
+    <div class="mobile-row">
+      <div class="row-primary">
+        <span class="name"><a href="#">aeroplasty</a></span>
+        <span class="health-tag active">🟢 Active</span>
+      </div>
+      <div class="row-secondary">
+        <span>★ 3</span>
+        <span>Stage: spec</span>
+        <span>2h ago</span>
+      </div>
+    </div>
+    <div class="mobile-row">
+      <div class="row-primary">
+        <span class="name"><a href="#">halo</a></span>
+        <span class="health-tag active">🟢 Active</span>
+      </div>
+      <div class="row-secondary">
+        <span>★ 0</span>
+        <span>Stage: build</span>
+        <span>12m ago</span>
+      </div>
+    </div>
+    <div class="mobile-row">
+      <div class="row-primary">
+        <span class="name"><a href="#">qmd-weekly</a></span>
+        <span class="health-tag stalled">🟡 Stalled</span>
+      </div>
+      <div class="row-secondary">
+        <span>★ 1</span>
+        <span>Stage: idle</span>
+        <span>14d ago</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PIPELINE -->
+<section>
+  <div class="section-header">
+    <h2>Pipeline Status</h2>
+    <span class="data-age">12m ago</span>
+  </div>
+  <p class="section-desc">Build chain from research to commit.</p>
+  <div class="pipeline-stack">
+    <div class="pipe-item">
+      <span class="emoji">🐍</span>
+      <span class="pipe-label"><strong>Veles</strong> Research</span>
+      <span style="font-size:0.7rem;color:#4ade80;">✅ 3h ago</span>
+    </div>
+    <div class="pipe-item">
+      <span class="emoji">🐮</span>
+      <span class="pipe-label"><strong>Moo</strong> Route</span>
+      <span style="font-size:0.7rem;color:#4ade80;">✅ 2h ago</span>
+    </div>
+    <div class="pipe-item">
+      <span class="emoji">🐉</span>
+      <span class="pipe-label"><strong>Cmok</strong> Build</span>
+      <span style="font-size:0.7rem;color:#60a5fa;">⏳ 30m ago</span>
+    </div>
+    <div class="pipe-item">
+      <span class="emoji">🚨</span>
+      <span class="pipe-label"><strong>Bagnik</strong> QA</span>
+      <span style="font-size:0.7rem;color:var(--text-muted);">⚪ —</span>
+    </div>
+    <div class="pipe-item">
+      <span class="emoji">🏚️</span>
+      <span class="pipe-label"><strong>Zlydni</strong> Commit</span>
+      <span style="font-size:0.7rem;color:var(--text-muted);">⚪ —</span>
+    </div>
+  </div>
+</section>
+
+<!-- CRON -->
+<section>
+  <div class="section-header">
+    <h2>Regular Tasks</h2>
+    <span class="data-age">12m ago</span>
+  </div>
+  <p class="section-desc">Scheduled jobs keeping the swarm humming.</p>
+  <div class="mobile-table-stack">
+    <div class="mobile-row">
+      <div class="row-primary">
+        <span class="name">Self-improvement</span>
+        <span class="status-dot green"></span>
+      </div>
+      <div class="row-secondary">
+        <span>09:00 daily</span>
+        <span>2026-07-03 09:00</span>
+      </div>
+    </div>
+    <div class="mobile-row">
+      <div class="row-primary">
+        <span class="name">Dream routine</span>
+        <span class="status-dot green"></span>
+      </div>
+      <div class="row-secondary">
+        <span>03:00 daily</span>
+        <span>2026-07-03 03:00</span>
+      </div>
+    </div>
+    <div class="mobile-row">
+      <div class="row-primary">
+        <span class="name">Halo data export</span>
+        <span class="status-dot green"></span>
+      </div>
+      <div class="row-secondary">
+        <span>hourly</span>
+        <span>2026-07-03 01:00</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ISSUES -->
+<section>
+  <div class="section-header">
+    <h2>Issues &amp; PRs</h2>
+    <span class="data-age">12m ago</span>
+  </div>
+  <p class="section-desc">Open issues and PRs across project repos.</p>
+
+  <div class="filter-stack">
+    <select><option>All projects</option></select>
+    <select><option>All labels</option></select>
+    <span class="count">Showing 5 of 5 issues</span>
+  </div>
+
+  <div style="margin-bottom:0.5rem;font-size:0.8rem;font-weight:500;">Open Issues</div>
+  <div class="mobile-table-stack">
+    <div class="mobile-row">
+      <div class="row-primary">
+        <span class="name"><a href="#">#12 Pipeline stuck</a></span>
+      </div>
+      <div class="row-secondary">
+        <span>aeroplasty</span><span>3d</span>
+        <span><span class="label">bug</span> <span class="label">pipeline</span></span>
+      </div>
+    </div>
+    <div class="mobile-row">
+      <div class="row-primary">
+        <span class="name"><a href="#">#8 Dark mode diagram</a></span>
+      </div>
+      <div class="row-secondary">
+        <span>halo</span><span>1d</span>
+        <span><span class="label">enhancement</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AGENT HEALTH -->
+<section>
+  <div class="section-header">
+    <h2>Agent Health</h2>
+    <span class="data-age">12m ago</span>
+  </div>
+  <p class="section-desc">Agent statuses at a glance.</p>
+  <div class="agent-list">
+    <div class="agent-card">
+      <span class="emoji">🐮</span>
+      <div class="info"><div class="name">Moo</div><div class="role">Orchestrator</div></div>
+      <div class="meta"><span class="status"><span class="status-dot green"></span> Active</span><span class="last">2h ago</span></div>
+    </div>
+    <div class="agent-card">
+      <span class="emoji">🐍</span>
+      <div class="info"><div class="name">Veles</div><div class="role">Research</div></div>
+      <div class="meta"><span class="status"><span class="status-dot green"></span> Active</span><span class="last">4h ago</span></div>
+    </div>
+    <div class="agent-card">
+      <span class="emoji">🐉</span>
+      <div class="info"><div class="name">Cmok</div><div class="role">Build</div></div>
+      <div class="meta"><span class="status"><span class="status-dot amber"></span> Busy</span><span class="last">30m ago</span></div>
+    </div>
+    <div class="agent-card">
+      <span class="emoji">🚨</span>
+      <div class="info"><div class="name">Bagnik</div><div class="role">QA</div></div>
+      <div class="meta"><span class="status"><span class="status-dot green"></span> Active</span><span class="last">1h ago</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SPENDING -->
+<section>
+  <div class="section-header">
+    <h2>Spending &amp; Usage</h2>
+    <span class="data-age">12m ago</span>
+  </div>
+  <div class="chart-ph">📊 Chart.js: 14-day token usage</div>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="val">1,234,567</div><div class="lbl">Tokens 7d</div></div>
+    <div class="stat-card"><div class="val">$2.45</div><div class="lbl">Cost 7d</div></div>
+    <div class="stat-card"><div class="val">847</div><div class="lbl">API Calls</div></div>
+    <div class="stat-card"><div class="val">6/8</div><div class="lbl">Agents</div></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div class="footer">
+  <span>Generated: 2026-07-03 01:00 UTC</span>
+  <nav style="display:flex;gap:0.75rem;">
+    <a href="#">GitHub</a>
+    <a href="#">Docs</a>
+  </nav>
+</div>
+
+</div><!-- /.mobile-grid -->
+
+</body>
+</html>

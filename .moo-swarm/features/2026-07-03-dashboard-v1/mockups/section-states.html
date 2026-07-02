@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mockup: Section States — Halo Dashboard v1</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #ffffff; --surface: #f8fafc; --border: #e2e8f0;
+    --text: #0f172a; --text-secondary: #64748b; --text-muted: #94a3b8;
+    --accent: #3b82f6; --success: #22c55e; --warning: #eab308; --danger: #ef4444;
+  }
+  body {
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.5;
+    padding: 2rem; max-width: 1200px; margin: 0 auto;
+  }
+  h1 { margin-bottom: 0.5rem; }
+  .subtitle { color: var(--text-secondary); margin-bottom: 2rem; }
+
+  .state-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+  @media (max-width: 768px) {
+    .state-grid { grid-template-columns: 1fr; }
+  }
+
+  .section-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1rem;
+  }
+  .section-card h2 {
+    font-size: 0.85rem; font-weight: 600; margin-bottom: 0.75rem;
+    padding-bottom: 0.4rem; border-bottom: 1px solid var(--border);
+  }
+  .section-card h2 .state-tag {
+    font-size: 0.65rem; font-weight: 400; color: var(--text-muted);
+    margin-left: 0.5rem;
+  }
+
+  /* ===== LOADING (skeleton) ===== */
+  .skeleton-row {
+    height: 24px; margin-bottom: 8px; border-radius: 4px;
+    background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+  .skeleton-row.w-40 { width: 40%; }
+  .skeleton-row.w-60 { width: 60%; }
+  .skeleton-row.w-80 { width: 80%; }
+  .skeleton-row.w-90 { width: 90%; }
+  .skeleton-row.h-sm { height: 16px; }
+  .skeleton-row.h-xs { height: 12px; }
+  .skeleton-circle {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    display: inline-block;
+  }
+  .skeleton-card {
+    height: 50px; border-radius: 8px; margin-bottom: 8px;
+    background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+  .flex-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+
+  /* ===== LOADED ===== */
+  .loaded-item { font-size: 0.8rem; padding: 0.3rem 0; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; }
+  .loaded-item:last-child { border-bottom: none; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; margin-right: 0.3rem; }
+  .dot.green { background: var(--success); }
+  .dot.amber { background: var(--warning); }
+  .dot.red { background: var(--danger); }
+  .dot.blue { background: var(--accent); }
+  .dot.grey { background: var(--text-muted); }
+
+  /* ===== EMPTY ===== */
+  .empty-state {
+    text-align: center; padding: 1.5rem 1rem;
+    border: 1px dashed var(--border); border-radius: 8px;
+    background: rgba(0,0,0,0.02);
+  }
+  .empty-state .icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+  .empty-state .msg { color: var(--text-secondary); font-size: 0.8rem; }
+
+  /* ===== ERROR ===== */
+  .error-state {
+    text-align: center; padding: 1.25rem 1rem;
+    border: 1px solid #fecaca; border-radius: 8px;
+    background: #fef2f2;
+  }
+  .error-state .icon { font-size: 1.5rem; }
+  .error-state .msg { color: #991b1b; font-size: 0.85rem; font-weight: 500; }
+  .error-state .sub { color: #b91c1c; font-size: 0.7rem; margin-top: 0.25rem; }
+
+  /* ===== Stale badge ===== */
+  .stale-badge {
+    display: inline-block; background: #fef9c3; color: #854d0e;
+    font-size: 0.65rem; padding: 0.1rem 0.4rem; border-radius: 999px;
+    margin-left: 0.5rem; font-weight: 500;
+  }
+
+  /* Example annotation */
+  .annotation { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.5rem; font-style: italic; }
+
+  /* Section group label */
+  .group-label { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+  .group-label hr { flex: 1; border: none; border-top: 1px solid var(--border); }
+
+  /* Loaded pipelines */
+  .pipe-row { display: flex; align-items: center; gap: 0.35rem; font-size: 0.75rem; margin-bottom: 0.35rem; }
+</style>
+</head>
+<body>
+<h1>🔬 Section States Reference</h1>
+<p class="subtitle">Four states for each data-backed section: Loading → Loaded → Empty → Error</p>
+
+<!-- ===== ROW 1: ACTIVE PROJECTS ===== -->
+<div class="group-label">ACTIVE PROJECTS <hr></div>
+<div class="state-grid">
+  <!-- Loading -->
+  <div class="section-card">
+    <h2>Projects <span class="state-tag">loading</span></h2>
+    <div class="flex-row"><div class="skeleton-circle"></div><div class="skeleton-row w-60"></div></div>
+    <div class="skeleton-row w-90"></div>
+    <div class="skeleton-row w-80"></div>
+    <div class="skeleton-row w-60"></div>
+    <div class="skeleton-row w-40"></div>
+    <div class="annotation">Shimmer animation on page load. <code>aria-busy="true"</code></div>
+  </div>
+
+  <!-- Loaded -->
+  <div class="section-card">
+    <h2>Projects <span class="state-tag">loaded</span></h2>
+    <div class="loaded-item"><span><span class="dot green"></span>aeroplasty</span><span style="color:var(--text-muted)">2h ago</span></div>
+    <div class="loaded-item"><span><span class="dot green"></span>halo</span><span style="color:var(--text-muted)">12m ago</span></div>
+    <div class="loaded-item"><span><span class="dot amber"></span>qmd-weekly</span><span style="color:var(--text-muted)">14d ago</span></div>
+    <div class="annotation">Full table with health dots, clickable names, stage tags.</div>
+  </div>
+
+  <!-- Empty -->
+  <div class="section-card">
+    <h2>Projects <span class="state-tag">empty</span></h2>
+    <div class="empty-state">
+      <div class="icon">📋</div>
+      <div class="msg">No active projects</div>
+    </div>
+    <div class="annotation">Dashed border box. Message is informative, not apologetic.</div>
+  </div>
+
+  <!-- Error -->
+  <div class="section-card">
+    <h2>Projects <span class="state-tag">error</span></h2>
+    <div class="error-state">
+      <div class="icon">⚠️</div>
+      <div class="msg">Data temporarily unavailable</div>
+      <div class="sub">Last known: 2 hours ago</div>
+    </div>
+    <div class="annotation">Red-toned border. Shows "last known" time if stale data exists.</div>
+  </div>
+</div>
+
+<!-- ===== ROW 2: PIPELINE STATUS ===== -->
+<div class="group-label">PIPELINE STATUS <hr></div>
+<div class="state-grid">
+  <!-- Loading -->
+  <div class="section-card">
+    <h2>Pipeline <span class="state-tag">loading</span></h2>
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card w-80"></div>
+    <div class="skeleton-card w-60"></div>
+    <div class="annotation">Skeleton cards matching pipeline stage height.</div>
+  </div>
+
+  <!-- Loaded -->
+  <div class="section-card">
+    <h2>Pipeline <span class="state-tag">loaded</span></h2>
+    <div class="pipe-row"><span>🐍</span><span style="flex:1"><b>Veles</b> Research</span><span class="dot green"></span> ✅ Pass 3h ago</div>
+    <div class="pipe-row"><span>🐮</span><span style="flex:1"><b>Moo</b> Route</span><span class="dot green"></span> ✅ Pass 2h ago</div>
+    <div class="pipe-row"><span>🐉</span><span style="flex:1"><b>Cmok</b> Build</span><span class="dot blue"></span> ⏳ Running 30m ago</div>
+    <div class="pipe-row"><span>🚨</span><span style="flex:1"><b>Bagnik</b> QA</span><span class="dot grey"></span> ⚪ Idle</div>
+    <div class="pipe-row"><span>🏚️</span><span style="flex:1"><b>Zlydni</b> Commit</span><span class="dot grey"></span> ⚪ Idle</div>
+    <div class="annotation">5 stages. Each row: emoji + name + status dot + label + time.</div>
+  </div>
+
+  <!-- Empty -->
+  <div class="section-card">
+    <h2>Pipeline <span class="state-tag">empty</span></h2>
+    <div class="empty-state">
+      <div class="icon">🔧</div>
+      <div class="msg">No pipeline stages configured</div>
+    </div>
+    <div class="annotation">Shown when the pipeline array is empty or absent.</div>
+  </div>
+
+  <!-- Error -->
+  <div class="section-card">
+    <h2>Pipeline <span class="state-tag">error</span></h2>
+    <div class="error-state">
+      <div class="icon">⚠️</div>
+      <div class="msg">Pipeline data unavailable</div>
+      <div class="sub">Mermaid.js failed to load</div>
+    </div>
+    <div class="annotation">Graceful: also triggers the plain-HTML fallback.</div>
+  </div>
+</div>
+
+<!-- ===== ROW 3: ISSUES & PRs ===== -->
+<div class="group-label">ISSUES &amp; PULL REQUESTS <hr></div>
+<div class="state-grid">
+  <!-- Loading -->
+  <div class="section-card">
+    <h2>Issues <span class="state-tag">loading</span></h2>
+    <div class="skeleton-row w-80"></div>
+    <div class="skeleton-row w-90"></div>
+    <div class="skeleton-row w-70"></div>
+    <div class="skeleton-row w-85"></div>
+    <div class="annotation">Skeleton rows matching table row height.</div>
+  </div>
+
+  <!-- Loaded -->
+  <div class="section-card">
+    <h2>Issues <span class="state-tag">loaded</span></h2>
+    <div style="font-size:0.75rem;margin-bottom:0.5rem;">
+      <select style="padding:0.2rem;font-size:0.75rem;"><option>All projects (5)</option><option>halo (2)</option></select>
+      <span style="color:var(--text-muted);margin-left:0.5rem;">5 results</span>
+    </div>
+    <div class="loaded-item"><span>#12 Pipeline stuck</span><span style="color:var(--text-muted)">3d</span></div>
+    <div class="loaded-item"><span>#8 Dark mode diagram</span><span style="color:var(--text-muted)">1d</span></div>
+    <div class="loaded-item"><span>#31 Dream routine logs</span><span style="color:var(--text-muted)">5d</span></div>
+    <div class="annotation">Filterable table with project/label/status dropdowns.</div>
+  </div>
+
+  <!-- Empty -->
+  <div class="section-card">
+    <h2>Issues <span class="state-tag">empty</span></h2>
+    <div class="empty-state">
+      <div class="icon">✅</div>
+      <div class="msg">All clear — no open issues or PRs</div>
+    </div>
+    <div class="annotation">Green-ish dashed box. Positive framing, not "no results".</div>
+  </div>
+
+  <!-- Error -->
+  <div class="section-card">
+    <h2>Issues <span class="state-tag">error</span></h2>
+    <div class="error-state">
+      <div class="icon">⚠️</div>
+      <div class="msg">Issue data unavailable</div>
+      <div class="sub">GitHub API fetch failed on last export</div>
+    </div>
+    <div class="annotation">Specific error message. Consider showing stale data if available.</div>
+  </div>
+</div>
+
+<!-- ===== ROW 4: SPENDING ===== -->
+<div class="group-label">SPENDING &amp; USAGE <hr></div>
+<div class="state-grid">
+  <!-- Loading -->
+  <div class="section-card">
+    <h2>Spending <span class="state-tag">loading</span></h2>
+    <div class="skeleton-card" style="height:60px;"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
+      <div class="skeleton-card" style="height:36px;"></div>
+      <div class="skeleton-card" style="height:36px;"></div>
+      <div class="skeleton-card" style="height:36px;"></div>
+      <div class="skeleton-card" style="height:36px;"></div>
+    </div>
+    <div class="annotation">Chart skeleton + 4 stat card skeletons.</div>
+  </div>
+
+  <!-- Loaded -->
+  <div class="section-card">
+    <h2>Spending <span class="state-tag">loaded</span></h2>
+    <div style="height:50px;background:linear-gradient(90deg,#e2e8f0 25%,#3b82f6 50%,#e2e8f0 75%);border-radius:4px;margin-bottom:0.5rem;"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:0.7rem;">
+      <div style="background:#fff;padding:0.35rem;border-radius:4px;border:1px solid var(--border);"><b>1,234,567</b><br><span style="color:var(--text-muted)">Tokens 7d</span></div>
+      <div style="background:#fff;padding:0.35rem;border-radius:4px;border:1px solid var(--border);"><b>$2.45</b><br><span style="color:var(--text-muted)">Cost 7d</span></div>
+    </div>
+    <div class="annotation">Chart.js bar chart + 4 stat cards below.</div>
+  </div>
+
+  <!-- Empty (data pending) -->
+  <div class="section-card">
+    <h2>Spending <span class="state-tag">data pending</span></h2>
+    <div class="empty-state">
+      <div class="icon">⏳</div>
+      <div class="msg">Data pending — spending tracking coming soon</div>
+    </div>
+    <div class="annotation">Deliberate "data pending" state, not an error. Show even in v1.</div>
+  </div>
+
+  <!-- Error -->
+  <div class="section-card">
+    <h2>Spending <span class="state-tag">error</span></h2>
+    <div class="error-state">
+      <div class="icon">⚠️</div>
+      <div class="msg">Usage data unavailable</div>
+      <div class="sub">Could not parse OpenClaw session logs</div>
+    </div>
+    <div class="annotation">Fall back to "data pending" if error is transient.</div>
+  </div>
+</div>
+
+<!-- ===== ROW 5: AGENT HEALTH ===== -->
+<div class="group-label">AGENT HEALTH <hr></div>
+<div class="state-grid">
+  <!-- Loading -->
+  <div class="section-card">
+    <h2>Agents <span class="state-tag">loading</span></h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+      <div class="skeleton-card" style="height:44px;"></div>
+      <div class="skeleton-card" style="height:44px;"></div>
+      <div class="skeleton-card" style="height:44px;"></div>
+      <div class="skeleton-card" style="height:44px;"></div>
+    </div>
+    <div class="annotation">2×2 grid of skeleton cards matching agent card dimensions.</div>
+  </div>
+
+  <!-- Loaded -->
+  <div class="section-card">
+    <h2>Agents <span class="state-tag">loaded</span></h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+      <div style="background:#fff;padding:0.4rem;border-radius:6px;border:1px solid var(--border);font-size:0.75rem;">
+        <b>🐮 Moo</b><br><span style="color:var(--text-muted)">Orchestrator</span>
+        <span class="dot green"></span> Active · 2h ago
+      </div>
+      <div style="background:#fff;padding:0.4rem;border-radius:6px;border:1px solid var(--border);font-size:0.75rem;">
+        <b>🐍 Veles</b><br><span style="color:var(--text-muted)">Research</span>
+        <span class="dot green"></span> Active · 4h ago
+      </div>
+      <div style="background:#fff;padding:0.4rem;border-radius:6px;border:1px solid var(--border);font-size:0.75rem;">
+        <b>🐉 Cmok</b><br><span style="color:var(--text-muted)">Build</span>
+        <span class="dot amber"></span> Busy · 30m ago
+      </div>
+      <div style="background:#fff;padding:0.4rem;border-radius:6px;border:1px solid var(--border);font-size:0.75rem;">
+        <b>🏚️ Zlydni</b><br><span style="color:var(--text-muted)">Commit</span>
+        <span class="dot grey"></span> Idle · 12h ago
+      </div>
+    </div>
+    <div class="annotation">2×2 card grid (responsive to 1 column on mobile).</div>
+  </div>
+
+  <!-- Empty -->
+  <div class="section-card">
+    <h2>Agents <span class="state-tag">empty</span></h2>
+    <div class="empty-state">
+      <div class="icon">🤖</div>
+      <div class="msg">No agent data available</div>
+    </div>
+    <div class="annotation">Shown when agents array is empty or absent.</div>
+  </div>
+
+  <!-- Error -->
+  <div class="section-card">
+    <h2>Agents <span class="state-tag">error</span></h2>
+    <div class="error-state">
+      <div class="icon">⚠️</div>
+      <div class="msg">Agent status unavailable</div>
+      <div class="sub">Sessions list query failed</div>
+    </div>
+    <div class="annotation">Red border. Could fall back to cached data if available.</div>
+  </div>
+</div>
+
+<hr style="margin:2rem 0;">
+<div class="group-label">STALE DATA DEGRADATION PATTERN <hr></div>
+<div class="state-grid" style="grid-template-columns:1fr 1fr;">
+  <div class="section-card">
+    <h2>Projects <span style="font-size:0.65rem;font-weight:400;color:#854d0e;margin-left:0.5rem;background:#fef9c3;padding:0.1rem 0.4rem;border-radius:999px;">stale</span></h2>
+    <div class="loaded-item"><span><span class="dot amber"></span>aeroplasty</span><span style="color:var(--text-muted)">2d ago</span></div>
+    <div class="loaded-item"><span><span class="dot amber"></span>halo</span><span style="color:var(--text-muted)">2d ago</span></div>
+    <div class="loaded-item"><span><span class="dot amber"></span>qmd-weekly</span><span style="color:var(--text-muted)">2d ago</span></div>
+    <div class="annotation">Data >1h old: amber freshness dot + "stale" badge on section header. Keep showing data rather than blank error.</div>
+  </div>
+  <div class="section-card">
+    <h2>All Passing <span style="font-size:0.65rem;font-weight:400;margin-left:0.5rem;color:var(--text-muted);font-weight:400;">loaded</span></h2>
+    <div class="pipe-row"><span>🐍</span><span style="flex:1">Veles</span><span style="color:#166534;">✅</span></div>
+    <div class="pipe-row"><span>🐮</span><span style="flex:1">Moo</span><span style="color:#166534;">✅</span></div>
+    <div class="pipe-row"><span>🐉</span><span style="flex:1">Cmok</span><span style="color:#166534;">✅</span></div>
+    <div class="pipe-row"><span>🚨</span><span style="flex:1">Bagnik</span><span style="color:#166534;">✅</span></div>
+    <div class="pipe-row"><span>🏚️</span><span style="flex:1">Zlydni</span><span style="color:#166534;">✅</span></div>
+    <div class="annotation">All green — everything running smoothly. Shows Mermaid.js diagram or badge row.</div>
+  </div>
+</div>
+
+</body>
+</html>
