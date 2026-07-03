@@ -1,24 +1,20 @@
 # Deploy Halo Dashboard to GitHub Pages
 #
 # Runs:
-#   - on every push to main (instant deploy)
-#   - every 6 hours (fresh data)
-#   - on workflow_dispatch (manual trigger)
+#   - on every push to main
+#   - manual trigger (workflow_dispatch)
 #
-# The data population script (moo-export-data.sh) runs on the
-# OpenClaw host via cron and pushes data/swarm.json directly.
-# This workflow only deploys the static site.
+# Data is refreshed by the OpenClaw host cron via moo-export-data.sh,
+# which pushes data/swarm.json directly to main.
+# This workflow deploys the static site to the gh-pages branch.
 
 name: Deploy to GitHub Pages
 
 on:
   push:
     branches: [main]
-  schedule:
-    - cron: "0 */6 * * *"    # every 6 hours
-  workflow_dispatch:          # manual button in Actions tab
+  workflow_dispatch:
 
-# Allow one concurrent deployment
 concurrency:
   group: pages-${{ github.ref }}
   cancel-in-progress: true
@@ -27,26 +23,19 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      pages: write
-      id-token: write
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      contents: write      # needed to push to gh-pages branch
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: .                         # serve from repo root
-
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .               # serve from repo root
+          publish_branch: gh-pages
+          allow_empty_commit: false
+          enable_cname: false          # CNAME already in repo
+          user_name: github-actions[bot]
+          user_email: github-actions[bot]@users.noreply.github.com
