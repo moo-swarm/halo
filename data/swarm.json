@@ -229,7 +229,7 @@
     "active_agents_7d": 6,
     "total_agents": 8,
     "pricing_configured": true,
-    "data_source": "openclaw_jsonl",
+    "data_source": "export_script",
     "daily": [
       { "date": "2026-06-20", "tokens": 92000, "cost": 0.18 },
       { "date": "2026-06-21", "tokens": 105000, "cost": 0.21 },
@@ -307,6 +307,6 @@
     "version": "1.0",
     "generated_by": "moo-export-data.sh",
     "export_host": "lex-agent-swarm",
-    "openclaw_version": "24.18.0"
+    "runtime_version": "24.18.0"
   }
 }

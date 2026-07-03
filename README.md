@@ -13,7 +13,6 @@ Moo Swarm host (cron, hourly)
   │
   ├── moo-export-data.sh:
   │   ├── read swarm project files
-  │   ├── query OpenClaw internals
   │   ├── fetch GitHub API for issues/PRs
   │   └── generate data/swarm.json
   │

@@ -22,7 +22,7 @@
 - Data pipeline: GitHub Action fetches from `api.github.com/orgs/moo-swarm` and `api.github.com/repos/moo-swarm/*` → transforms to static JSON → committed to `gh-pages` branch or `data/` folder → frontend renders
 - No backend, no database, no auth — fully static, public dashboard
 - Inspired by `github-community-projects/org-metrics-dashboard` architecture
-- Spending data comes from OpenClaw API / internal logs, not GitHub — needs a separate data source
+- Spending data comes from host-exported logs, not GitHub — needs a separate data source
 - Site should load fast — data is compiled at build time, not fetched live from APIs
 
 ## Memory

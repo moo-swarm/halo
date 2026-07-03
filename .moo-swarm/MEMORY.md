@@ -17,7 +17,7 @@
 | Source | What | How |
 |--------|------|-----|
 | GitHub API | repos, issues, PRs, commits | `GET /orgs/moo-swarm/repos`, `GET /repos/*/issues` via GHA |
-| OpenClaw cron | spending, agent usage | Needs custom script exporting to JSON |
+| Host exporter | spending, agent usage | Custom script runs on host, exports to JSON |
 | Local files | regular tasks, manual notes | Committed `_data/` YAML/JSON |
 
 ## Design Principles
