@@ -1,12 +1,7 @@
 # Deploy Halo Dashboard to GitHub Pages
 #
-# Runs:
-#   - on every push to main
-#   - manual trigger (workflow_dispatch)
-#
-# Data is refreshed by the OpenClaw host cron via moo-export-data.sh,
-# which pushes data/swarm.json directly to main.
-# This workflow deploys the static site to the gh-pages branch.
+# Runs on every push to main or manual dispatch.
+# Deploys via GitHub Actions Pages API (deploy-pages action).
 
 name: Deploy to GitHub Pages
 
@@ -19,23 +14,30 @@ concurrency:
   group: pages-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write      # needed to push to gh-pages branch
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .               # serve from repo root
-          publish_branch: gh-pages
-          allow_empty_commit: false
-          enable_cname: false          # CNAME already in repo
-          user_name: github-actions[bot]
-          user_email: github-actions[bot]@users.noreply.github.com
+          path: .
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
