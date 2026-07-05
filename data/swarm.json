@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-05T15:49:18Z",
+  "updated_at": "2026-07-05T15:51:13Z",
   "refresh_interval": 3600,
   "projects": [
     {
@@ -13,7 +13,8 @@
       "pipeline_stage": "build",
       "specs": {
         "total": 1,
-        "active": 0
+        "active": 0,
+        "latest": "2026-07-03"
       }
     },
     {
@@ -27,7 +28,8 @@
       "pipeline_stage": "spec",
       "specs": {
         "total": 0,
-        "active": 0
+        "active": 0,
+        "latest": null
       }
     },
     {
@@ -41,7 +43,8 @@
       "pipeline_stage": "research",
       "specs": {
         "total": 0,
-        "active": 0
+        "active": 0,
+        "latest": null
       }
     },
     {
@@ -55,7 +58,8 @@
       "pipeline_stage": "idle",
       "specs": {
         "total": 0,
-        "active": 0
+        "active": 0,
+        "latest": null
       }
     },
     {
@@ -69,7 +73,8 @@
       "pipeline_stage": "test",
       "specs": {
         "total": 0,
-        "active": 0
+        "active": 0,
+        "latest": null
       }
     }
   ],
