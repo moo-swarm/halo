@@ -161,7 +161,7 @@
 
       return '<tr>' +
         '<td data-label="Project"><span class="project-name">' + repoLink + ' ' + stars + '</span></td>' +
-        '<td data-label="Status"><span class="health-cell"><span class="status-dot ' + health.color + '"></span><span class="health-label">' + health.emoji + ' ' + escapeHtml(health.label) + '</span></span></td>' +
+        '<td data-label="Status"><span class="health-cell"><span class="status-dot ' + health.color + '"></span><span class="health-label">' + escapeHtml(health.label) + '</span></span></td>' +
         '<td data-label="Last Update">' + escapeHtml(lastUpdate) + '</td>' +
         '<td data-label="Stage"><span class="status-tag ' + stageClass + '">' + escapeHtml(stageLabel) + '</span></td>' +
         '</tr>';
@@ -175,11 +175,11 @@
   }
 
   function getProjectHealth(project) {
-    if (!project.last_updated) return { color: 'grey', emoji: '⚪', label: 'Unknown' };
+    if (!project.last_updated) return { color: 'grey', label: 'Unknown' };
     var days = daysAgo(project.last_updated + 'T00:00:00Z');
-    if (days <= 7) return { color: 'green', emoji: '🟢', label: 'Active' };
-    if (days <= 30) return { color: 'amber', emoji: '🟡', label: 'Stalled' };
-    return { color: 'red', emoji: '🔴', label: 'Dormant' };
+    if (days <= 7) return { color: 'green', label: 'Active' };
+    if (days <= 30) return { color: 'amber', label: 'Stalled' };
+    return { color: 'red', label: 'Dormant' };
   }
 
   function getStageClass(stage) {
