@@ -214,14 +214,17 @@ header { grid-area: header; }
   min-height: 44px;
 }
 .theme-toggle:hover { background: var(--color-surface-elevated); }
-.theme-toggle .sun-icon,
-.theme-toggle .moon-icon { width: 20px; height: 20px; }
-[color-mode="dark"] .theme-toggle .sun-icon { display: none; }
-[color-mode="dark"] .theme-toggle .moon-icon { display: block; }
-[color-mode="light"] .theme-toggle .sun-icon { display: block; }
-[color-mode="light"] .theme-toggle .moon-icon { display: none; }
-[color-mode="dark"] .theme-toggle svg.moon-icon { color: #facc15; }
-[color-mode="light"] .theme-toggle svg.sun-icon { color: #f59e0b; }
+.theme-toggle .toggle-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  font-size: 1.3rem;
+  line-height: 1;
+}
+[color-mode="dark"] .theme-toggle .toggle-icon::before { content: "☾"; color: #facc15; }
+[color-mode="light"] .theme-toggle .toggle-icon::before { content: "☀"; color: #f59e0b; }
 
 /* GitHub Link */
 .gh-link { color: var(--color-text-secondary); text-decoration: none; font-size: 0.85rem; }
