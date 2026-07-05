@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-03T00:00:00Z",
+  "updated_at": "2026-07-05T15:49:18Z",
   "refresh_interval": 3600,
   "projects": [
     {
@@ -8,7 +8,7 @@
       "status": "active",
       "health": "green",
       "repo_url": "https://github.com/moo-swarm/halo",
-      "open_issues": 2,
+      "open_issues": 0,
       "last_updated": "2026-07-03",
       "pipeline_stage": "build",
       "specs": {
@@ -22,7 +22,7 @@
       "status": "active",
       "health": "green",
       "repo_url": "https://github.com/moo-swarm/aeroplasty",
-      "open_issues": 3,
+      "open_issues": 0,
       "last_updated": "2026-07-02",
       "pipeline_stage": "spec",
       "specs": {
@@ -36,7 +36,7 @@
       "status": "active",
       "health": "green",
       "repo_url": "https://github.com/moo-swarm/dream-routine",
-      "open_issues": 1,
+      "open_issues": 0,
       "last_updated": "2026-07-02",
       "pipeline_stage": "research",
       "specs": {
@@ -64,7 +64,7 @@
       "status": "active",
       "health": "green",
       "repo_url": "https://github.com/moo-swarm/telegram-connector",
-      "open_issues": 1,
+      "open_issues": 0,
       "last_updated": "2026-06-30",
       "pipeline_stage": "test",
       "specs": {
