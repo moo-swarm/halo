@@ -57,13 +57,16 @@
         cachedData = data;
         renderFromData(data);
         removeErrorBanner();
+        onDataLoadComplete(true);
       })
       .catch(function (err) {
         console.error('Halo: Failed to load dashboard data:', err);
         if (cachedData) {
           renderFromData(cachedData, true);
+          onDataLoadComplete(false);
         } else {
           showErrorBanner();
+          onDataLoadComplete(false);
         }
       });
   }
@@ -626,6 +629,69 @@
     });
   }
 
+  /* === Telegram Mini App Integration === */
+  function initTelegram() {
+    var tg = window.Telegram && window.Telegram.WebApp;
+    if (!tg) return;
+
+    // Expand to full height + ready
+    if (tg.ready) tg.ready();
+    if (tg.expand) tg.expand();
+
+    // MainButton: refresh
+    if (tg.MainButton) {
+      tg.MainButton.setText('↻ Refresh');
+      tg.MainButton.onClick(function () {
+        tgHaptic('impact', 'medium');
+        loadDashboardData();
+      });
+      tg.MainButton.show();
+    }
+
+    // Listen for Telegram theme changes
+    if (tg.onEvent) {
+      tg.onEvent('themeChanged', function () {
+        var tp = tg.themeParams;
+        if (!tp) return;
+        var root = document.documentElement;
+        root.style.setProperty('--tg-bg', tp.bg_color || '');
+        root.style.setProperty('--tg-secondary-bg', tp.secondary_bg_color || '');
+        root.style.setProperty('--tg-text', tp.text_color || '');
+        root.style.setProperty('--tg-hint', tp.hint_color || '');
+        root.style.setProperty('--tg-link', tp.link_color || '');
+        root.style.setProperty('--tg-button', tp.button_color || '');
+        if (tg.colorScheme === 'dark') {
+          root.classList.add('tg-dark');
+        } else {
+          root.classList.remove('tg-dark');
+        }
+        syncChartJSToTheme();
+        reRenderMermaid();
+      });
+    }
+  }
+
+  function tgHaptic(type, style) {
+    var tg = window.Telegram && window.Telegram.WebApp;
+    if (!tg || !tg.HapticFeedback) return;
+    if (type === 'impact') tg.HapticFeedback.impactOccurred(style || 'light');
+    else if (type === 'notification') tg.HapticFeedback.notificationOccurred(style || 'success');
+  }
+
+  function tgMainButtonProgress(show) {
+    var tg = window.Telegram && window.Telegram.WebApp;
+    if (!tg || !tg.MainButton) return;
+    if (show) {
+      tg.MainButton.showProgress(true);
+      tg.MainButton.setText('Refreshing…');
+      tg.MainButton.disable();
+    } else {
+      tg.MainButton.hideProgress();
+      tg.MainButton.setText('↻ Refresh');
+      tg.MainButton.enable();
+    }
+ }
+
 
 
   function reRenderMermaid() {
@@ -765,6 +831,7 @@
    * ========================================================== */
   function init() {
     initTheme();
+    initTelegram();
     loadDashboardData();
     setInterval(function () {
       loadDashboardData();
@@ -773,8 +840,18 @@
     var retryBtn = document.getElementById('retry-btn');
     if (retryBtn) {
       retryBtn.addEventListener('click', function () {
+        tgHaptic('impact', 'medium');
         loadDashboardData();
       });
+    }
+  }
+
+  function onDataLoadComplete(success) {
+    tgMainButtonProgress(false);
+    if (success) {
+      tgHaptic('notification', 'success');
+    } else {
+      tgHaptic('notification', 'warning');
     }
   }
 
