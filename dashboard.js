@@ -218,7 +218,7 @@
   }
 
   function getMermaidThemeVars() {
-    var isDark = document.documentElement.getAttribute('color-mode') === 'dark';
+    var isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     return {
       primaryColor: isDark ? '#1e293b' : '#eff6ff',
       primaryTextColor: isDark ? '#f1f5f9' : '#1e293b',
@@ -232,7 +232,7 @@
   }
 
   function buildMermaidDefinition(pipeline) {
-    var isDark = document.documentElement.getAttribute('color-mode') === 'dark';
+    var isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     var styles = isDark ? MERMAID_STATUS_STYLES_DARK : MERMAID_STATUS_STYLES;
 
     var def = 'flowchart LR\n';
@@ -512,7 +512,7 @@
     var labels = dailyData.map(function (d) { return d.date.slice(5); });
     var tokens = dailyData.map(function (d) { return d.tokens; });
     var costs = dailyData.map(function (d) { return d.cost || 0; });
-    var isDark = document.documentElement.getAttribute('color-mode') === 'dark';
+    var isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
     new Chart(canvas, {
       type: 'bar',
@@ -562,8 +562,7 @@
 
   function syncChartJSToTheme() {
     if (typeof Chart === 'undefined') return;
-    var mode = document.documentElement.getAttribute('color-mode');
-    var isDark = mode === 'dark';
+    var isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     Chart.defaults.color = isDark ? '#94a3b8' : '#64748b';
     Chart.defaults.borderColor = isDark ? '#334155' : '#e2e8f0';
   }
@@ -616,41 +615,18 @@
    * 10. Theme System
    * ========================================================== */
   function initTheme() {
-    var toggle = document.getElementById('theme-toggle');
-    if (!toggle) return;
-
-    toggle.addEventListener('click', toggleTheme);
+    // Theme auto-follows system/Telegram via @media (prefers-color-scheme)
+    // Just sync chart colours and mermaid on theme change
+    syncChartJSToTheme();
 
     var mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     mediaQuery.addEventListener('change', function () {
-      if (!localStorage.getItem('halo-theme')) {
-        var mode = mediaQuery.matches ? 'dark' : 'light';
-        document.documentElement.setAttribute('color-mode', mode);
-        updateToggleAriaLabel(mode);
-        syncChartJSToTheme();
-        reRenderMermaid();
-      }
+      syncChartJSToTheme();
+      reRenderMermaid();
     });
-
-    syncChartJSToTheme();
   }
 
-  function toggleTheme() {
-    var current = document.documentElement.getAttribute('color-mode') || 'light';
-    var next = current === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('color-mode', next);
-    localStorage.setItem('halo-theme', next);
-    updateToggleAriaLabel(next);
-    syncChartJSToTheme();
-    reRenderMermaid();
-  }
 
-  function updateToggleAriaLabel(mode) {
-    var toggle = document.getElementById('theme-toggle');
-    if (!toggle) return;
-    toggle.setAttribute('aria-label', mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
-    toggle.setAttribute('aria-pressed', mode === 'dark' ? 'true' : 'false');
-  }
 
   function reRenderMermaid() {
     if (cachedData && cachedData.pipeline) {
