@@ -277,6 +277,16 @@ tr:last-child td { border-bottom: none; }
 /* Project name */
 .project-name a { font-weight: 500; }
 .project-stars { color: var(--color-text-muted); font-size: 0.75rem; margin-left: 0.3rem; }
+.project-specs {
+  color: var(--color-text-muted);
+  font-size: 0.7rem;
+  margin-left: 0.4rem;
+  padding: 0.05rem 0.35rem;
+  border-radius: 999px;
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  cursor: help;
+}
 
 /* Status tag (e.g. pipeline stage pill) */
 .status-tag {

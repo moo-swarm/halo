@@ -8,10 +8,13 @@
       "status": "active",
       "health": "green",
       "repo_url": "https://github.com/moo-swarm/halo",
-      "stars": 0,
       "open_issues": 2,
       "last_updated": "2026-07-03",
-      "pipeline_stage": "build"
+      "pipeline_stage": "build",
+      "specs": {
+        "total": 1,
+        "active": 0
+      }
     },
     {
       "name": "aeroplasty",
@@ -19,10 +22,13 @@
       "status": "active",
       "health": "green",
       "repo_url": "https://github.com/moo-swarm/aeroplasty",
-      "stars": 3,
       "open_issues": 3,
       "last_updated": "2026-07-02",
-      "pipeline_stage": "spec"
+      "pipeline_stage": "spec",
+      "specs": {
+        "total": 0,
+        "active": 0
+      }
     },
     {
       "name": "dream-routine",
@@ -30,10 +36,13 @@
       "status": "active",
       "health": "green",
       "repo_url": "https://github.com/moo-swarm/dream-routine",
-      "stars": 0,
       "open_issues": 1,
       "last_updated": "2026-07-02",
-      "pipeline_stage": "research"
+      "pipeline_stage": "research",
+      "specs": {
+        "total": 0,
+        "active": 0
+      }
     },
     {
       "name": "qmd-weekly",
@@ -41,10 +50,13 @@
       "status": "active",
       "health": "yellow",
       "repo_url": "https://github.com/moo-swarm/qmd-weekly",
-      "stars": 1,
       "open_issues": 0,
       "last_updated": "2026-06-19",
-      "pipeline_stage": "idle"
+      "pipeline_stage": "idle",
+      "specs": {
+        "total": 0,
+        "active": 0
+      }
     },
     {
       "name": "telegram-connector",
@@ -52,16 +64,19 @@
       "status": "active",
       "health": "green",
       "repo_url": "https://github.com/moo-swarm/telegram-connector",
-      "stars": 2,
       "open_issues": 1,
       "last_updated": "2026-06-30",
-      "pipeline_stage": "test"
+      "pipeline_stage": "test",
+      "specs": {
+        "total": 0,
+        "active": 0
+      }
     }
   ],
   "pipeline": [
     {
       "agent": "veles",
-      "emoji": "🐍",
+      "emoji": "\ud83d\udc0d",
       "role": "Research",
       "status": "pass",
       "last_run": "2026-07-02T22:00:00Z",
@@ -70,7 +85,7 @@
     },
     {
       "agent": "moo",
-      "emoji": "🐮",
+      "emoji": "\ud83d\udc2e",
       "role": "Route",
       "status": "pass",
       "last_run": "2026-07-02T23:00:00Z",
@@ -79,7 +94,7 @@
     },
     {
       "agent": "cmok",
-      "emoji": "🐉",
+      "emoji": "\ud83d\udc09",
       "role": "Build",
       "status": "running",
       "last_run": "2026-07-02T23:30:00Z",
@@ -88,7 +103,7 @@
     },
     {
       "agent": "bagnik",
-      "emoji": "🚨",
+      "emoji": "\ud83d\udea8",
       "role": "QA",
       "status": "pass",
       "last_run": "2026-07-02T21:00:00Z",
@@ -97,7 +112,7 @@
     },
     {
       "agent": "zlydni",
-      "emoji": "🏚️",
+      "emoji": "\ud83c\udfda\ufe0f",
       "role": "Commit",
       "status": "idle",
       "last_run": null,
@@ -110,7 +125,10 @@
       "project": "aeroplasty",
       "number": 3,
       "title": "Pipeline visualisation breaks on dark mode",
-      "labels": ["bug", "ui"],
+      "labels": [
+        "bug",
+        "ui"
+      ],
       "created_at": "2026-06-30T15:30:00Z",
       "url": "https://github.com/moo-swarm/aeroplasty/issues/3"
     },
@@ -118,7 +136,10 @@
       "project": "halo",
       "number": 8,
       "title": "Add dark mode to pipeline diagram",
-      "labels": ["enhancement", "ux"],
+      "labels": [
+        "enhancement",
+        "ux"
+      ],
       "created_at": "2026-07-01T10:00:00Z",
       "url": "https://github.com/moo-swarm/halo/issues/8"
     },
@@ -126,7 +147,10 @@
       "project": "dream-routine",
       "number": 31,
       "title": "Dream routine logs too verbose",
-      "labels": ["enhancement", "logging"],
+      "labels": [
+        "enhancement",
+        "logging"
+      ],
       "created_at": "2026-06-28T08:15:00Z",
       "url": "https://github.com/moo-swarm/dream-routine/issues/31"
     },
@@ -134,7 +158,9 @@
       "project": "halo",
       "number": 3,
       "title": "README needs architecture diagram",
-      "labels": ["docs"],
+      "labels": [
+        "docs"
+      ],
       "created_at": "2026-06-26T14:00:00Z",
       "url": "https://github.com/moo-swarm/halo/issues/3"
     },
@@ -142,7 +168,9 @@
       "project": "aeroplasty",
       "number": 15,
       "title": "Export script fails on encoding",
-      "labels": ["bug"],
+      "labels": [
+        "bug"
+      ],
       "created_at": "2026-07-01T09:30:00Z",
       "url": "https://github.com/moo-swarm/aeroplasty/issues/15"
     },
@@ -150,7 +178,10 @@
       "project": "telegram-connector",
       "number": 7,
       "title": "Rate limiting on long polling",
-      "labels": ["bug", "performance"],
+      "labels": [
+        "bug",
+        "performance"
+      ],
       "created_at": "2026-06-29T11:00:00Z",
       "url": "https://github.com/moo-swarm/telegram-connector/issues/7"
     }
@@ -224,33 +255,89 @@
   "spending": {
     "total_tokens_7d": 1234567,
     "cost_7d": 2.45,
-    "cost_30d": 10.20,
+    "cost_30d": 10.2,
     "api_calls_7d": 847,
     "active_agents_7d": 6,
     "total_agents": 8,
     "pricing_configured": true,
     "data_source": "export_script",
     "daily": [
-      { "date": "2026-06-20", "tokens": 92000, "cost": 0.18 },
-      { "date": "2026-06-21", "tokens": 105000, "cost": 0.21 },
-      { "date": "2026-06-22", "tokens": 88000, "cost": 0.17 },
-      { "date": "2026-06-23", "tokens": 112000, "cost": 0.22 },
-      { "date": "2026-06-24", "tokens": 96000, "cost": 0.19 },
-      { "date": "2026-06-25", "tokens": 130000, "cost": 0.26 },
-      { "date": "2026-06-26", "tokens": 180000, "cost": 0.35 },
-      { "date": "2026-06-27", "tokens": 145000, "cost": 0.29 },
-      { "date": "2026-06-28", "tokens": 99000, "cost": 0.20 },
-      { "date": "2026-06-29", "tokens": 121000, "cost": 0.24 },
-      { "date": "2026-06-30", "tokens": 108000, "cost": 0.22 },
-      { "date": "2026-07-01", "tokens": 142000, "cost": 0.28 },
-      { "date": "2026-07-02", "tokens": 135000, "cost": 0.27 },
-      { "date": "2026-07-03", "tokens": 61000, "cost": 0.12 }
+      {
+        "date": "2026-06-20",
+        "tokens": 92000,
+        "cost": 0.18
+      },
+      {
+        "date": "2026-06-21",
+        "tokens": 105000,
+        "cost": 0.21
+      },
+      {
+        "date": "2026-06-22",
+        "tokens": 88000,
+        "cost": 0.17
+      },
+      {
+        "date": "2026-06-23",
+        "tokens": 112000,
+        "cost": 0.22
+      },
+      {
+        "date": "2026-06-24",
+        "tokens": 96000,
+        "cost": 0.19
+      },
+      {
+        "date": "2026-06-25",
+        "tokens": 130000,
+        "cost": 0.26
+      },
+      {
+        "date": "2026-06-26",
+        "tokens": 180000,
+        "cost": 0.35
+      },
+      {
+        "date": "2026-06-27",
+        "tokens": 145000,
+        "cost": 0.29
+      },
+      {
+        "date": "2026-06-28",
+        "tokens": 99000,
+        "cost": 0.2
+      },
+      {
+        "date": "2026-06-29",
+        "tokens": 121000,
+        "cost": 0.24
+      },
+      {
+        "date": "2026-06-30",
+        "tokens": 108000,
+        "cost": 0.22
+      },
+      {
+        "date": "2026-07-01",
+        "tokens": 142000,
+        "cost": 0.28
+      },
+      {
+        "date": "2026-07-02",
+        "tokens": 135000,
+        "cost": 0.27
+      },
+      {
+        "date": "2026-07-03",
+        "tokens": 61000,
+        "cost": 0.12
+      }
     ]
   },
   "agents": [
     {
       "name": "moo",
-      "emoji": "🐮",
+      "emoji": "\ud83d\udc2e",
       "role": "Orchestrator",
       "status": "active",
       "last_active": "2026-07-02T22:30:00Z",
@@ -259,7 +346,7 @@
     },
     {
       "name": "veles",
-      "emoji": "🐍",
+      "emoji": "\ud83d\udc0d",
       "role": "Research",
       "status": "active",
       "last_active": "2026-07-02T20:00:00Z",
@@ -268,7 +355,7 @@
     },
     {
       "name": "cmok",
-      "emoji": "🐉",
+      "emoji": "\ud83d\udc09",
       "role": "Build",
       "status": "busy",
       "last_active": "2026-07-02T23:30:00Z",
@@ -277,7 +364,7 @@
     },
     {
       "name": "bagnik",
-      "emoji": "🚨",
+      "emoji": "\ud83d\udea8",
       "role": "QA",
       "status": "active",
       "last_active": "2026-07-02T21:00:00Z",
@@ -286,7 +373,7 @@
     },
     {
       "name": "zlydni",
-      "emoji": "🏚️",
+      "emoji": "\ud83c\udfda\ufe0f",
       "role": "Commit",
       "status": "idle",
       "last_active": "2026-07-02T10:00:00Z",
@@ -295,7 +382,7 @@
     },
     {
       "name": "mokash",
-      "emoji": "🧶",
+      "emoji": "\ud83e\uddf6",
       "role": "Docs",
       "status": "active",
       "last_active": "2026-07-02T23:50:00Z",

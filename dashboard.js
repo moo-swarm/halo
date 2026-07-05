@@ -154,13 +154,15 @@
       var lastUpdate = p.last_updated ? relativeTime(p.last_updated + 'T00:00:00Z') : '—';
       var stageLabel = p.pipeline_stage || '—';
       var stageClass = getStageClass(p.pipeline_stage);
-      var stars = p.stars > 0 ? '<span class="project-stars">★ ' + p.stars + '</span>' : '';
+      var specsLabel = p.specs && p.specs.total > 0
+        ? '<span class="project-specs" title="' + p.specs.active + ' active, ' + p.specs.total + ' total specs">' + p.specs.active + '&#47;' + p.specs.total + ' specs</span>'
+        : '';
       var repoLink = p.repo_url
         ? '<a href="' + escapeHtml(p.repo_url) + '" target="_blank" rel="noopener">' + escapeHtml(p.name) + '</a>'
         : escapeHtml(p.name);
 
       return '<tr>' +
-        '<td data-label="Project"><span class="project-name">' + repoLink + ' ' + stars + '</span></td>' +
+        '<td data-label="Project"><span class="project-name">' + repoLink + ' ' + specsLabel + '</span></td>' +
         '<td data-label="Status"><span class="health-cell"><span class="status-dot ' + health.color + '"></span><span class="health-label">' + escapeHtml(health.label) + '</span></span></td>' +
         '<td data-label="Last Update">' + escapeHtml(lastUpdate) + '</td>' +
         '<td data-label="Stage"><span class="status-tag ' + stageClass + '">' + escapeHtml(stageLabel) + '</span></td>' +
