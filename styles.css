@@ -1,7 +1,7 @@
 /* ============================================================
    Halo Dashboard — styles.css
    All CSS for the Moo Swarm live status dashboard.
-   Three-layer theming: :root → [color-mode="dark"] → prefers-color-scheme
+   Theme auto-follows system/Telegram preference via @media prefers-color-scheme
    ============================================================ */
 
 /* ---------- Layer 1: Default (Light) ---------- */
@@ -35,33 +35,9 @@
   --transition-theme: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* ---------- Layer 2: Dark ---------- */
-[color-mode="dark"] {
-  --color-bg: #0f172a;
-  --color-surface: #1e293b;
-  --color-surface-elevated: #334155;
-  --color-border: #334155;
-  --color-text-primary: #f1f5f9;
-  --color-text-secondary: #94a3b8;
-  --color-text-muted: #64748b;
-  --color-accent: #60a5fa;
-  --color-accent-hover: #93c5fd;
-  --color-success: #22c55e;
-  --color-warning: #eab308;
-  --color-danger: #ef4444;
-  --color-running: #60a5fa;
-  --color-idle: #64748b;
-  --color-skeleton: #334155;
-  --color-skeleton-shine: #475569;
-  --color-chart-grid: #334155;
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
-  --shadow-md: 0 4px 6px rgba(0,0,0,0.4);
-  --shadow-hover: 0 4px 12px rgba(0,0,0,0.5);
-}
-
-/* ---------- Layer 3: System Preference (fallback) ---------- */
+/* ---------- Layer 2: Dark (auto-follows system/Telegram theme) ---------- */
 @media (prefers-color-scheme: dark) {
-  :root:not([color-mode="light"]) {
+  :root {
     --color-bg: #0f172a;
     --color-surface: #1e293b;
     --color-surface-elevated: #334155;
@@ -193,30 +169,8 @@ header { grid-area: header; }
 .dot-sm.grey   { background: var(--color-idle); }
 .dot-sm.blue   { background: var(--color-running); }
 
-/* Theme Toggle */
-.theme-toggle {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  width: 44px; height: 44px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  transition: background 0.2s, var(--transition-theme);
-  min-width: 44px;
-  min-height: 44px;
-}
-.theme-toggle:hover { background: var(--color-surface-elevated); }
-.theme-toggle .sun-icon,
-.theme-toggle .moon-icon { width: 20px; height: 20px; }
-[color-mode="dark"] .theme-toggle .sun-icon { display: none; }
-[color-mode="dark"] .theme-toggle .moon-icon { display: block; }
-[color-mode="light"] .theme-toggle .sun-icon { display: block; }
-[color-mode="light"] .theme-toggle .moon-icon { display: none; }
-[color-mode="dark"] .theme-toggle svg.moon-icon { color: #facc15; }
-[color-mode="light"] .theme-toggle svg.sun-icon { color: #f59e0b; }
+
+
 
 /* GitHub Link */
 .gh-link { color: var(--color-text-secondary); text-decoration: none; font-size: 0.85rem; }
@@ -306,13 +260,15 @@ tr:last-child td { border-bottom: none; }
 .status-tag.fail   { background: #fee2e2; color: #991b1b; }
 .status-tag.running{ background: #dbeafe; color: #1e40af; }
 .status-tag.idle   { background: #f1f5f9; color: #475569; }
-[color-mode="dark"] .status-tag.active  { background: rgba(34,197,94,0.2); color: #4ade80; }
-[color-mode="dark"] .status-tag.stalled{ background: rgba(234,179,8,0.2); color: #facc15; }
-[color-mode="dark"] .status-tag.dormant{ background: rgba(239,68,68,0.2); color: #f87171; }
-[color-mode="dark"] .status-tag.success{ background: rgba(34,197,94,0.2); color: #4ade80; }
-[color-mode="dark"] .status-tag.fail   { background: rgba(239,68,68,0.2); color: #f87171; }
-[color-mode="dark"] .status-tag.running{ background: rgba(96,165,250,0.2); color: #93c5fd; }
-[color-mode="dark"] .status-tag.idle   { background: rgba(100,116,139,0.2); color: #94a3b8; }
+@media (prefers-color-scheme: dark) {
+  .status-tag.active  { background: rgba(34,197,94,0.2); color: #4ade80; }
+  .status-tag.stalled{ background: rgba(234,179,8,0.2); color: #facc15; }
+  .status-tag.dormant{ background: rgba(239,68,68,0.2); color: #f87171; }
+  .status-tag.success{ background: rgba(34,197,94,0.2); color: #4ade80; }
+  .status-tag.fail   { background: rgba(239,68,68,0.2); color: #f87171; }
+  .status-tag.running{ background: rgba(96,165,250,0.2); color: #93c5fd; }
+  .status-tag.idle   { background: rgba(100,116,139,0.2); color: #94a3b8; }
+}
 
 /* ============================================================
    Pipeline Status
@@ -396,12 +352,14 @@ tr:last-child td { border-bottom: none; }
 .label.ux           { background: #f3e8ff; color: #6b21a8; }
 .label.logging      { background: #fef9c3; color: #854d0e; }
 .label.performance  { background: #ede9fe; color: #5b21b6; }
-[color-mode="dark"] .label.bug          { background: rgba(239,68,68,0.2); color: #fca5a5; }
-[color-mode="dark"] .label.enhancement  { background: rgba(96,165,250,0.2); color: #93c5fd; }
-[color-mode="dark"] .label.docs         { background: rgba(74,222,128,0.2); color: #86efac; }
-[color-mode="dark"] .label.ux           { background: rgba(196,181,253,0.2); color: #c4b5fd; }
-[color-mode="dark"] .label.logging      { background: rgba(250,204,21,0.2); color: #fde047; }
-[color-mode="dark"] .label.performance  { background: rgba(167,139,250,0.2); color: #a78bfa; }
+@media (prefers-color-scheme: dark) {
+  .label.bug          { background: rgba(239,68,68,0.2); color: #fca5a5; }
+  .label.enhancement  { background: rgba(96,165,250,0.2); color: #93c5fd; }
+  .label.docs         { background: rgba(74,222,128,0.2); color: #86efac; }
+  .label.ux           { background: rgba(196,181,253,0.2); color: #c4b5fd; }
+  .label.logging      { background: rgba(250,204,21,0.2); color: #fde047; }
+  .label.performance  { background: rgba(167,139,250,0.2); color: #a78bfa; }
+}
 
 /* ============================================================
    Spending & Usage
@@ -483,15 +441,17 @@ tr:last-child td { border-bottom: none; }
   border-radius: var(--radius-md);
   background: #fef2f2;
 }
-[color-mode="dark"] .error-state {
-  border-color: rgba(239,68,68,0.3);
-  background: rgba(239,68,68,0.1);
-}
+@media (prefers-color-scheme: dark) {
+  .error-state {
+    border-color: rgba(239,68,68,0.3);
+    background: rgba(239,68,68,0.1);
+  }
 .error-state .error-icon { font-size: 1.5rem; }
 .error-state .error-msg { color: #991b1b; font-size: 0.85rem; font-weight: 500; }
-[color-mode="dark"] .error-state .error-msg { color: #fca5a5; }
+  .error-state .error-msg { color: #fca5a5; }
 .error-state .error-sub { color: #b91c1c; font-size: 0.7rem; margin-top: 0.25rem; }
-[color-mode="dark"] .error-state .error-sub { color: #f87171; }
+  .error-state .error-sub { color: #f87171; }
+}
 
 .data-pending {
   border: 1px dashed var(--color-border);
@@ -512,8 +472,10 @@ tr:last-child td { border-bottom: none; }
   border-radius: 999px;
   margin-left: 0.3rem;
 }
-[color-mode="dark"] .stale-badge {
-  background: rgba(239,68,68,0.2);
+@media (prefers-color-scheme: dark) {
+  .stale-badge {
+    background: rgba(239,68,68,0.2);
+  }
 }
 
 /* ============================================================
@@ -583,16 +545,20 @@ tr:last-child td { border-bottom: none; }
   gap: 1rem;
   flex-wrap: wrap;
 }
-[color-mode="dark"] .page-error-banner {
-  background: rgba(239,68,68,0.1);
-  border-color: rgba(239,68,68,0.3);
+@media (prefers-color-scheme: dark) {
+  .page-error-banner {
+    background: rgba(239,68,68,0.1);
+    border-color: rgba(239,68,68,0.3);
+  }
 }
 .page-error-banner .error-text {
   color: #991b1b;
   font-size: 0.9rem;
   font-weight: 500;
 }
-[color-mode="dark"] .page-error-banner .error-text { color: #fca5a5; }
+@media (prefers-color-scheme: dark) {
+  .page-error-banner .error-text { color: #fca5a5; }
+}
 .page-error-banner .retry-btn {
   padding: 0.4rem 1rem;
   background: #ef4444;
@@ -662,7 +628,7 @@ footer nav { display: flex; gap: 1rem; }
   }
   .halo-header h1 { font-size: 1.25rem; }
   .header-right { width: 100%; justify-content: flex-end; }
-  .theme-toggle { width: 38px; height: 38px; }
+
   section { padding: 1rem; }
 
   /* Tables → stacked card rows */
