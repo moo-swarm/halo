@@ -10,11 +10,32 @@
   <meta property="og:type" content="website">
   <title>Halo — Moo Swarm Status</title>
 
-  <!-- FOUC Prevention (runs before CSS) -->
+  <!-- FOUC Prevention + Telegram theme injection (runs before CSS) -->
   <script>
-    // Theme follows system/Telegram preference via CSS @media prefers-color-scheme
-    // No manual toggle needed
+    // Detect Telegram Mini App context
+    var tg = window.Telegram && window.Telegram.WebApp;
+    if (tg) {
+      // Inject Telegram themeParams as CSS vars on :root
+      var tp = tg.themeParams;
+      if (tp) {
+        var root = document.documentElement;
+        root.style.setProperty('--tg-bg', tp.bg_color || '');
+        root.style.setProperty('--tg-secondary-bg', tp.secondary_bg_color || '');
+        root.style.setProperty('--tg-text', tp.text_color || '');
+        root.style.setProperty('--tg-hint', tp.hint_color || '');
+        root.style.setProperty('--tg-link', tp.link_color || '');
+        root.style.setProperty('--tg-button', tp.button_color || '');
+        root.style.setProperty('--tg-button-text', tp.button_text_color || '');
+        // Force dark class if Telegram is in dark mode
+        if (tg.colorScheme === 'dark') {
+          root.classList.add('tg-dark');
+        }
+      }
+    }
   </script>
+
+  <!-- Telegram WebApp SDK (sync — must be in head for Mini App) -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <!-- Resource hints -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
