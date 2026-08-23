@@ -86,6 +86,24 @@
   var REFRESH_INTERVAL = 3600;
   var FRESHNESS_UPDATE_MS = 10000;
   var DATA_URL = 'data/swarm.json';
+  /* Per-section staleness threshold (minutes) — mirrors the exporter's
+   * honesty contract: a section older than this, or listed in
+   * source_errors, gets its own marker chip instead of silently reusing
+   * last-good data. */
+  var STALE_MINUTES_DASH = 120;
+
+  /* Dashboard section id ← swarm.json stamp keys that feed it.
+   * spending-usage stays intentionally unmapped: it is seeded data pending
+   * privacy decision F2 and must not pretend to be fresh. Absent maps in
+   * the JSON ⇒ zero DOM writes ⇒ byte-identical behaviour with old files. */
+  var SECTION_SOURCES = {
+    'active-projects': ['projects'],
+    'pipeline-status': ['pipeline'],
+    'cron-jobs':       ['cron_jobs'],
+    'issues-prs':      ['issues', 'prs'],
+    'agent-health':    ['agents'],
+    'agent-budget':    ['agents']
+  };
   var filteredIssues = [];
   var filteredPrs = [];
 
@@ -139,6 +157,7 @@
     renderSpending(data.spending, isStale);
     renderAgentBudget(data.agents || []);
     renderAgents(data.agents || []);
+    applySectionStaleness(data);
   }
 
   /* ==========================================================
@@ -186,6 +205,58 @@
     } else {
       if (staleLabel) staleLabel.remove();
     }
+  }
+
+  /* ==========================================================
+   * 3b. Per-section staleness markers
+   * ========================================================== */
+  /* A section is stale when any stamp feeding it is older than
+   * STALE_MINUTES_DASH or when the exporter recorded a source error for it.
+   * The chip is created lazily in the section header and removed again once
+   * fresh — sections keep rendering their (possibly old) data either way. */
+  function sectionIsStale(sectionId, stamps, errors) {
+    return SECTION_SOURCES[sectionId].some(function (key) {
+      if (errors[key]) return true;
+      var then = new Date(stamps[key]).getTime();
+      if (isNaN(then)) return false; // no/unparsable stamp: leave to global badge
+      return Date.now() - then > STALE_MINUTES_DASH * 60000;
+    });
+  }
+
+  function applySectionStaleness(data) {
+    var stamps = data.sections_updated_at || {};
+    var errors = data.source_errors || {};
+
+    Object.keys(SECTION_SOURCES).forEach(function (sectionId) {
+      var section = document.getElementById(sectionId);
+      if (!section) return;
+      var header = section.querySelector('.section-header') || section;
+      var existing = header.querySelector ? header.querySelector('.section-stale') : null;
+
+      if (!sectionIsStale(sectionId, stamps, errors)) {
+        if (existing) existing.remove();
+        return;
+      }
+
+      var erroredKeys = SECTION_SOURCES[sectionId].filter(function (key) {
+        return !!errors[key];
+      });
+      var title = SECTION_SOURCES[sectionId].map(function (key) {
+        return errors[key]
+          ? key + ': source failed at ' + errors[key].at
+          : key + ': last good ' + (stamps[key] || 'unknown');
+      }).join('; ');
+
+      var chip = existing;
+      if (!chip) {
+        chip = document.createElement('span');
+        chip.className = 'section-stale';
+        header.appendChild(chip);
+      }
+      chip.textContent = erroredKeys.length ? 'source failed' : 'stale';
+      chip.className = 'section-stale' + (erroredKeys.length ? ' source-error' : '');
+      chip.title = title;
+    });
   }
 
   /* ==========================================================
