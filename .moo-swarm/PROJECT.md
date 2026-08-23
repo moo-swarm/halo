@@ -8,13 +8,13 @@
 
 - **Location:** `github.com/moo-swarm/halo`
 - **Stack:** Vanilla HTML5 + CSS3 (Tailwind via CDN or plain CSS) + JavaScript (Chart.js for charts), GitHub Actions for data fetching
-- **Run / build:** `npm run build` (builds static site to `docs/` or root for GitHub Pages); or pure static — open `index.html` locally
+- **Run / build:** no build step — pure static; open `index.html` locally or serve the repo root on GitHub Pages
 
 ## Pipeline config
 
-- **Test command:** `npm run test:html` (validate HTML structure) or `npx htmlhint index.html`
+- **Test command:** `npm test` (= `node --test tests/`, runtime smoke suite) plus exporter unit tests via `python3 -m unittest discover -s tests`; swarm-root aggregate: `tests/run.sh halo`
 - **Version files:** none (static site — no version bumps)
-- **Lint / format:** `npx prettier --check .` or omit for pure static
+- **Lint / format:** CI runs `node --check` on all JS and `python3 -m py_compile` on all Python
 
 ## Notes
 
