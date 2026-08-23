@@ -34,7 +34,24 @@ function makeFakeElement(id) {
     getAttribute: () => null,
     addEventListener() {},
     appendChild(child) { this.children.push(child); },
-    querySelector: () => null,
+    // Minimal class-selector resolution over explicitly appended children —
+    // index.html markup is NOT parsed out of innerHTML strings by this mock,
+    // so only appendChild-built structure is visible. Compound "a, b" lists
+    // match either class; everything else stays null like a miss.
+    querySelector(selector) {
+      const parts = String(selector).split(',').map((s) => s.trim());
+      return (
+        this.children.find((c) =>
+          parts.some((p) => {
+            const classes = (String(p).match(/\.([\w-]+)/g) || []).map((m) => m.slice(1));
+            return (
+              classes.length > 0 &&
+              classes.every((k) => String(c.className).includes(k))
+            );
+          })
+        ) || null
+      );
+    },
     querySelectorAll: () => [],
     getContext: () => ({}) // Chart.js canvas
   };
@@ -163,4 +180,90 @@ test('mermaid styles differ between light and dark color schemes', async () => {
   const lightDef = light.state.mermaidDefinitions[0];
   const darkDef = dark.state.mermaidDefinitions[0];
   assert.notEqual(lightDef, darkDef, 'dark scheme produces different classDef colors');
+});
+
+/* ── Per-section staleness markers (live-exporter AC12/AC13) ─────────── */
+
+const SECTION_IDS = [
+  'active-projects', 'pipeline-status', 'cron-jobs',
+  'issues-prs', 'agent-health', 'agent-budget'
+];
+
+function chipsFor(elements, sectionId) {
+  const el = elements.get(sectionId);
+  if (!el) return [];
+  return el.children.filter((c) => String(c.className).includes('section-stale'));
+}
+
+async function boot(source, fixture) {
+  const { sandbox, elements, state } = buildSandbox(fixture);
+  vm.runInNewContext(source, sandbox, { filename: 'dashboard.js' });
+  await state.domContentLoadedHandler();
+  await flushMicrotasks();
+  return { sandbox, elements, state };
+}
+
+test('stale stamps + one source_errors entry mark exactly those sections', async () => {
+  const source = fs.readFileSync(path.join(ROOT, 'dashboard.js'), 'utf8');
+  const base = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'swarm.json'), 'utf8'));
+
+  const fresh = new Date(Date.now() - 5 * 60000).toISOString();   // 5 min old
+  const old = new Date(Date.now() - 3 * 3600000).toISOString();   // 3 h old
+  const fixture = JSON.parse(JSON.stringify(base));
+  fixture.sections_updated_at = {
+    projects: fresh, pipeline: fresh, cron_jobs: old,
+    issues: fresh, prs: fresh, agents: fresh
+  };
+  fixture.source_errors = { pipeline: { error: 'boom', at: fresh } };
+
+  const { elements } = await boot(source, fixture);
+
+  // cron-jobs: stamp >120 min. pipeline-status: listed in source_errors.
+  assert.equal(chipsFor(elements, 'cron-jobs').length, 1, 'cron chip shown');
+  assert.equal(chipsFor(elements, 'pipeline-status').length, 1, 'pipeline chip shown');
+  assert.equal(
+    chipsFor(elements, 'pipeline-status')[0].textContent, 'source failed',
+    'error-backed chip says why'
+  );
+  // Everything else is fresh: no markers at all.
+  for (const id of ['active-projects', 'issues-prs', 'agent-health', 'agent-budget']) {
+    assert.equal(chipsFor(elements, id).length, 0, `${id} stays clean`);
+  }
+});
+
+test('fixture without staleness maps renders identically — no markers, badge per age rules', async () => {
+  const source = fs.readFileSync(path.join(ROOT, 'dashboard.js'), 'utf8');
+  const fixture = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'swarm.json'), 'utf8'));
+  // The hourly auto-export cron setdefaults both maps into the tracked
+  // data/swarm.json, so asserting their absence would race live state. Strip
+  // them instead: this always simulates an old-format file, and
+  // applySectionStaleness treats absent and empty maps identically.
+  delete fixture.sections_updated_at;
+  delete fixture.source_errors;
+
+  // Pre-seed the badge with the real index.html structure (lines 75-78) so
+  // updateFreshness's querySelector paths run against the mock DOM.
+  const { sandbox, elements, state } = buildSandbox(fixture);
+  const badge = sandbox.document.getElementById('freshness-badge');
+  const dot = sandbox.document.createElement('span');
+  dot.className = 'status-dot green';
+  const relSpan = sandbox.document.createElement('span');
+  relSpan.className = 'relative-time';
+  badge.appendChild(dot);
+  badge.appendChild(relSpan);
+
+  vm.runInNewContext(source, sandbox, { filename: 'dashboard.js' });
+  await state.domContentLoadedHandler();
+  await flushMicrotasks();
+
+  for (const id of SECTION_IDS) {
+    assert.equal(chipsFor(elements, id).length, 0, `${id} has no marker`);
+  }
+
+  // Global badge still renders and follows the documented thresholds
+  // (green <60 min, amber ≤120, red + (stale) beyond).
+  assert.ok(relSpan.textContent.startsWith('updated '), 'badge shows relative time');
+  const minsAgo = (Date.now() - new Date(fixture.updated_at).getTime()) / 60000;
+  const expected = minsAgo > 120 ? 'red' : minsAgo > 60 ? 'amber' : 'green';
+  assert.equal(dot.className, `status-dot ${expected}`, 'dot colour matches age');
 });
