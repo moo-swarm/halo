@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "updated_at": "2026-08-23T22:19:24Z",
+  "updated_at": "2026-08-23T23:19:24Z",
   "refresh_interval": 3600,
   "projects": [
     {
@@ -22,7 +22,7 @@
       },
       "specs": {
         "total": 6,
-        "active": 5,
+        "active": 2,
         "latest": "2026-08-23"
       }
     },
@@ -121,187 +121,67 @@
   ],
   "pipeline": [
     {
-      "agent": "veles",
-      "emoji": "\ud83d\udc0d",
-      "role": "Research",
-      "status": "pass",
-      "last_run": "2026-07-02T22:00:00Z",
-      "badge_url": "https://img.shields.io/badge/passing-green",
-      "workflow_url": "https://github.com/moo-swarm/aeroplasty/actions"
-    },
-    {
-      "agent": "moo",
-      "emoji": "\ud83d\udc2e",
-      "role": "Route",
-      "status": "pass",
-      "last_run": "2026-07-02T23:00:00Z",
-      "badge_url": "https://img.shields.io/badge/passing-green",
-      "workflow_url": "https://github.com/moo-swarm/aeroplasty/actions"
-    },
-    {
-      "agent": "cmok",
-      "emoji": "\ud83d\udc09",
-      "role": "Build",
-      "status": "running",
-      "last_run": "2026-07-02T23:30:00Z",
-      "badge_url": "https://img.shields.io/badge/running-blue",
-      "workflow_url": "https://github.com/moo-swarm/halo/actions"
-    },
-    {
       "agent": "bagnik",
       "emoji": "\ud83d\udea8",
       "role": "QA",
-      "status": "pass",
-      "last_run": "2026-07-02T21:00:00Z",
-      "badge_url": "https://img.shields.io/badge/passing-green",
-      "workflow_url": "https://github.com/moo-swarm/aeroplasty/actions"
+      "status": "running",
+      "last_run": "2026-08-23T00:36:00Z"
     },
     {
       "agent": "zlydni",
-      "emoji": "\ud83c\udfda\ufe0f",
+      "emoji": "\ud83c\udfe6\ufe0f",
       "role": "Commit",
-      "status": "idle",
-      "last_run": null,
-      "badge_url": "https://img.shields.io/badge/idle-grey",
-      "workflow_url": "https://github.com/moo-swarm/halo/actions"
+      "status": "pass",
+      "last_run": "2026-08-23T21:51:00Z"
     }
   ],
-  "issues": [
-    {
-      "project": "aeroplasty",
-      "number": 3,
-      "title": "Pipeline visualisation breaks on dark mode",
-      "labels": [
-        "bug",
-        "ui"
-      ],
-      "created_at": "2026-06-30T15:30:00Z",
-      "status": "open",
-      "url": "https://github.com/moo-swarm/aeroplasty/issues/3"
-    },
-    {
-      "project": "halo",
-      "number": 8,
-      "title": "Add dark mode to pipeline diagram",
-      "labels": [
-        "enhancement",
-        "ux"
-      ],
-      "created_at": "2026-07-01T10:00:00Z",
-      "status": "open",
-      "url": "https://github.com/moo-swarm/halo/issues/8"
-    },
-    {
-      "project": "dream-routine",
-      "number": 31,
-      "title": "Dream routine logs too verbose",
-      "labels": [
-        "enhancement",
-        "logging"
-      ],
-      "created_at": "2026-06-28T08:15:00Z",
-      "status": "open",
-      "url": "https://github.com/moo-swarm/dream-routine/issues/31"
-    },
-    {
-      "project": "halo",
-      "number": 3,
-      "title": "README needs architecture diagram",
-      "labels": [
-        "docs"
-      ],
-      "created_at": "2026-06-26T14:00:00Z",
-      "status": "open",
-      "url": "https://github.com/moo-swarm/halo/issues/3"
-    },
-    {
-      "project": "aeroplasty",
-      "number": 15,
-      "title": "Export script fails on encoding",
-      "labels": [
-        "bug"
-      ],
-      "created_at": "2026-07-01T09:30:00Z",
-      "status": "open",
-      "url": "https://github.com/moo-swarm/aeroplasty/issues/15"
-    },
-    {
-      "project": "telegram-connector",
-      "number": 7,
-      "title": "Rate limiting on long polling",
-      "labels": [
-        "bug",
-        "performance"
-      ],
-      "created_at": "2026-06-29T11:00:00Z",
-      "status": "open",
-      "url": "https://github.com/moo-swarm/telegram-connector/issues/7"
-    }
-  ],
-  "prs": [
-    {
-      "project": "halo",
-      "number": 9,
-      "title": "Section states prototype",
-      "author": "cmok",
-      "status": "draft",
-      "created_at": "2026-07-02T20:00:00Z",
-      "url": "https://github.com/moo-swarm/halo/pull/9"
-    },
-    {
-      "project": "aeroplasty",
-      "number": 11,
-      "title": "Fix encoding in export script",
-      "author": "veles",
-      "status": "open",
-      "created_at": "2026-07-01T15:00:00Z",
-      "url": "https://github.com/moo-swarm/aeroplasty/pull/11"
-    },
-    {
-      "project": "dream-routine",
-      "number": 4,
-      "title": "Reduce log verbosity in dream routine",
-      "author": "cmok",
-      "status": "open",
-      "created_at": "2026-06-29T12:00:00Z",
-      "url": "https://github.com/moo-swarm/dream-routine/pull/4"
-    }
-  ],
+  "issues": [],
+  "prs": [],
   "cron_jobs": [
     {
-      "name": "self-improvement-dispatch",
-      "schedule": "0 9 * * *",
-      "schedule_human": "09:00 daily",
-      "last_run": "2026-07-02T09:00:00Z",
-      "status": "ok"
+      "name": "brain-routine-pull",
+      "schedule_human": "every 30m",
+      "schedule": 1800000,
+      "last_run": "2026-08-23T22:58:07Z",
+      "status": "ok",
+      "next_run": "2026-08-23T23:28:07Z",
+      "consecutive_errors": 0
     },
     {
-      "name": "dream-routine",
-      "schedule": "0 3 * * *",
-      "schedule_human": "03:00 daily",
-      "last_run": "2026-07-02T03:00:00Z",
-      "status": "ok"
+      "name": "halo-hourly-export",
+      "schedule_human": "every 1h",
+      "schedule": 3600000,
+      "last_run": "2026-08-23T22:19:24Z",
+      "status": "ok",
+      "next_run": "2026-08-23T23:19:24Z",
+      "consecutive_errors": 0
+    },
+    {
+      "name": "pipeline-state-monitor",
+      "schedule_human": "every 1h",
+      "schedule": 3600000,
+      "last_run": "2026-08-23T22:28:10Z",
+      "status": "ok",
+      "next_run": "2026-08-23T23:28:10Z",
+      "consecutive_errors": 0
     },
     {
       "name": "qmd-weekly-digest",
+      "schedule_human": "0 2 * * 0 (Europe/Madrid)",
       "schedule": "0 2 * * 0",
-      "schedule_human": "Sun 02:00",
-      "last_run": "2026-06-29T02:00:00Z",
-      "status": "ok"
+      "last_run": "2026-08-23T00:30:14Z",
+      "status": "ok",
+      "next_run": "2026-08-30T00:00:00Z",
+      "consecutive_errors": 0
     },
     {
-      "name": "pipeline-monitor",
-      "schedule": "0 * * * *",
-      "schedule_human": "hourly",
-      "last_run": "2026-07-02T23:00:00Z",
-      "status": "ok"
-    },
-    {
-      "name": "halo-data-export",
-      "schedule": "0 * * * *",
-      "schedule_human": "hourly",
-      "last_run": "2026-07-03T00:00:00Z",
-      "status": "ok"
+      "name": "veles-autoresearch",
+      "schedule_human": "0 5 * * * (Europe/Madrid)",
+      "schedule": "0 5 * * *",
+      "last_run": "2026-08-23T03:00:00Z",
+      "status": "fail",
+      "next_run": "2026-08-24T03:00:00Z",
+      "consecutive_errors": 10
     }
   ],
   "spending": {
@@ -492,106 +372,148 @@
   },
   "agents": [
     {
-      "name": "moo",
-      "emoji": "\ud83d\udc2e",
-      "role": "Orchestrator",
-      "status": "active",
-      "last_active": "2026-07-02T22:30:00Z",
-      "sessions_24h": 12,
-      "tokens_24h": 45000,
+      "name": "bagnik",
+      "emoji": "\ud83d\udea8",
+      "role": "QA",
+      "last_active": "2026-08-23T03:16:59Z",
+      "sessions_24h": 4,
+      "status": "idle",
+      "tokens_24h": null,
       "budget_daily": {
-        "tokens": 42000,
-        "cost": 0.09,
-        "pricing_configured": true,
+        "tokens": 0,
+        "cost": 0.0,
+        "pricing_configured": false,
         "limit_tokens": 200000,
         "limit_cost": 0.6
-      },
-      "pipeline_owner_agent": "moo"
-    },
-    {
-      "name": "veles",
-      "emoji": "\ud83d\udc0d",
-      "role": "Research",
-      "status": "active",
-      "last_active": "2026-07-02T20:00:00Z",
-      "sessions_24h": 8,
-      "tokens_24h": 32000,
-      "budget_daily": {
-        "tokens": 56000,
-        "cost": 0.13,
-        "pricing_configured": true,
-        "limit_tokens": 200000,
-        "limit_cost": 0.6
-      },
-      "pipeline_owner_agent": "veles"
+      }
     },
     {
       "name": "cmok",
       "emoji": "\ud83d\udc09",
       "role": "Build",
-      "status": "busy",
-      "last_active": "2026-07-02T23:30:00Z",
-      "sessions_24h": 22,
-      "tokens_24h": 78000,
-      "budget_daily": {
-        "tokens": 84000,
-        "cost": 0.19,
-        "pricing_configured": true,
-        "limit_tokens": 200000,
-        "limit_cost": 0.6
-      },
-      "pipeline_owner_agent": "cmok"
-    },
-    {
-      "name": "bagnik",
-      "emoji": "\ud83d\udea8",
-      "role": "QA",
-      "status": "active",
-      "last_active": "2026-07-02T21:00:00Z",
-      "sessions_24h": 5,
-      "tokens_24h": 15000,
-      "budget_daily": {
-        "tokens": 18000,
-        "cost": 0.04,
-        "pricing_configured": true,
-        "limit_tokens": 200000,
-        "limit_cost": 0.6
-      },
-      "pipeline_owner_agent": "bagnik"
-    },
-    {
-      "name": "zlydni",
-      "emoji": "\ud83c\udfda\ufe0f",
-      "role": "Commit",
+      "last_active": "2026-08-23T01:52:46Z",
+      "sessions_24h": 4,
       "status": "idle",
-      "last_active": "2026-07-02T10:00:00Z",
-      "sessions_24h": 0,
-      "tokens_24h": 0,
+      "tokens_24h": null,
       "budget_daily": {
-        "tokens": 15000,
-        "cost": 0.03,
-        "pricing_configured": true,
+        "tokens": 0,
+        "cost": 0.0,
+        "pricing_configured": false,
         "limit_tokens": 200000,
         "limit_cost": 0.6
-      },
-      "pipeline_owner_agent": "zlydni"
+      }
+    },
+    {
+      "name": "damavik",
+      "emoji": "\ud83e\udd16",
+      "role": "agent",
+      "last_active": "2026-08-23T01:00:14Z",
+      "sessions_24h": 4,
+      "status": "idle",
+      "tokens_24h": null,
+      "budget_daily": {
+        "tokens": 0,
+        "cost": 0.0,
+        "pricing_configured": false,
+        "limit_tokens": 200000,
+        "limit_cost": 0.6
+      }
+    },
+    {
+      "name": "main",
+      "emoji": "\ud83e\udd16",
+      "role": "agent",
+      "last_active": "2026-06-30T12:31:49Z",
+      "sessions_24h": 0,
+      "status": "dormant",
+      "tokens_24h": null,
+      "budget_daily": {
+        "tokens": 0,
+        "cost": 0.0,
+        "pricing_configured": false,
+        "limit_tokens": 200000,
+        "limit_cost": 0.6
+      }
     },
     {
       "name": "mokash",
       "emoji": "\ud83e\uddf6",
       "role": "Docs",
-      "status": "active",
-      "last_active": "2026-07-02T23:50:00Z",
+      "last_active": "2026-08-23T14:29:39Z",
       "sessions_24h": 4,
-      "tokens_24h": 8500,
+      "status": "idle",
+      "tokens_24h": null,
       "budget_daily": {
-        "tokens": 30000,
-        "cost": 0.07,
-        "pricing_configured": true,
+        "tokens": 0,
+        "cost": 0.0,
+        "pricing_configured": false,
         "limit_tokens": 200000,
         "limit_cost": 0.6
-      },
-      "pipeline_owner_agent": "mokash"
+      }
+    },
+    {
+      "name": "moo",
+      "emoji": "\ud83d\udc02",
+      "role": "Orchestrator",
+      "last_active": "2026-08-23T22:52:34Z",
+      "sessions_24h": 16,
+      "status": "active",
+      "tokens_24h": null,
+      "budget_daily": {
+        "tokens": 0,
+        "cost": 0.0,
+        "pricing_configured": false,
+        "limit_tokens": 200000,
+        "limit_cost": 0.6
+      }
+    },
+    {
+      "name": "veles",
+      "emoji": "\ud83d\udc0d",
+      "role": "Research",
+      "last_active": "2026-08-23T00:34:21Z",
+      "sessions_24h": 5,
+      "status": "idle",
+      "tokens_24h": null,
+      "budget_daily": {
+        "tokens": 0,
+        "cost": 0.0,
+        "pricing_configured": false,
+        "limit_tokens": 200000,
+        "limit_cost": 0.6
+      }
+    },
+    {
+      "name": "yaga",
+      "emoji": "\ud83e\udd16",
+      "role": "agent",
+      "last_active": "2026-08-23T03:19:30Z",
+      "sessions_24h": 4,
+      "status": "idle",
+      "tokens_24h": null,
+      "budget_daily": {
+        "tokens": 0,
+        "cost": 0.0,
+        "pricing_configured": false,
+        "limit_tokens": 200000,
+        "limit_cost": 0.6
+      }
+    },
+    {
+      "name": "zlydni",
+      "emoji": "\ud83c\udfe6\ufe0f",
+      "role": "Commit",
+      "last_active": "2026-08-23T03:18:20Z",
+      "sessions_24h": 4,
+      "status": "idle",
+      "tokens_24h": null,
+      "budget_daily": {
+        "tokens": 0,
+        "cost": 0.0,
+        "pricing_configured": false,
+        "limit_tokens": 200000,
+        "limit_cost": 0.6
+      }
     }
   ],
   "meta": {
@@ -600,5 +522,14 @@
     "export_host": "lex-agent-swarm",
     "runtime_version": "24.18.0",
     "pipeline_owner_agent": "cmok"
-  }
+  },
+  "sections_updated_at": {
+    "issues": "2026-08-23T23:19:24Z",
+    "prs": "2026-08-23T23:19:24Z",
+    "projects": "2026-08-23T23:19:24Z",
+    "pipeline": "2026-08-23T23:19:24Z",
+    "cron_jobs": "2026-08-23T23:19:24Z",
+    "agents": "2026-08-23T23:19:24Z"
+  },
+  "source_errors": {}
 }
