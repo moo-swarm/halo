@@ -48,21 +48,6 @@
   --color-accent-hover: var(--tg-link, #93c5fd);
 }
 
-/* Only when Telegram SDK injected theme CSS vars */
-:root:has([style*="--tg-bg"]) {
-  --color-bg: var(--tg-bg);
-  --color-text-primary: var(--tg-text);
-  --color-text-secondary: var(--tg-hint);
-  --color-text-muted: var(--tg-hint);
-  --color-accent: var(--tg-button);
-  --color-accent-hover: var(--tg-link);
-}
-:root.tg-dark {
-  --color-surface: var(--tg-secondary-bg);
-  --color-surface-elevated: var(--tg-bg);
-  --color-border: var(--tg-hint);
-}
-
 /* ---------- Layer 2: Dark (auto-follows system/Telegram theme) ---------- */
 @media (prefers-color-scheme: dark) {
   :root:not(.tg-dark) {
@@ -111,17 +96,45 @@ img { max-width: 100%; height: auto; }
    ============================================================ */
 .site-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(12, 1fr);
   grid-template-areas:
-    "header   header   header"
-    "projects pipeline cron"
-    "issues   issues   issues"
-    "spending agents   agents"
-    "footer   footer   footer";
+    "header header header header header header header header header header header header"
+    "projects projects pipeline cron cron issues issues issues issues issues issues issues"
+    "spending spending spending budget budget budget budget agents agents agents agents"
+    "footer footer footer footer footer footer footer footer footer footer footer footer";
   gap: var(--gap);
   max-width: var(--container-max);
   margin: 0 auto;
   padding: var(--gap);
+}
+
+@media (max-width: 980px) {
+  .site-grid {
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-areas:
+      "header header header header header header"
+      "projects projects projects pipeline pipeline pipeline"
+      "cron cron cron issues issues issues"
+      "spending spending spending budget budget budget"
+      "agents agents agents agents agents agents"
+      "footer footer footer footer footer footer";
+  }
+}
+
+@media (max-width: 560px) {
+  .site-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "header"
+      "projects"
+      "pipeline"
+      "cron"
+      "issues"
+      "spending"
+      "budget"
+      "agents"
+      "footer";
+  }
 }
 
 /* ============================================================
@@ -175,11 +188,15 @@ header { grid-area: header; }
 
 /* Status Dot shared */
 .status-dot {
-  width: 8px; height: 8px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   display: inline-block;
   flex-shrink: 0;
   animation: pulse-opacity 2s ease-in-out infinite;
+}
+.status-dot {
+  box-shadow: 0 0 0 2px color-mix(in srgb, currentColor 15%, transparent);
 }
 @keyframes pulse-opacity {
   0%, 100% { opacity: 1; }
@@ -190,12 +207,48 @@ header { grid-area: header; }
 .status-dot.red    { background: var(--color-danger); }
 .status-dot.blue   { background: var(--color-running); }
 .status-dot.grey   { background: var(--color-idle); }
-.dot-sm { width: 6px; height: 6px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
-.dot-sm.green  { background: var(--color-success); }
-.dot-sm.amber  { background: var(--color-warning); }
-.dot-sm.red    { background: var(--color-danger); }
-.dot-sm.grey   { background: var(--color-idle); }
-.dot-sm.blue   { background: var(--color-running); }
+.dot-sm { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+.dot-sm.green,.dot-sm.amber,.dot-sm.red,.dot-sm.blue,.dot-sm.grey {
+  box-shadow: 0 0 0 1px color-mix(in srgb, currentColor 18%, transparent);
+}
+
+/* Toggle button */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.skip-link:focus {
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  width: auto;
+  height: auto;
+  padding: 0.4rem 0.7rem;
+  background: var(--color-accent);
+  color: #fff;
+  border-radius: var(--radius-md);
+  z-index: 1000;
+  text-decoration: none;
+  font-weight: 600;
+}
 
 
 
@@ -233,6 +286,7 @@ section {
 #cron-jobs       { grid-area: cron; }
 #issues-prs      { grid-area: issues; }
 #spending-usage  { grid-area: spending; }
+#agent-budget    { grid-area: budget; }
 #agent-health    { grid-area: agents; }
 
 /* ============================================================
@@ -298,6 +352,15 @@ tr:last-child td { border-bottom: none; }
   .status-tag.idle   { background: rgba(100,116,139,0.2); color: #94a3b8; }
 }
 
+/* Telegram dark overrides */
+:root.tg-dark .status-tag.active  { background: rgba(34,197,94,0.2); color: #4ade80; }
+:root.tg-dark .status-tag.stalled { background: rgba(234,179,8,0.2); color: #facc15; }
+:root.tg-dark .status-tag.dormant  { background: rgba(239,68,68,0.2); color: #f87171; }
+:root.tg-dark .status-tag.success  { background: rgba(34,197,94,0.2); color: #4ade80; }
+:root.tg-dark .status-tag.fail     { background: rgba(239,68,68,0.2); color: #f87171; }
+:root.tg-dark .status-tag.running  { background: rgba(96,165,250,0.2); color: #93c5fd; }
+:root.tg-dark .status-tag.idle     { background: rgba(100,116,139,0.2); color: #94a3b8; }
+
 /* ============================================================
    Pipeline Status
    ============================================================ */
@@ -354,6 +417,14 @@ tr:last-child td { border-bottom: none; }
   cursor: pointer;
 }
 .filter-bar .clear-filters:hover { background: var(--color-surface-elevated); }
+
+.project-budget { font-size: 0.8rem; color: var(--color-text-secondary); display: inline-flex; align-items: center; gap: 0.35rem; }
+.budget-pct { font-weight: 700; }
+.budget-pct.green { color: #16a34a; }
+.budget-pct.amber { color: #d97706; }
+.budget-pct.red { color: #dc2626; }
+
+.pipeline-owner { font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 0.15rem; }
 .sub-table { margin-top: 1rem; }
 .sub-table h3 { font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--color-text-secondary); }
 

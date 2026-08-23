@@ -9,37 +9,70 @@
   /* ==========================================================
    * 1. Config & Constants
    * ========================================================== */
-  var REFRESH_INTERVAL = 3600;
-  var FRESHNESS_UPDATE_MS = 10000;
-  var DATA_URL = 'data/swarm.json';
-
-  var MERMAID_STATUS_STYLES = {
-    pass:   { fill: '#dcfce7', stroke: '#22c55e', text: '#166534' },
-    fail:   { fill: '#fee2e2', stroke: '#ef4444', text: '#991b1b' },
-    running:{ fill: '#dbeafe', stroke: '#3b82f6', text: '#1e40af' },
-    idle:   { fill: '#f1f5f9', stroke: '#94a3b8', text: '#475569' }
+  /* ==========================================================
+   * 1. Schema + Version Control
+   * ========================================================== */
+  var SCHEMA = {
+    version: '2.0',
+    required: ['updated_at','projects','pipeline','issues','prs','cron_jobs','agents'],
+    sectionIds: [
+      'active-projects','pipeline-status','cron-jobs',
+      'issues-prs','spending-usage','agent-budget','agent-health'
+    ]
   };
 
-  var MERMAID_STATUS_STYLES_DARK = {
-    pass:   { fill: '#064e3b', stroke: '#22c55e', text: '#86efac' },
-    fail:   { fill: '#7f1d1d', stroke: '#ef4444', text: '#fca5a5' },
-    running:{ fill: '#1e3a5f', stroke: '#60a5fa', text: '#93c5fd' },
-    idle:   { fill: '#1e293b', stroke: '#64748b', text: '#94a3b8' }
+  var SCHEMA_MIGRATIONS = {
+    '1.0': {
+      patch: function(data) {
+        if (!data.agents) data.agents = [];
+        if (!data.spending) data.spending = { daily: [] };
+        data.projects = data.projects || [];
+        data.pipeline = data.pipeline || [];
+        data.issues = data.issues || [];
+        data.prs = data.prs || [];
+        data.cron_jobs = data.cron_jobs || [];
+        data.meta = data.meta || {};
+        if (!data.meta.version) data.meta.version = '1.0';
+        data.schema_version = '2.0';
+        data.projects.forEach(function(p) {
+          p.pipeline_stage = p.pipeline_stage || 'idle';
+          if (typeof p.open_issues === 'undefined') p.open_issues = 0;
+        });
+      }
+    }
   };
 
-  var SECTION_IDS = [
-    'active-projects', 'pipeline-status', 'cron-jobs',
-    'issues-prs', 'spending-usage', 'agent-health'
-  ];
+  function applySchemaMigrations(data) {
+    var current = (data.schema_version || data.meta && data.meta.version || '1.0').toString();
+    var sorted = Object.keys(SCHEMA_MIGRATIONS).sort(function(a,b){return a<b?-1:(a>b?1:0);});
+    sorted.forEach(function(ver) {
+      if (current < ver) {
+        SCHEMA_MIGRATIONS[ver].patch(data);
+        current = ver;
+      }
+    });
+    if (current !== SCHEMA.version) {
+      data.schema_version = SCHEMA.version;
+    }
+  }
 
   var EMPTY_MESSAGES = {
     'active-projects': { icon: '📋', msg: 'No active projects' },
     'pipeline-status': { icon: '🔀', msg: 'No pipeline stages configured' },
     'cron-jobs':       { icon: '⏰', msg: 'No periodic tasks configured' },
     'issues-prs':      { icon: '✅', msg: 'All clear — no open issues or PRs' },
-    'spending-usage':  { icon: '⏳', msg: 'Data pending — spending tracking coming soon' },
+    'agent-budget':    { icon: '🧮', msg: 'Budget data pending' },
+    'spending-usage':  { icon: '⏳', msg: 'Pending — spending data coming soon' },
     'agent-health':    { icon: '🤖', msg: 'No agent data available' }
   };
+
+  var REFRESH_INTERVAL = 3600;
+  var FRESHNESS_UPDATE_MS = 10000;
+  var DATA_URL = 'data/swarm.json';
+  var filteredIssues = [];
+  var filteredPrs = [];
+
+  var mergeSelectFilterSupport = true;
 
   var freshnessIntervalId = null;
   var cachedData = null;
@@ -57,22 +90,19 @@
         cachedData = data;
         renderFromData(data);
         removeErrorBanner();
-        onDataLoadComplete(true);
       })
       .catch(function (err) {
         console.error('Halo: Failed to load dashboard data:', err);
         if (cachedData) {
           renderFromData(cachedData, true);
-          onDataLoadComplete(false);
         } else {
           showErrorBanner();
-          onDataLoadComplete(false);
         }
       });
   }
 
   function renderFromData(data, isStale) {
-    SECTION_IDS.forEach(function (id) {
+    SCHEMA.sectionIds.forEach(function (id) {
       var section = document.getElementById(id);
       if (section) {
         var skel = section.querySelector('.skeleton-loader');
@@ -90,6 +120,7 @@
     renderCronJobs(data.cron_jobs || []);
     renderIssuesAndPRs(data.issues || [], data.prs || []);
     renderSpending(data.spending, isStale);
+    renderAgentBudget(data.agent_budgets || []);
     renderAgents(data.agents || []);
   }
 
@@ -164,17 +195,28 @@
         ? '<a href="' + escapeHtml(p.repo_url) + '" target="_blank" rel="noopener">' + escapeHtml(p.name) + '</a>'
         : escapeHtml(p.name);
 
+      var budget = p.budget_daily || {};
+      var usageHtml = '';
+      if (budget.limit_tokens) {
+        var pct = budget.limit_tokens ? Math.min(100, Math.round((budget.tokens || 0) / budget.limit_tokens * 100)) : null;
+        usageHtml = '<span class="project-budget" title="tokens/cost">' +
+          escapeHtml(formatNumber(budget.tokens || 0) + ' / ' + formatNumber(budget.limit_tokens) + ' tokens') +
+          (pct != null ? ' <span class="budget-pct ' + (pct > 85 ? 'red' : pct > 60 ? 'amber' : 'green') + '">' + pct + '%</span>' : '') +
+          '</span>';
+      }
+
       return '<tr>' +
         '<td data-label="Project"><span class="project-name">' + repoLink + ' ' + specsLabel + '</span></td>' +
         '<td data-label="Status"><span class="health-cell"><span class="status-dot ' + health.color + '"></span><span class="health-label">' + escapeHtml(health.label) + '</span></span></td>' +
         '<td data-label="Last Update">' + escapeHtml(lastUpdate) + '</td>' +
-        '<td data-label="Stage"><span class="status-tag ' + stageClass + '">' + escapeHtml(stageLabel) + '</span></td>' +
+        '<td data-label="Pipeline"><span class="status-tag ' + stageClass + '">' + escapeHtml(stageLabel) + '</span>' + (getOwnerAgent(p) ? '<div class="pipeline-owner">' + escapeHtml(getOwnerAgent(p)) + '</div>' : '') + '</td>' +
+        '<td data-label="Budget">' + usageHtml + '</td>' +
         '</tr>';
     }).join('');
 
     container.innerHTML =
       '<table>' +
-      '<thead><tr><th>Project</th><th>Status</th><th>Last Update</th><th>Pipeline</th></tr></thead>' +
+      '<thead><tr><th>Project</th><th>Status</th><th>Last Update</th><th>Pipeline</th><th>Owner</th><th>Budget</th></tr></thead>' +
       '<tbody>' + rows + '</tbody>' +
       '</table>';
   }
@@ -194,6 +236,10 @@
     if (stage === 'fail' || stage === 'failed') return 'fail';
     if (stage === 'running') return 'running';
     return 'idle';
+  }
+
+  function getOwnerAgent(project) {
+    return project && project.pipeline_owner_agent ? project.pipeline_owner_agent : '';
   }
 
   /* ==========================================================
@@ -417,7 +463,7 @@
     }
   }
 
-  function filterTableRows(project) {
+  function filterTableRows(project, label, status) {
     var rows = document.querySelectorAll('#issues-tbody tr, #prs-tbody tr');
     var visibleCount = 0;
     Array.from(rows).forEach(function (row) {
@@ -425,6 +471,19 @@
       if (project !== 'all') {
         var projCell = row.querySelector('.issue-project, .pr-project');
         if (projCell && projCell.textContent.trim() !== project) show = false;
+      }
+      if (show && label && label !== 'all') {
+        var labelCells = row.querySelectorAll('.issue-label, .pr-label');
+        if (!labelCells.length) {
+          show = false;
+        } else {
+          var labels = Array.from(labelCells).map(function(c) { return c.textContent.trim(); });
+          show = labels.indexOf(label) !== -1;
+        }
+      }
+      if (show && status && status !== 'all') {
+        var statusCell = row.querySelector('.issue-status, .pr-status');
+        if (!statusCell || statusCell.textContent.trim() !== status) show = false;
       }
       if (show) {
         row.style.display = '';
@@ -478,7 +537,14 @@
     var container = document.getElementById('spending-content');
     if (!container) return;
 
-    if (!spending || !spending.daily || !spending.daily.length) {
+    var daily = [];
+    if (spending && Array.isArray(spending.daily) && spending.daily.length) {
+      daily = spending.daily;
+    } else if (spending && spending.budget_daily && Array.isArray(spending.budget_daily.items) && spending.budget_daily.items.length) {
+      daily = spending.budget_daily.items;
+    }
+
+    if (!daily.length) {
       renderPendingState('spending-usage');
       return;
     }
@@ -588,6 +654,13 @@
       var lastActive = agent.last_active ? relativeTime(agent.last_active) : '—';
       var sessionsStr = agent.sessions_24h != null ? agent.sessions_24h + ' sessions' : '';
 
+      var budget = agent.budget_daily || {};
+      var budgetStr = budget.limit_tokens
+        ? formatNumber(budget.tokens || 0) + ' / ' + formatNumber(budget.limit_tokens) + ' tokens'
+        : '';
+
+      var owner = agent.pipeline_owner_agent ? 'owner: ' + agent.pipeline_owner_agent : '';
+
       return '<article class="agent-card">' +
         '<span class="agent-emoji">' + escapeHtml(agent.emoji || '') + '</span>' +
         '<div class="agent-info">' +
@@ -597,6 +670,8 @@
         '<div class="agent-meta">' +
         '<span class="agent-status"><span class="dot-sm ' + statusClass + '"></span> ' + escapeHtml(statusLabel) + '</span>' +
         '<span class="agent-last">' + escapeHtml(lastActive) + (sessionsStr ? ' · ' + sessionsStr : '') + '</span>' +
+        (budgetStr ? '<span class="agent-budget">' + escapeHtml(budgetStr) + '</span>' : '') +
+        (owner ? '<span class="agent-owner">' + escapeHtml(owner) + '</span>' : '') +
         '</div>' +
         '</article>';
     }).join('');
@@ -642,7 +717,6 @@
     if (tg.MainButton) {
       tg.MainButton.setText('↻ Refresh');
       tg.MainButton.onClick(function () {
-        tgHaptic('impact', 'medium');
         loadDashboardData();
       });
       tg.MainButton.show();
@@ -670,29 +744,6 @@
       });
     }
   }
-
-  function tgHaptic(type, style) {
-    var tg = window.Telegram && window.Telegram.WebApp;
-    if (!tg || !tg.HapticFeedback) return;
-    if (type === 'impact') tg.HapticFeedback.impactOccurred(style || 'light');
-    else if (type === 'notification') tg.HapticFeedback.notificationOccurred(style || 'success');
-  }
-
-  function tgMainButtonProgress(show) {
-    var tg = window.Telegram && window.Telegram.WebApp;
-    if (!tg || !tg.MainButton) return;
-    if (show) {
-      tg.MainButton.showProgress(true);
-      tg.MainButton.setText('Refreshing…');
-      tg.MainButton.disable();
-    } else {
-      tg.MainButton.hideProgress();
-      tg.MainButton.setText('↻ Refresh');
-      tg.MainButton.enable();
-    }
- }
-
-
 
   function reRenderMermaid() {
     if (cachedData && cachedData.pipeline) {
@@ -840,18 +891,8 @@
     var retryBtn = document.getElementById('retry-btn');
     if (retryBtn) {
       retryBtn.addEventListener('click', function () {
-        tgHaptic('impact', 'medium');
         loadDashboardData();
       });
-    }
-  }
-
-  function onDataLoadComplete(success) {
-    tgMainButtonProgress(false);
-    if (success) {
-      tgHaptic('notification', 'success');
-    } else {
-      tgHaptic('notification', 'warning');
     }
   }
 

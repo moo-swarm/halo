@@ -10,6 +10,9 @@
   <meta property="og:type" content="website">
   <title>Halo — Moo Swarm Status</title>
 
+  <!-- Skip link for accessibility -->
+  <a href="#active-projects" class="skip-link">Skip to main content</a>
+
   <!-- FOUC Prevention + Telegram theme injection (runs before CSS) -->
   <script>
     // Detect Telegram Mini App context
@@ -51,18 +54,24 @@
   <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js" defer></script>
 </head>
 <body>
+  <a class="skip-link" href="#active-projects">Skip to main content</a>
   <div class="site-grid">
 
     <!-- ===== HEADER ===== -->
-    <header>
+    <header role="banner">
       <div class="halo-header">
         <div class="brand">
+          <span class="brand-icon" aria-hidden="true">🐮</span>
           <div>
             <h1>Halo</h1>
             <div class="tagline">Moo Swarm Status</div>
           </div>
         </div>
         <div class="header-right">
+          <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle color theme">
+            <span aria-hidden="true">🌓</span>
+            <span class="toggle-label">System</span>
+          </button>
           <span class="freshness-badge" id="freshness-badge" role="status" aria-live="polite">
             <span class="status-dot green" aria-label="Data freshness indicator"></span>
             <span class="relative-time">loading…</span>
@@ -204,10 +213,10 @@
     <!-- ===== SPENDING & USAGE ===== -->
     <section id="spending-usage" aria-labelledby="spending-heading" aria-busy="true">
       <div class="section-header">
-        <h2 id="spending-heading">Spending &amp; Usage</h2>
+        <h2 id="spending-heading">Budget & Usage</h2>
         <span class="data-age"></span>
       </div>
-      <p class="section-desc">Token usage and cost for the last 14 days.</p>
+      <p class="section-desc">Budget limits, token usage, and spend for the last ~14 days.</p>
       <div id="spending-content">
         <div class="skeleton-loader">
           <div class="skeleton-chart"></div>
@@ -222,6 +231,23 @@
 
       <!-- Screen-reader companion table for chart data -->
       <table class="sr-only" id="spending-sr-table" aria-label="Daily token usage data"></table>
+    </section>
+
+    <!-- ===== BUDGET BY AGENT ===== -->
+    <section id="agent-budget" aria-labelledby="budget-heading" aria-busy="true">
+      <div class="section-header">
+        <h2 id="budget-heading">Budget by Agent</h2>
+        <span class="data-age"></span>
+      </div>
+      <p class="section-desc">How much each agent has spent against its budget.</p>
+      <div id="agent-budget-content">
+        <div class="skeleton-loader">
+          <div class="skeleton-row w-90"></div>
+          <div class="skeleton-row w-85"></div>
+          <div class="skeleton-row w-80"></div>
+          <div class="skeleton-row w-75"></div>
+        </div>
+      </div>
     </section>
 
     <!-- ===== AGENT HEALTH ===== -->

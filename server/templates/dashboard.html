@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Halo Dashboard</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌙</text></svg>">
+  <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
+  <script src="/static/halo.js" defer></script>
+  <style>.skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;}.skip-link:focus{position:fixed;left:1rem;top:1rem;width:auto;height:auto;padding:.4rem .7rem;background:var(--color-accent);color:#fff;border-radius:var(--radius-md);z-index:1000;text-decoration:none;font-weight:600;}</style>
+</head>
+<body>
+  <a class="skip-link" href="#dashboard">Skip to dashboard</a>
+  <div class="site-grid">
+    <header role="banner">
+      <div class="halo-header">
+        <div class="brand">
+          <span class="brand-icon" aria-hidden="true">🐮</span>
+          <div>
+            <h1>Halo</h1>
+            <div class="tagline">Moo Swarm Status</div>
+          </div>
+        </div>
+        <div class="header-right">
+          <select id="user-role" aria-label="Select role"></select>
+          <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle color theme"><span aria-hidden="true">🌓</span><span class="toggle-label">System</span></button>
+          <span class="freshness-badge" id="freshness-badge" role="status" aria-live="polite"><span class="status-dot green" aria-label="Data freshness indicator"></span><span class="relative-time">loading…</span></span>
+          <a class="gh-link" href="https://github.com/moo-swarm" target="_blank" rel="noopener">github/moo-swarm →</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Role gate banners -->
+    <div id="gate-banner" class="gate-banner" style="display:none;grid-column:1/-1;">
+      <button id="gate-btn" class="main-action" type="button">Enter dashboard</button>
+    </div>
+
+    <main id="dashboard-main" style="grid-column:1/-1;">
+      <section id="active-projects" aria-labelledby="projects-heading" aria-busy="true">
+        <div class="section-header"><h2 id="projects-heading">Active Projects</h2><span class="data-age"></span></div>
+        <p class="section-desc">Live projects in the swarm.</p>
+        <div id="active-projects-content"><div class="skeleton-loader skeleton-projects"><div class="skeleton-row w-90"></div><div class="skeleton-row w-70"></div><div class="skeleton-row w-80"></div></div></div>
+      </section>
+
+      <section id="spending-usage" aria-labelledby="spending-heading" aria-busy="true">
+        <div class="section-header"><h2 id="spending-heading">Budget & Usage</h2><span class="data-age"></span></div>
+        <p class="section-desc">Token usage and cost for the last 14 days.</p>
+        <div id="spending-content"><div class="skeleton-loader"><div class="skeleton-chart"></div><div style="display:flex;gap:.5rem;margin-top:.5rem;"><div class="skeleton-card" style="flex:1"></div><div class="skeleton-card" style="flex:1"></div></div></div></div>
+        <table class="sr-only" id="spending-sr-table" aria-label="Daily token usage data"></table>
+      </section>
+
+      <section id="agent-health" aria-labelledby="agents-heading" aria-busy="true">
+        <div class="section-header"><h2 id="agents-heading">Agent Health</h2><span class="data-age"></span></div>
+        <p class="section-desc">Current agent statuses and activity.</p>
+        <div id="agents-content"><div class="skeleton-loader" style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;"><div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div></div></div>
+      </section>
+
+      <section id="agent-action" aria-labelledby="agent-action-heading" aria-busy="true">
+        <div class="section-header"><h2 id="agent-action-heading">Report</h2><span class="data-age"></span></div>
+        <p class="section-desc">Submit a status report for your role run.</p>
+        <form id="report-form">
+          <label for="report-text">Report</label>
+          <textarea id="report-text" placeholder="Short summary: what changed, what failed, next step." required></textarea>
+          <label for="report-attachments">Attachments</label>
+          <input id="report-attachments" type="text" placeholder="Optional refs, URLs, filenames">
+          <button class="main-action" type="submit">Send report</button>
+        </form>
+        <div id="report-status" role="status" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <footer>
+      <p>Generated: <span id="footer-timestamp">loading…</span></p>
+      <nav><a href="../">Standalone</a><a href="/admin">Admin</a><a href="https://github.com/moo-swarm/halo">Repo</a></nav>
+    </footer>
+  </div>
+</body>
+</html>\n
