@@ -21,6 +21,23 @@
     ]
   };
 
+  /* Mermaid classDef palettes per pipeline stage status.
+   * Keys mirror the statuses used in data/swarm.json ("pass", "fail",
+   * "running", "idle"); colors derive from the :root tokens in styles.css
+   * (--color-success/-danger/-running/-idle). */
+  var MERMAID_STATUS_STYLES = {
+    pass:    { fill: '#dcfce7', stroke: '#22c55e', text: '#14532d' },
+    fail:    { fill: '#fee2e2', stroke: '#ef4444', text: '#7f1d1d' },
+    running: { fill: '#dbeafe', stroke: '#3b82f6', text: '#1e3a8a' },
+    idle:    { fill: '#f1f5f9', stroke: '#94a3b8', text: '#334155' }
+  };
+  var MERMAID_STATUS_STYLES_DARK = {
+    pass:    { fill: '#14532d', stroke: '#22c55e', text: '#dcfce7' },
+    fail:    { fill: '#7f1d1d', stroke: '#ef4444', text: '#fee2e2' },
+    running: { fill: '#1e3a8a', stroke: '#3b82f6', text: '#dbeafe' },
+    idle:    { fill: '#1e293b', stroke: '#94a3b8', text: '#cbd5e1' }
+  };
+
   var SCHEMA_MIGRATIONS = {
     '1.0': {
       patch: function(data) {
@@ -120,7 +137,7 @@
     renderCronJobs(data.cron_jobs || []);
     renderIssuesAndPRs(data.issues || [], data.prs || []);
     renderSpending(data.spending, isStale);
-    renderAgentBudget(data.agent_budgets || []);
+    renderAgentBudget(data.agents || []);
     renderAgents(data.agents || []);
   }
 
@@ -672,6 +689,44 @@
         '<span class="agent-last">' + escapeHtml(lastActive) + (sessionsStr ? ' · ' + sessionsStr : '') + '</span>' +
         (budgetStr ? '<span class="agent-budget">' + escapeHtml(budgetStr) + '</span>' : '') +
         (owner ? '<span class="agent-owner">' + escapeHtml(owner) + '</span>' : '') +
+        '</div>' +
+        '</article>';
+    }).join('');
+
+    container.innerHTML = '<div class="agent-grid">' + cards + '</div>';
+  }
+
+  /* Budget by Agent: per-agent token spend against its daily budget.
+   * Reads the same agents[] payload as renderAgents (each agent carries
+   * budget_daily = {tokens, limit_tokens}); there is no separate
+   * agent_budgets section in swarm.json. */
+  function renderAgentBudget(agents) {
+    var container = document.getElementById('agent-budget-content');
+    if (!container) return;
+
+    var budgeted = agents.filter(function (agent) {
+      return agent.budget_daily && agent.budget_daily.limit_tokens;
+    });
+
+    if (!budgeted.length) {
+      renderEmptyState('agent-budget');
+      return;
+    }
+
+    var cards = budgeted.map(function (agent) {
+      var used = agent.budget_daily.tokens || 0;
+      var limit = agent.budget_daily.limit_tokens;
+      var pct = limit > 0 ? Math.min(100, Math.round((used / limit) * 100)) : 0;
+      var over = used > limit;
+
+      return '<article class="agent-card">' +
+        '<span class="agent-emoji">' + escapeHtml(agent.emoji || '') + '</span>' +
+        '<div class="agent-info">' +
+        '<div class="agent-name">' + escapeHtml(agent.name) + '</div>' +
+        '<div class="agent-role">' + escapeHtml(used + ' / ' + formatNumber(limit) + ' tokens · ' + pct + '%') + '</div>' +
+        '</div>' +
+        '<div class="agent-meta">' +
+        '<span class="agent-status">' + (over ? '⚠️ over budget' : 'within budget') + '</span>' +
         '</div>' +
         '</article>';
     }).join('');
