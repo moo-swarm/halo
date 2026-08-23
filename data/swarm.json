@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "updated_at": "2026-08-23T21:19:24Z",
+  "updated_at": "2026-08-23T22:19:24Z",
   "refresh_interval": 3600,
   "projects": [
     {
@@ -21,8 +21,8 @@
         "limit_cost": 0.6
       },
       "specs": {
-        "total": 5,
-        "active": 4,
+        "total": 6,
+        "active": 5,
         "latest": "2026-08-23"
       }
     },
