@@ -4,6 +4,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 import subprocess
+import sys
 
 HALO_DIR = Path(__file__).resolve().parent.parent
 DATA_FILE = HALO_DIR / "data" / "swarm.json"
