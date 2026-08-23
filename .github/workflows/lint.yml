@@ -1,0 +1,27 @@
+# Lint — fail fast on broken auto-export commits (halo-hardening AC8).
+#
+# Syntax-checks every tracked JS file and byte-compiles every Python file.
+# Stdlib-only on the runner side (node + python3 preinstalled on ubuntu-latest).
+
+name: Lint
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Syntax-check JavaScript (node --check)
+        run: |
+          find . -name '*.js' -type f -not -path './.git/*' -not -path '*/.venv/*' -print0 \
+            | xargs -0 -n1 node --check
+
+      - name: Byte-compile Python (py_compile)
+        run: |
+          find . -name '*.py' -type f -not -path './.git/*' -not -path '*/.venv/*' -not -path '*/__pycache__/*' -print0 \
+            | xargs -0 -n1 python3 -m py_compile

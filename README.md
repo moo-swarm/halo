@@ -55,6 +55,21 @@ No build step needed. Open `index.html` in a browser or serve locally:
 npx serve .
 ```
 
+### Tests
+
+Stdlib-only (`unittest` + bash guards) — no dependencies to install:
+
+```bash
+# inside halo/: exporter unit tests
+python3 -m unittest discover -s tests
+
+# from the swarm root: all halo suites (unit + structural guards)
+tests/run.sh halo
+```
+
+CI runs `node --check` on all JavaScript and `python3 -m py_compile` on all
+Python on every push to main (`.github/workflows/lint.yml`).
+
 ## File Structure
 
 ```
@@ -64,10 +79,13 @@ halo/
 ├── dashboard.js      ← All JS (IIFE)
 ├── data/
 │   └── swarm.json    ← Pre-baked data
+├── scripts/          ← Hourly export (host cron → commit → Pages)
+├── tests/            ← Stdlib unit tests (exporter)
 ├── .nojekyll         ← Disable Jekyll on Pages
 ├── CNAME             ← Custom domain placeholder
 └── README.md         ← This file
 ```
+
 
 ## License
 
