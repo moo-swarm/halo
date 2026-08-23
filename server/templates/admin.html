@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Halo Admin</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <style>.skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;}.skip-link:focus{position:fixed;left:1rem;top:1rem;width:auto;height:auto;padding:.4rem .7rem;background:var(--color-accent);color:#fff;border-radius:var(--radius-md);z-index:1000;text-decoration:none;font-weight:600;}.admin-layout{display:grid;grid-template-columns:1fr;gap:1rem;}@media (min-width:900px){.admin-layout{grid-template-columns:1fr 1fr;}}</style>
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to admin</a>
+  <div class="site-grid">
+    <header role="banner">
+      <div class="halo-header">
+        <div class="brand">
+          <span class="brand-icon" aria-hidden="true">🐮</span>
+          <div>
+            <h1>Halo</h1>
+            <div class="tagline">Admin</div>
+          </div>
+        </div>
+        <div class="header-right">
+          <span id="admin-user" class="data-age">anonymous</span>
+          <a class="gh-link" href="/">Dashboard</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="content" style="grid-column:1/-1;">
+      <div id="login-card" class="card">
+        <h2>Admin login</h2>
+        <form id="login-form">
+          <label for="username">Username</label>
+          <input id="username" required autocomplete="username">
+          <label for="password">Password</label>
+          <input id="password" type="password" required autocomplete="current-password">
+          <button class="main-action" type="submit">Login</button>
+        </form>
+        <div id="login-status" role="alert"></div>
+      </div>
+
+      <div id="admin-panel" class="admin-layout" style="display:none;">
+        <section aria-labelledby="agents-heading">
+          <div class="section-header"><h2 id="agents-heading">Agents</h2></div>
+          <form id="agent-form" class="sub-form">
+            <input id="agent-username" placeholder="username" required>
+            <input id="agent-role" placeholder="role" value="agent">
+            <input id="agent-password" type="password" placeholder="new password (optional)">
+            <label class="checkbox"><input id="agent-active" type="checkbox" checked> active</label>
+            <button class="main-action" type="submit">Save</button>
+            <button type="button" data-action="reset">Reset selected</button>
+          </form>
+          <table id="agents-table"><thead><tr><th></th><th>Username</th><th>Role</th><th>Active</th></tr></thead><tbody id="agents-tbody"></tbody></table>
+        </section>
+
+        <section aria-labelledby="lock-heading">
+          <div class="section-header"><h2 id="lock-heading">System Lock</h2></div>
+          <div id="lock-card">
+            <p>Current lock status: <strong id="lock-value">—</strong></p>
+            <button class="main-action" data-action="lock-on" type="button">Enable</button>
+            <button class="main-action" data-action="lock-off" type="button">Disable</button>
+          </div>
+
+          <div class="section-header" style="margin-top:1.25rem;"><h2 id="reports-heading">Reports</h2></div>
+          <div id="reports-card">
+            <div class="filter-bar">
+              <button class="main-action" data-download="csv" type="button">Export CSV</button>
+              <button class="main-action secondary" data-download="json" type="button">Export JSON</button>
+            </div>
+            <table id="reports-table"><thead><tr><th>Agent</th><th>Reported at</th><th>Text</th></tr></thead><tbody id="reports-tbody"></tbody></table>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <p>Admin panel</p>
+      <nav><a href="/">Dashboard</a><a href="https://github.com/moo-swarm/halo">Repo</a></nav>
+    </footer>
+  </div>
+
+  <script src="/static/halo.js" defer></script>
+  <script>
+    if (!window.__HALO_UI_ADMIN__) window.__HALO_UI_ADMIN__ = true;
+  </script>
+</body>
+</html>\n

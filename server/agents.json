@@ -1,0 +1,32 @@
+{
+  "moo": {
+    "password": null,
+    "role": "orchestrator",
+    "active": true
+  },
+  "veles": {
+    "password": null,
+    "role": "research",
+    "active": true
+  },
+  "cmok": {
+    "password": null,
+    "role": "build",
+    "active": true
+  },
+  "bagnik": {
+    "password": null,
+    "role": "qa",
+    "active": true
+  },
+  "zlydni": {
+    "password": null,
+    "role": "commit",
+    "active": true
+  },
+  "mokash": {
+    "password": null,
+    "role": "docs",
+    "active": true
+  }
+}

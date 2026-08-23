@@ -1,4 +1,5 @@
 {
+  "schema_version": "2.0",
   "updated_at": "2026-07-05T15:51:13Z",
   "refresh_interval": 3600,
   "projects": [
@@ -11,6 +12,14 @@
       "open_issues": 0,
       "last_updated": "2026-07-03",
       "pipeline_stage": "build",
+      "pipeline_owner_agent": "cmok",
+      "budget_daily": {
+        "tokens": 84000,
+        "cost": 0.19,
+        "pricing_configured": true,
+        "limit_tokens": 200000,
+        "limit_cost": 0.60
+      },
       "specs": {
         "total": 1,
         "active": 0,
@@ -26,6 +35,14 @@
       "open_issues": 0,
       "last_updated": "2026-07-02",
       "pipeline_stage": "spec",
+      "pipeline_owner_agent": "veles",
+      "budget_daily": {
+        "tokens": 56000,
+        "cost": 0.13,
+        "pricing_configured": true,
+        "limit_tokens": 200000,
+        "limit_cost": 0.60
+      },
       "specs": {
         "total": 0,
         "active": 0,
@@ -41,6 +58,14 @@
       "open_issues": 0,
       "last_updated": "2026-07-02",
       "pipeline_stage": "research",
+      "pipeline_owner_agent": "veles",
+      "budget_daily": {
+        "tokens": 42000,
+        "cost": 0.09,
+        "pricing_configured": true,
+        "limit_tokens": 200000,
+        "limit_cost": 0.60
+      },
       "specs": {
         "total": 0,
         "active": 0,
@@ -56,6 +81,14 @@
       "open_issues": 0,
       "last_updated": "2026-06-19",
       "pipeline_stage": "idle",
+      "pipeline_owner_agent": "moo",
+      "budget_daily": {
+        "tokens": 18000,
+        "cost": 0.04,
+        "pricing_configured": true,
+        "limit_tokens": 200000,
+        "limit_cost": 0.60
+      },
       "specs": {
         "total": 0,
         "active": 0,
@@ -71,6 +104,14 @@
       "open_issues": 0,
       "last_updated": "2026-06-30",
       "pipeline_stage": "test",
+      "pipeline_owner_agent": "moo",
+      "budget_daily": {
+        "tokens": 61000,
+        "cost": 0.15,
+        "pricing_configured": true,
+        "limit_tokens": 200000,
+        "limit_cost": 0.60
+      },
       "specs": {
         "total": 0,
         "active": 0,
@@ -135,6 +176,7 @@
         "ui"
       ],
       "created_at": "2026-06-30T15:30:00Z",
+      "status": "open",
       "url": "https://github.com/moo-swarm/aeroplasty/issues/3"
     },
     {
@@ -146,6 +188,7 @@
         "ux"
       ],
       "created_at": "2026-07-01T10:00:00Z",
+      "status": "open",
       "url": "https://github.com/moo-swarm/halo/issues/8"
     },
     {
@@ -157,6 +200,7 @@
         "logging"
       ],
       "created_at": "2026-06-28T08:15:00Z",
+      "status": "open",
       "url": "https://github.com/moo-swarm/dream-routine/issues/31"
     },
     {
@@ -167,6 +211,7 @@
         "docs"
       ],
       "created_at": "2026-06-26T14:00:00Z",
+      "status": "open",
       "url": "https://github.com/moo-swarm/halo/issues/3"
     },
     {
@@ -177,6 +222,7 @@
         "bug"
       ],
       "created_at": "2026-07-01T09:30:00Z",
+      "status": "open",
       "url": "https://github.com/moo-swarm/aeroplasty/issues/15"
     },
     {
@@ -188,6 +234,7 @@
         "performance"
       ],
       "created_at": "2026-06-29T11:00:00Z",
+      "status": "open",
       "url": "https://github.com/moo-swarm/telegram-connector/issues/7"
     }
   ],
@@ -339,6 +386,110 @@
       }
     ]
   },
+  "budget_daily": {
+    "window_days": 14,
+    "generated_at": "2026-07-05T15:51:13Z",
+    "items": [
+      {
+        "date": "2026-06-20",
+        "tokens": 92000,
+        "cost": 0.18,
+        "limit_tokens": 200000,
+        "limit_cost": 0.60
+      },
+      {
+        "date": "2026-06-21",
+        "tokens": 105000,
+        "cost": 0.21,
+        "limit_tokens": 200000,
+        "limit_cost": 0.60
+      },
+      {
+        "date": "2026-06-22",
+        "tokens": 88000,
+        "cost": 0.17,
+        "limit_tokens": 200000,
+        "limit_cost": 0.60
+      },
+      {
+        "date": "2026-06-23",
+        "tokens": 112000,
+        "cost": 0.22,
+        "limit_tokens": 200000,
+        "limit_cost": 0.60
+      },
+      {
+        "date": "2026-06-24",
+        "tokens": 96000,
+        "cost": 0.19,
+        "limit_tokens": 200000,
+        "limit_cost": 0.60
+      },
+      {
+        "date": "2026-06-25",
+        "tokens": 130000,
+        "cost": 0.26,
+        "limit_tokens": 200000,
+        "limit_cost": 0.60
+      },
+      {
+        "date": "2026-06-26",
+        "tokens": 180000,
+        "cost": 0.35,
+        "limit_tokens": 200000,
+        "limit_cost": 0.60
+      },
+      {
+        "date": "2026-06-27",
+        "tokens": 145000,
+        "cost": 0.29,
+        "limit_tokens": 200000,
+        "limit_cost": 0.60
+      },
+      {
+        "date": "2026-06-28",
+        "tokens": 99000,
+        "cost": 0.20,
+        "limit_tokens": 200000,
+        "limit_cost": 0.60
+      },
+      {
+        "date": "2026-06-29",
+        "tokens": 121000,
+        "cost": 0.24,
+        "limit_tokens": 200000,
+        "limit_cost": 0.60
+      },
+      {
+        "date": "2026-06-30",
+        "tokens": 108000,
+        "cost": 0.22,
+        "limit_tokens": 200000,
+        "limit_cost": 0.60
+      },
+      {
+        "date": "2026-07-01",
+        "tokens": 142000,
+        "cost": 0.28,
+        "limit_tokens": 200000,
+        "limit_cost": 0.60
+      },
+      {
+        "date": "2026-07-02",
+        "tokens": 135000,
+        "cost": 0.27,
+        "limit_tokens": 200000,
+        "limit_cost": 0.60
+      },
+      {
+        "date": "2026-07-03",
+        "tokens": 61000,
+        "cost": 0.12,
+        "limit_tokens": 200000,
+        "limit_cost": 0.60
+      }
+    ]
+  },
   "agents": [
     {
       "name": "moo",
@@ -347,7 +498,15 @@
       "status": "active",
       "last_active": "2026-07-02T22:30:00Z",
       "sessions_24h": 12,
-      "tokens_24h": 45000
+      "tokens_24h": 45000,
+      "budget_daily": {
+        "tokens": 42000,
+        "cost": 0.09,
+        "pricing_configured": true,
+        "limit_tokens": 200000,
+        "limit_cost": 0.60
+      },
+      "pipeline_owner_agent": "moo"
     },
     {
       "name": "veles",
@@ -356,7 +515,15 @@
       "status": "active",
       "last_active": "2026-07-02T20:00:00Z",
       "sessions_24h": 8,
-      "tokens_24h": 32000
+      "tokens_24h": 32000,
+      "budget_daily": {
+        "tokens": 56000,
+        "cost": 0.13,
+        "pricing_configured": true,
+        "limit_tokens": 200000,
+        "limit_cost": 0.60
+      },
+      "pipeline_owner_agent": "veles"
     },
     {
       "name": "cmok",
@@ -365,7 +532,15 @@
       "status": "busy",
       "last_active": "2026-07-02T23:30:00Z",
       "sessions_24h": 22,
-      "tokens_24h": 78000
+      "tokens_24h": 78000,
+      "budget_daily": {
+        "tokens": 84000,
+        "cost": 0.19,
+        "pricing_configured": true,
+        "limit_tokens": 200000,
+        "limit_cost": 0.60
+      },
+      "pipeline_owner_agent": "cmok"
     },
     {
       "name": "bagnik",
@@ -374,7 +549,15 @@
       "status": "active",
       "last_active": "2026-07-02T21:00:00Z",
       "sessions_24h": 5,
-      "tokens_24h": 15000
+      "tokens_24h": 15000,
+      "budget_daily": {
+        "tokens": 18000,
+        "cost": 0.04,
+        "pricing_configured": true,
+        "limit_tokens": 200000,
+        "limit_cost": 0.60
+      },
+      "pipeline_owner_agent": "bagnik"
     },
     {
       "name": "zlydni",
@@ -383,7 +566,15 @@
       "status": "idle",
       "last_active": "2026-07-02T10:00:00Z",
       "sessions_24h": 0,
-      "tokens_24h": 0
+      "tokens_24h": 0,
+      "budget_daily": {
+        "tokens": 15000,
+        "cost": 0.03,
+        "pricing_configured": true,
+        "limit_tokens": 200000,
+        "limit_cost": 0.60
+      },
+      "pipeline_owner_agent": "zlydni"
     },
     {
       "name": "mokash",
@@ -392,13 +583,22 @@
       "status": "active",
       "last_active": "2026-07-02T23:50:00Z",
       "sessions_24h": 4,
-      "tokens_24h": 8500
+      "tokens_24h": 8500,
+      "budget_daily": {
+        "tokens": 30000,
+        "cost": 0.07,
+        "pricing_configured": true,
+        "limit_tokens": 200000,
+        "limit_cost": 0.60
+      },
+      "pipeline_owner_agent": "mokash"
     }
   ],
   "meta": {
-    "version": "1.0",
+    "version": "2.0",
     "generated_by": "moo-export-data.sh",
     "export_host": "lex-agent-swarm",
-    "runtime_version": "24.18.0"
+    "runtime_version": "24.18.0",
+    "pipeline_owner_agent": "cmok"
   }
 }
