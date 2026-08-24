@@ -213,3 +213,9 @@ Coverage note: n/a — post-archive UAT surgery; feature §3 table untouched and
 Result: run started. Toplevel verified (/home/lex/.openclaw/workspaces/_align-rail_/projects/halo, main). Dirty tree matches the authorized set exactly: index.html, dashboard.js, styles.css, tests/smoke.test.js + .moo-swarm/archive/2026-08-23-live-exporter/handoff-log.md (metrics.jsonl has no changes to stage). Two cron data commits (aea18dc, 2f4e1b7) on top of e188936, branch in sync with origin/main — untouched. Bagnik code QA PASS (01:31) confirmed in the archived log with evidence before staging.
 Artifacts: none yet
 Next: stage by pathspec + commit -F from scratch message; push; return entry in follow-up commit; push again.
+## 01:48 Zlydni → Coordinator [commit] done — UAT-fix follow-up
+Result: shipped. Commit 9b6b6a6 "fix(dashboard): merge Budget by Agent into Agent Health cards (owner-UAT)" — exactly the authorized paths staged by pathspec (index.html, dashboard.js, styles.css, tests/smoke.test.js + .moo-swarm/archive/2026-08-23-live-exporter/handoff-log.md carrying Cmok/Bagnik entries; metrics.jsonl had no changes to stage). Pushed main→origin 2f4e1b7..9b6b6a6 on top of the two interim cron data commits (aea18dc, 2f4e1b7) without touching them. data/swarm.json untouched by this commit; exporter untouched by design (Bagnik-verified). Version bump skipped per halo precedent. This return entry lands in a follow-up chore commit, staged before committing this time.
+Artifacts: /home/lex/.openclaw/workspaces/_align-rail_/projects/halo/.moo-swarm/archive/2026-08-23-live-exporter/handoff-log.md (this entry); scratch temp files removed after use
+Recommend: END
+Why: Bagnik code QA PASS, UAT fix committed and pushed — follow-up closed.
+Blockers: None
