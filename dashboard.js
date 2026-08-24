@@ -17,7 +17,7 @@
     required: ['updated_at','projects','pipeline','issues','prs','cron_jobs','agents'],
     sectionIds: [
       'active-projects','pipeline-status','cron-jobs',
-      'issues-prs','spending-usage','agent-budget','agent-health'
+      'issues-prs','spending-usage','agent-health'
     ]
   };
 
@@ -78,7 +78,6 @@
     'pipeline-status': { icon: '🔀', msg: 'No pipeline stages configured' },
     'cron-jobs':       { icon: '⏰', msg: 'No periodic tasks configured' },
     'issues-prs':      { icon: '✅', msg: 'All clear — no open issues or PRs' },
-    'agent-budget':    { icon: '🧮', msg: 'Budget data pending' },
     'spending-usage':  { icon: '⏳', msg: 'Pending — spending data coming soon' },
     'agent-health':    { icon: '🤖', msg: 'No agent data available' }
   };
@@ -101,8 +100,7 @@
     'pipeline-status': ['pipeline'],
     'cron-jobs':       ['cron_jobs'],
     'issues-prs':      ['issues', 'prs'],
-    'agent-health':    ['agents'],
-    'agent-budget':    ['agents']
+    'agent-health':    ['agents']
   };
   var filteredIssues = [];
   var filteredPrs = [];
@@ -155,7 +153,6 @@
     renderCronJobs(data.cron_jobs || []);
     renderIssuesAndPRs(data.issues || [], data.prs || []);
     renderSpending(data.spending, isStale);
-    renderAgentBudget(data.agents || []);
     renderAgents(data.agents || []);
     applySectionStaleness(data);
   }
@@ -742,10 +739,19 @@
       var lastActive = agent.last_active ? relativeTime(agent.last_active) : '—';
       var sessionsStr = agent.sessions_24h != null ? agent.sessions_24h + ' sessions' : '';
 
+      /* Budget folded into the health card (UAT fix: standalone Budget by
+       * Agent section removed — it duplicated this same agents[] payload).
+       * Percentage reuses the projects cards' .budget-pct thresholds so
+       * colour semantics stay identical dashboard-wide (>85 red, >60 amber). */
       var budget = agent.budget_daily || {};
-      var budgetStr = budget.limit_tokens
-        ? formatNumber(budget.tokens || 0) + ' / ' + formatNumber(budget.limit_tokens) + ' tokens'
-        : '';
+      var budgetLine = '';
+      if (budget.limit_tokens) {
+        var pct = Math.min(100, Math.round(((budget.tokens || 0) / budget.limit_tokens) * 100));
+        budgetLine = '<span class="agent-budget">' +
+          escapeHtml(formatNumber(budget.tokens || 0) + ' / ' + formatNumber(budget.limit_tokens) + ' tokens') +
+          ' <span class="budget-pct ' + (pct > 85 ? 'red' : pct > 60 ? 'amber' : 'green') + '">' + pct + '%</span>' +
+          '</span>';
+      }
 
       var owner = agent.pipeline_owner_agent ? 'owner: ' + agent.pipeline_owner_agent : '';
 
@@ -758,46 +764,8 @@
         '<div class="agent-meta">' +
         '<span class="agent-status"><span class="dot-sm ' + statusClass + '"></span> ' + escapeHtml(statusLabel) + '</span>' +
         '<span class="agent-last">' + escapeHtml(lastActive) + (sessionsStr ? ' · ' + sessionsStr : '') + '</span>' +
-        (budgetStr ? '<span class="agent-budget">' + escapeHtml(budgetStr) + '</span>' : '') +
+        budgetLine +
         (owner ? '<span class="agent-owner">' + escapeHtml(owner) + '</span>' : '') +
-        '</div>' +
-        '</article>';
-    }).join('');
-
-    container.innerHTML = '<div class="agent-grid">' + cards + '</div>';
-  }
-
-  /* Budget by Agent: per-agent token spend against its daily budget.
-   * Reads the same agents[] payload as renderAgents (each agent carries
-   * budget_daily = {tokens, limit_tokens}); there is no separate
-   * agent_budgets section in swarm.json. */
-  function renderAgentBudget(agents) {
-    var container = document.getElementById('agent-budget-content');
-    if (!container) return;
-
-    var budgeted = agents.filter(function (agent) {
-      return agent.budget_daily && agent.budget_daily.limit_tokens;
-    });
-
-    if (!budgeted.length) {
-      renderEmptyState('agent-budget');
-      return;
-    }
-
-    var cards = budgeted.map(function (agent) {
-      var used = agent.budget_daily.tokens || 0;
-      var limit = agent.budget_daily.limit_tokens;
-      var pct = limit > 0 ? Math.min(100, Math.round((used / limit) * 100)) : 0;
-      var over = used > limit;
-
-      return '<article class="agent-card">' +
-        '<span class="agent-emoji">' + escapeHtml(agent.emoji || '') + '</span>' +
-        '<div class="agent-info">' +
-        '<div class="agent-name">' + escapeHtml(agent.name) + '</div>' +
-        '<div class="agent-role">' + escapeHtml(used + ' / ' + formatNumber(limit) + ' tokens · ' + pct + '%') + '</div>' +
-        '</div>' +
-        '<div class="agent-meta">' +
-        '<span class="agent-status">' + (over ? '⚠️ over budget' : 'within budget') + '</span>' +
         '</div>' +
         '</article>';
     }).join('');

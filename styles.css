@@ -100,13 +100,17 @@ img { max-width: 100%; height: auto; }
   grid-template-areas:
     "header header header header header header header header header header header header"
     "projects projects pipeline cron cron issues issues issues issues issues issues issues"
-    "spending spending spending budget budget budget budget agents agents agents agents"
+    "spending spending spending spending agents agents agents agents agents agents agents agents"
     "footer footer footer footer footer footer footer footer footer footer footer footer";
   gap: var(--gap);
   max-width: var(--container-max);
   margin: 0 auto;
   padding: var(--gap);
 }
+
+/* Grid children may never widen a track from the inside (long tokens,
+ * wide tables) — clamp them so content overflows within its cell instead. */
+.site-grid > section { min-width: 0; }
 
 @media (max-width: 980px) {
   .site-grid {
@@ -115,7 +119,7 @@ img { max-width: 100%; height: auto; }
       "header header header header header header"
       "projects projects projects pipeline pipeline pipeline"
       "cron cron cron issues issues issues"
-      "spending spending spending budget budget budget"
+      "spending spending spending spending spending spending"
       "agents agents agents agents agents agents"
       "footer footer footer footer footer footer";
   }
@@ -131,7 +135,6 @@ img { max-width: 100%; height: auto; }
       "cron"
       "issues"
       "spending"
-      "budget"
       "agents"
       "footer";
   }
@@ -286,7 +289,6 @@ section {
 #cron-jobs       { grid-area: cron; }
 #issues-prs      { grid-area: issues; }
 #spending-usage  { grid-area: spending; }
-#agent-budget    { grid-area: budget; }
 #agent-health    { grid-area: agents; }
 
 /* ============================================================
