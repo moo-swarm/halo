@@ -139,8 +139,9 @@ test('dashboard boots end-to-end against the real swarm.json without ReferenceEr
   const agentsHtml = elements.get('agents-content').innerHTML;
   assert.ok(agentsHtml.includes('agent-card'), 'Agent Health section rendered cards');
 
-  const budgetHtml = elements.get('agent-budget-content').innerHTML;
-  assert.ok(budgetHtml.includes('agent-card'), 'Budget by Agent section rendered cards');
+  // UAT fix: Budget by Agent was merged into Agent Health — every budgeted
+  // agent card must carry the compact used/limit line with a colour-coded %.
+  assert.ok(agentsHtml.includes('budget-pct'), 'Agent Health cards carry merged per-agent budget %');
 
   assert.ok(
     elements.get('projects-body') === undefined ||
@@ -186,7 +187,7 @@ test('mermaid styles differ between light and dark color schemes', async () => {
 
 const SECTION_IDS = [
   'active-projects', 'pipeline-status', 'cron-jobs',
-  'issues-prs', 'agent-health', 'agent-budget'
+  'issues-prs', 'agent-health'
 ];
 
 function chipsFor(elements, sectionId) {
@@ -226,7 +227,7 @@ test('stale stamps + one source_errors entry mark exactly those sections', async
     'error-backed chip says why'
   );
   // Everything else is fresh: no markers at all.
-  for (const id of ['active-projects', 'issues-prs', 'agent-health', 'agent-budget']) {
+  for (const id of ['active-projects', 'issues-prs', 'agent-health']) {
     assert.equal(chipsFor(elements, id).length, 0, `${id} stays clean`);
   }
 });
