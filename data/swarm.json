@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "updated_at": "2026-09-02T08:19:28Z",
+  "updated_at": "2026-09-02T09:19:28Z",
   "refresh_interval": 3600,
   "projects": [
     {
@@ -135,27 +135,27 @@
       "name": "brain-routine-pull",
       "schedule_human": "every 30m",
       "schedule": 1800000,
-      "last_run": "2026-09-02T07:54:32Z",
+      "last_run": "2026-09-02T08:54:32Z",
       "status": "ok",
-      "next_run": "2026-09-02T08:24:32Z",
+      "next_run": "2026-09-02T09:24:32Z",
       "consecutive_errors": 0
     },
     {
       "name": "halo-hourly-export",
       "schedule_human": "every 1h",
       "schedule": 3600000,
-      "last_run": "2026-09-02T07:19:28Z",
+      "last_run": "2026-09-02T08:19:28Z",
       "status": "ok",
-      "next_run": "2026-09-02T08:19:28Z",
+      "next_run": "2026-09-02T09:19:28Z",
       "consecutive_errors": 0
     },
     {
       "name": "pipeline-state-monitor",
       "schedule_human": "every 1h",
       "schedule": 3600000,
-      "last_run": "2026-09-02T07:29:27Z",
+      "last_run": "2026-09-02T08:29:27Z",
       "status": "ok",
-      "next_run": "2026-09-02T08:29:27Z",
+      "next_run": "2026-09-02T09:29:27Z",
       "consecutive_errors": 0
     },
     {
@@ -448,7 +448,7 @@
       "name": "moo",
       "emoji": "\ud83d\udc02",
       "role": "Orchestrator",
-      "last_active": "2026-09-02T07:51:40Z",
+      "last_active": "2026-09-02T08:51:40Z",
       "sessions_24h": 4,
       "status": "active",
       "tokens_24h": null,
@@ -517,12 +517,12 @@
     "pipeline_owner_agent": "cmok"
   },
   "sections_updated_at": {
-    "issues": "2026-09-02T08:19:28Z",
-    "prs": "2026-09-02T08:19:28Z",
-    "projects": "2026-09-02T08:19:28Z",
-    "pipeline": "2026-09-02T08:19:28Z",
-    "cron_jobs": "2026-09-02T08:19:28Z",
-    "agents": "2026-09-02T08:19:28Z"
+    "issues": "2026-09-02T09:19:28Z",
+    "prs": "2026-09-02T09:19:28Z",
+    "projects": "2026-09-02T09:19:28Z",
+    "pipeline": "2026-09-02T09:19:28Z",
+    "cron_jobs": "2026-09-02T09:19:28Z",
+    "agents": "2026-09-02T09:19:28Z"
   },
   "source_errors": {}
 }
