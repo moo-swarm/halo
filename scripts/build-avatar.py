@@ -31,26 +31,9 @@ DEPTH = 0.38       # head scale swing front/back
 DUR = 6            # seconds per cycle
 SAMPLES = 96
 STATIC_T = 0.25
-SEGMENTS = 90
 
-# Colour wheel behind the ring, cyclic (first stop == last). It turns the other
-# way at a constant rate, so colour flows against the ring's own motion.
-RING_STOPS = [(0, "#1e3a8a"), (0.25, "#4f46e5"), (0.5, "#2563eb"), (0.7, "#60a5fa"),
-              (0.82, "#e0f2fe"), (0.92, "#60a5fa"), (1, "#1e3a8a")]
-COLOR_TURNS = -1   # colour wheel turns per cycle (negative: against the ring)
-
-
-def lerp_hex(a, b, u):
-    pa = [int(a[i:i + 2], 16) for i in (1, 3, 5)]
-    pb = [int(b[i:i + 2], 16) for i in (1, 3, 5)]
-    return "#" + "".join(f"{round(x + (y - x) * u):02x}" for x, y in zip(pa, pb))
-
-
-def ring_color(u):
-    for (u0, c0), (u1, c1) in zip(RING_STOPS, RING_STOPS[1:]):
-        if u <= u1:
-            return lerp_hex(c0, c1, (u - u0) / (u1 - u0))
-    return RING_STOPS[-1][1]
+RING_BASE = "#1a3278"  # unlit ring
+LIGHT_R = 300          # reach of the comet's light on the ring
 
 
 def smootherstep(u):
@@ -80,6 +63,9 @@ def state(t):
         "dust": R / 2 * (1 + math.cos(th - LAG * abs(s))) - R / 2 * (1 + math.cos(th)),
         "ion": R / 2 * (1 + math.cos(th - ION_LAG * abs(s))) - R / 2 * (1 + math.cos(th)),
         "opacity": 0.78 + 0.22 * s,
+        # Light on the ring: dimmer with the comet's distance out of the ring's
+        # plane, and from behind only the far face is lit, so we see less.
+        "light": (0.75 + 0.25 * s) / (1 + (R / 2 * s / 140) ** 2),
         "front": t < 0.5,
     }
 
@@ -99,18 +85,6 @@ def ring_mask():
     x1, y1 = polar(360 - GAP)
     return (f'<path d="M{f(x0)} {f(y0)}A{R} {R} 0 1 1 {f(x1)} {f(y1)}" fill="none" '
             f'stroke="#fff" stroke-width="{BAND}" stroke-linecap="round"/>')
-
-
-def color_wheel():
-    """A full annulus coloured round the circle, seen only through the ring."""
-    step = 360 / SEGMENTS
-    parts = []
-    for i in range(SEGMENTS):
-        x0, y0 = polar(i * step)
-        x1, y1 = polar((i + 1) * step + 1.2)
-        parts.append(f'<path d="M{f(x0)} {f(y0)}A{R} {R} 0 0 1 {f(x1)} {f(y1)}" '
-                     f'stroke="{ring_color((i + 0.5) / SEGMENTS)}"/>')
-    return "\n      ".join(parts)
 
 
 DEFS = f"""<defs>
@@ -141,6 +115,13 @@ DEFS = f"""<defs>
     <filter id="ionBlur" filterUnits="userSpaceOnUse" x="-220" y="-40" width="440" height="80">
       <feGaussianBlur stdDeviation="1"/>
     </filter>
+    <radialGradient id="light">
+      <stop offset="0" stop-color="#fffaf0"/>
+      <stop offset="0.2" stop-color="#fde9c0"/>
+      <stop offset="0.4" stop-color="#bfdbfe" stop-opacity="0.9"/>
+      <stop offset="0.65" stop-color="#3b82f6" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#2563eb" stop-opacity="0"/>
+    </radialGradient>
     <mask id="ringMask" maskUnits="userSpaceOnUse" x="0" y="0" width="{SIZE}" height="{SIZE}">
       RING_SHAPE
     </mask>
@@ -196,11 +177,13 @@ def build(animated):
         rots = [f"{f(AXIS + state(i / SAMPLES)['ring'] if i < SAMPLES else AXIS + 360)} {C} {C}"
                 for i in range(SAMPLES + 1)]
         shape = f'<g>{anim(None, rots, "rotate")}{ring_mask()}</g>'
-        wheel_open = (f'<g><animateTransform attributeName="transform" type="rotate" '
-                      f'values="0 {C} {C};{360 * COLOR_TURNS} {C} {C}" dur="{DUR}s" repeatCount="indefinite"/>')
+        ss = [state((i / SAMPLES) % 1) for i in range(SAMPLES + 1)]
+        light = (f'<g>{anim(None, [f"{f(x["x"])} 0" for x in ss], "translate")}'
+                 f'<circle r="{LIGHT_R}" fill="url(#light)">{anim("opacity", [f(x["light"]) for x in ss])}</circle></g>')
     else:
         shape = f'<g transform="rotate({f(AXIS + st["ring"])} {C} {C})">{ring_mask()}</g>'
-        wheel_open = f'<g transform="rotate({f(360 * COLOR_TURNS * STATIC_T)} {C} {C})">'
+        light = (f'<g transform="translate({f(st["x"])} 0)">'
+                 f'<circle r="{LIGHT_R}" fill="url(#light)" opacity="{f(st["light"])}"/></g>')
     defs = DEFS.replace("RING_SHAPE", shape)
     title = "Halo — AI assistant" + ("" if animated else " (static)")
     return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {SIZE} {SIZE}" width="{SIZE}" height="{SIZE}" role="img" aria-label="{title}">
@@ -209,10 +192,9 @@ def build(animated):
   <rect width="{SIZE}" height="{SIZE}" fill="url(#bg)"/>
   {comet("back", animated, st)}
   <g filter="url(#ringGlow)">
-    <g mask="url(#ringMask)" fill="none" stroke-width="{BAND + 8}">
-      {wheel_open}
-      {color_wheel()}
-      </g>
+    <g mask="url(#ringMask)">
+      <rect width="{SIZE}" height="{SIZE}" fill="{RING_BASE}"/>
+      <g transform="translate({C} {C}) rotate({AXIS})">{light}</g>
     </g>
   </g>
   {comet("front", animated, st)}

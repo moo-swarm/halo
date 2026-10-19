@@ -28,6 +28,13 @@
     <filter id="ionBlur" filterUnits="userSpaceOnUse" x="-220" y="-40" width="440" height="80">
       <feGaussianBlur stdDeviation="1"/>
     </filter>
+    <radialGradient id="light">
+      <stop offset="0" stop-color="#fffaf0"/>
+      <stop offset="0.2" stop-color="#fde9c0"/>
+      <stop offset="0.4" stop-color="#bfdbfe" stop-opacity="0.9"/>
+      <stop offset="0.65" stop-color="#3b82f6" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#2563eb" stop-opacity="0"/>
+    </radialGradient>
     <mask id="ringMask" maskUnits="userSpaceOnUse" x="0" y="0" width="512" height="512">
       <g transform="rotate(-31.5 256.0 256.0)"><path d="M376.85 372.7A168 168 0 1 1 376.85 139.3" fill="none" stroke="#fff" stroke-width="48" stroke-linecap="round"/></g>
     </mask>
@@ -41,99 +48,9 @@
   <rect width="512" height="512" fill="url(#bg)"/>
   <g transform="translate(256.0 256.0) rotate(-45)" opacity="0"><g transform="translate(84 0)"><g opacity="1"><g filter="url(#dustBlur)"><g transform="scale(60.26 24.84)"><use href="#dustShape"/></g></g><g filter="url(#ionBlur)"><g transform="scale(65.8 4.83)"><use href="#ionShape"/></g></g><g transform="scale(1.38)"><circle r="44" fill="url(#coma)"/><circle r="5.5" fill="#ffffff"/></g></g></g></g>
   <g filter="url(#ringGlow)">
-    <g mask="url(#ringMask)" fill="none" stroke-width="56">
-      <g transform="rotate(-90 256.0 256.0)">
-      <path d="M424 256A168 168 0 0 1 423.31 271.23" stroke="#1f3a8c"/>
-      <path d="M423.59 267.72A168 168 0 0 1 421.84 282.86" stroke="#213b90"/>
-      <path d="M422.37 279.38A168 168 0 0 1 419.56 294.36" stroke="#233b94"/>
-      <path d="M420.33 290.93A168 168 0 0 1 416.49 305.68" stroke="#263c98"/>
-      <path d="M417.49 302.31A168 168 0 0 1 412.63 316.75" stroke="#283c9c"/>
-      <path d="M413.87 313.46A168 168 0 0 1 408.01 327.53" stroke="#2a3da0"/>
-      <path d="M409.48 324.33A168 168 0 0 1 402.65 337.96" stroke="#2c3da4"/>
-      <path d="M404.34 334.87A168 168 0 0 1 396.58 347.99" stroke="#2e3ea8"/>
-      <path d="M398.47 345.03A168 168 0 0 1 389.82 357.57" stroke="#313fac"/>
-      <path d="M391.91 354.75A168 168 0 0 1 382.41 366.66" stroke="#333fb0"/>
-      <path d="M384.7 363.99A168 168 0 0 1 374.38 375.21" stroke="#3540b4"/>
-      <path d="M376.85 372.7A168 168 0 0 1 365.77 383.18" stroke="#3740b9"/>
-      <path d="M368.41 380.85A168 168 0 0 1 356.64 390.52" stroke="#3941bd"/>
-      <path d="M359.43 388.39A168 168 0 0 1 347.01 397.22" stroke="#3b41c1"/>
-      <path d="M349.94 395.28A168 168 0 0 1 336.93 403.22" stroke="#3e42c5"/>
-      <path d="M340 401.49A168 168 0 0 1 326.47 408.51" stroke="#4042c9"/>
-      <path d="M329.65 407A168 168 0 0 1 315.66 413.05" stroke="#4243cd"/>
-      <path d="M318.93 411.77A168 168 0 0 1 304.56 416.83" stroke="#4443d1"/>
-      <path d="M307.91 415.78A168 168 0 0 1 293.22 419.83" stroke="#4644d5"/>
-      <path d="M296.64 419.01A168 168 0 0 1 281.7 422.02" stroke="#4844d9"/>
-      <path d="M285.17 421.45A168 168 0 0 1 270.06 423.41" stroke="#4b45dd"/>
-      <path d="M273.56 423.08A168 168 0 0 1 258.35 423.98" stroke="#4d45e1"/>
-      <path d="M261.86 423.9A168 168 0 0 1 246.62 423.74" stroke="#4f46e5"/>
-      <path d="M250.14 423.9A168 168 0 0 1 234.94 422.68" stroke="#4d47e5"/>
-      <path d="M238.44 423.08A168 168 0 0 1 223.37 420.8" stroke="#4b49e6"/>
-      <path d="M226.83 421.45A168 168 0 0 1 211.95 418.12" stroke="#494ae6"/>
-      <path d="M215.36 419.01A168 168 0 0 1 200.75 414.66" stroke="#484be6"/>
-      <path d="M204.09 415.78A168 168 0 0 1 189.82 410.41" stroke="#464ce6"/>
-      <path d="M193.07 411.77A168 168 0 0 1 179.21 405.42" stroke="#444ee7"/>
-      <path d="M182.35 407A168 168 0 0 1 168.97 399.7" stroke="#424fe7"/>
-      <path d="M172 401.49A168 168 0 0 1 159.16 393.28" stroke="#4050e7"/>
-      <path d="M162.06 395.28A168 168 0 0 1 149.82 386.19" stroke="#3e52e7"/>
-      <path d="M152.57 388.39A168 168 0 0 1 141 378.47" stroke="#3c53e8"/>
-      <path d="M143.59 380.85A168 168 0 0 1 132.73 370.15" stroke="#3a54e8"/>
-      <path d="M135.15 372.7A168 168 0 0 1 125.07 361.27" stroke="#3955e8"/>
-      <path d="M127.3 363.99A168 168 0 0 1 118.05 351.88" stroke="#3757e8"/>
-      <path d="M120.09 354.75A168 168 0 0 1 111.69 342.02" stroke="#3558e9"/>
-      <path d="M113.53 345.03A168 168 0 0 1 106.05 331.75" stroke="#3359e9"/>
-      <path d="M107.66 334.87A168 168 0 0 1 101.13 321.1" stroke="#315be9"/>
-      <path d="M102.52 324.33A168 168 0 0 1 96.96 310.14" stroke="#2f5cea"/>
-      <path d="M98.13 313.46A168 168 0 0 1 93.57 298.91" stroke="#2d5dea"/>
-      <path d="M94.51 302.31A168 168 0 0 1 90.98 287.48" stroke="#2c5eea"/>
-      <path d="M91.67 290.93A168 168 0 0 1 89.18 275.89" stroke="#2a60ea"/>
-      <path d="M89.63 279.38A168 168 0 0 1 88.2 264.21" stroke="#2861eb"/>
-      <path d="M88.41 267.72A168 168 0 0 1 88.04 252.48" stroke="#2662eb"/>
-      <path d="M88 256A168 168 0 0 1 88.69 240.77" stroke="#2765eb"/>
-      <path d="M88.41 244.28A168 168 0 0 1 90.16 229.14" stroke="#2a69ec"/>
-      <path d="M89.63 232.62A168 168 0 0 1 92.44 217.64" stroke="#2d6ced"/>
-      <path d="M91.67 221.07A168 168 0 0 1 95.51 206.32" stroke="#3070ee"/>
-      <path d="M94.51 209.69A168 168 0 0 1 99.37 195.25" stroke="#3474ef"/>
-      <path d="M98.13 198.54A168 168 0 0 1 103.99 184.47" stroke="#3777f0"/>
-      <path d="M102.52 187.67A168 168 0 0 1 109.35 174.04" stroke="#3a7bf0"/>
-      <path d="M107.66 177.13A168 168 0 0 1 115.42 164.01" stroke="#3e7ff1"/>
-      <path d="M113.53 166.97A168 168 0 0 1 122.18 154.43" stroke="#4182f2"/>
-      <path d="M120.09 157.25A168 168 0 0 1 129.59 145.34" stroke="#4486f3"/>
-      <path d="M127.3 148.01A168 168 0 0 1 137.62 136.79" stroke="#478af4"/>
-      <path d="M135.15 139.3A168 168 0 0 1 146.23 128.82" stroke="#4b8df5"/>
-      <path d="M143.59 131.15A168 168 0 0 1 155.36 121.48" stroke="#4e91f5"/>
-      <path d="M152.57 123.61A168 168 0 0 1 164.99 114.78" stroke="#5195f6"/>
-      <path d="M162.06 116.72A168 168 0 0 1 175.07 108.78" stroke="#5598f7"/>
-      <path d="M172 110.51A168 168 0 0 1 185.53 103.49" stroke="#589cf8"/>
-      <path d="M182.35 105A168 168 0 0 1 196.34 98.95" stroke="#5ba0f9"/>
-      <path d="M193.07 100.23A168 168 0 0 1 207.44 95.17" stroke="#5ea3fa"/>
-      <path d="M204.09 96.22A168 168 0 0 1 218.78 92.17" stroke="#66a9fa"/>
-      <path d="M215.36 92.99A168 168 0 0 1 230.3 89.98" stroke="#72b0fb"/>
-      <path d="M226.83 90.55A168 168 0 0 1 241.94 88.59" stroke="#7eb7fb"/>
-      <path d="M238.44 88.92A168 168 0 0 1 253.65 88.02" stroke="#89befb"/>
-      <path d="M250.14 88.1A168 168 0 0 1 265.38 88.26" stroke="#95c5fc"/>
-      <path d="M261.86 88.1A168 168 0 0 1 277.06 89.32" stroke="#a1ccfc"/>
-      <path d="M273.56 88.92A168 168 0 0 1 288.63 91.2" stroke="#add3fc"/>
-      <path d="M285.17 90.55A168 168 0 0 1 300.05 93.88" stroke="#b9dafd"/>
-      <path d="M296.64 92.99A168 168 0 0 1 311.25 97.34" stroke="#c5e2fd"/>
-      <path d="M307.91 96.22A168 168 0 0 1 322.18 101.59" stroke="#d1e9fe"/>
-      <path d="M318.93 100.23A168 168 0 0 1 332.79 106.58" stroke="#dcf0fe"/>
-      <path d="M329.65 105A168 168 0 0 1 343.03 112.3" stroke="#d6ecfe"/>
-      <path d="M340 110.51A168 168 0 0 1 352.84 118.72" stroke="#c8e3fd"/>
-      <path d="M349.94 116.72A168 168 0 0 1 362.18 125.81" stroke="#badbfd"/>
-      <path d="M359.43 123.61A168 168 0 0 1 371 133.53" stroke="#abd2fc"/>
-      <path d="M368.41 131.15A168 168 0 0 1 379.27 141.85" stroke="#9dcafc"/>
-      <path d="M376.85 139.3A168 168 0 0 1 386.93 150.73" stroke="#8fc1fb"/>
-      <path d="M384.7 148.01A168 168 0 0 1 393.95 160.12" stroke="#81b9fb"/>
-      <path d="M391.91 157.25A168 168 0 0 1 400.31 169.98" stroke="#72b0fb"/>
-      <path d="M398.47 166.97A168 168 0 0 1 405.95 180.25" stroke="#64a8fa"/>
-      <path d="M404.34 177.13A168 168 0 0 1 410.87 190.9" stroke="#5a9bef"/>
-      <path d="M409.48 187.67A168 168 0 0 1 415.04 201.86" stroke="#508ce0"/>
-      <path d="M413.87 198.54A168 168 0 0 1 418.43 213.09" stroke="#477dd0"/>
-      <path d="M417.49 209.69A168 168 0 0 1 421.02 224.52" stroke="#3e6ec0"/>
-      <path d="M420.33 221.07A168 168 0 0 1 422.82 236.11" stroke="#355fb1"/>
-      <path d="M422.37 232.62A168 168 0 0 1 423.8 247.79" stroke="#2c50a1"/>
-      <path d="M423.59 244.28A168 168 0 0 1 423.96 259.52" stroke="#234192"/>
-      </g>
+    <g mask="url(#ringMask)">
+      <rect width="512" height="512" fill="#1a3278"/>
+      <g transform="translate(256.0 256.0) rotate(-45)"><g transform="translate(84 0)"><circle r="300" fill="url(#light)" opacity="0.74"/></g></g>
     </g>
   </g>
   <g transform="translate(256.0 256.0) rotate(-45)" opacity="1"><g transform="translate(84 0)"><g opacity="1"><g filter="url(#dustBlur)"><g transform="scale(60.26 24.84)"><use href="#dustShape"/></g></g><g filter="url(#ionBlur)"><g transform="scale(65.8 4.83)"><use href="#ionShape"/></g></g><g transform="scale(1.38)"><circle r="44" fill="url(#coma)"/><circle r="5.5" fill="#ffffff"/></g></g></g></g>
