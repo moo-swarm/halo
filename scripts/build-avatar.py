@@ -18,13 +18,13 @@ from pathlib import Path
 SIZE = 512
 C = SIZE / 2
 R = 168            # ring radius
-BAND = 24          # ring thickness
-GAP = 28           # half-width of the gap, degrees
+BAND = 36          # ring thickness
+GAP = 36           # half-width of the gap, degrees
 AXIS = -45         # screen angle of the comet's line (edge at top-right)
 DWELL = 0.25       # no ratchet clicks while the comet is within this phase of the gap
 CREEP = 0.15       # share of the turn done by the steady creep (the ring never stops)
 CLICKS = 3         # ratchet clicks per turn, all while the comet is near the centre
-SNAP = 0.4         # share of each click slot spent moving; the rest is creep only
+SNAP = 0.8         # share of each click slot spent moving; the rest is creep only
 LAG = 0.8          # tail = the orbit arc this far (rad, at full speed) behind the head
 DEPTH = 0.38       # head scale swing front/back
 DUR = 6            # seconds per cycle
@@ -142,9 +142,9 @@ def comet(layer, animated, st):
         visible = st["front"] == (layer == "front")
         return f"""<g transform="translate({C} {C}) rotate({AXIS})" opacity="{1 if visible else 0}">
     <g transform="translate({f(st['x'])} 0)" opacity="{f(st['opacity'])}">
-      <g transform="scale({f(st['tail'])} {f(6.5 * st['head'])})"><use href="#tailShape"/></g>
+      <g transform="scale({f(st['tail'])} {f(9 * st['head'])})"><use href="#tailShape"/></g>
       <g transform="scale({f(st['head'])})">
-        <circle r="22" fill="url(#glow)"/><circle r="6" fill="#ffffff"/>
+        <circle r="30" fill="url(#glow)"/><circle r="8.5" fill="#ffffff"/>
       </g>
     </g>
   </g>"""
@@ -158,12 +158,12 @@ def comet(layer, animated, st):
       <g>
         {anim("opacity", [f(s['opacity']) for s in ss])}
         <g>
-          {anim(None, [f"{f(s['tail'])} {f(6.5 * s['head'])}" for s in ss], "scale")}
+          {anim(None, [f"{f(s['tail'])} {f(9 * s['head'])}" for s in ss], "scale")}
           <use href="#tailShape"/>
         </g>
         <g>
           {anim(None, [f(s['head']) for s in ss], "scale")}
-          <circle r="22" fill="url(#glow)"/><circle r="6" fill="#ffffff"/>
+          <circle r="30" fill="url(#glow)"/><circle r="8.5" fill="#ffffff"/>
         </g>
       </g>
     </g>
