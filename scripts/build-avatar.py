@@ -1,0 +1,202 @@
+#!/usr/bin/env python3
+"""Build the Halo assistant avatar: a comet orbiting through a rotating ring.
+
+The comet circles in a plane perpendicular to the ring, so on screen its path
+collapses to a line from the ring's edge (through the gap) to the centre.
+At both ends it is a bare point; the tail grows with its sideways speed.
+Inbound it flies in front of the ring and larger, outbound behind and smaller.
+The ring creeps while the gap holds the comet and sweeps round while the comet
+is at the centre, making exactly one turn per cycle, so the loop is seamless
+and the comet never touches the ring.
+
+Writes assets/avatar/halo-comet.svg (SMIL, works in <img>) and
+assets/avatar/halo-comet-static.svg (a single frame).
+"""
+import math
+from pathlib import Path
+
+SIZE = 512
+C = SIZE / 2
+R = 168            # ring radius
+BAND = 24          # ring thickness
+GAP = 28           # half-width of the gap, degrees
+AXIS = -45         # screen angle of the comet's line (edge at top-right)
+DWELL = 0.25       # no ratchet clicks while the comet is within this phase of the gap
+CREEP = 0.15       # share of the turn done by the steady creep (the ring never stops)
+CLICKS = 3         # ratchet clicks per turn, all while the comet is near the centre
+SNAP = 0.4         # share of each click slot spent moving; the rest is creep only
+LAG = 0.8          # tail = the orbit arc this far (rad, at full speed) behind the head
+DEPTH = 0.38       # head scale swing front/back
+DUR = 6            # seconds per cycle
+SAMPLES = 96
+STATIC_T = 0.25
+SEGMENTS = 90
+
+RING_STOPS = [(0, "#1e3a8a"), (0.55, "#2563eb"), (0.85, "#60a5fa"), (1, "#e0f2fe")]
+
+
+def lerp_hex(a, b, u):
+    pa = [int(a[i:i + 2], 16) for i in (1, 3, 5)]
+    pb = [int(b[i:i + 2], 16) for i in (1, 3, 5)]
+    return "#" + "".join(f"{round(x + (y - x) * u):02x}" for x, y in zip(pa, pb))
+
+
+def ring_color(u):
+    for (u0, c0), (u1, c1) in zip(RING_STOPS, RING_STOPS[1:]):
+        if u <= u1:
+            return lerp_hex(c0, c1, (u - u0) / (u1 - u0))
+    return RING_STOPS[-1][1]
+
+
+def smootherstep(u):
+    u = min(max(u, 0), 1)
+    return u * u * u * (u * (u * 6 - 15) + 10)
+
+
+def ring_turn(t):
+    """Fraction of the ring's single turn done by phase t. Like a ratchet the ring
+    always creeps and snaps forward in clicks, but only while the comet is near
+    the centre, so the comet passes the gap without ever touching the ring."""
+    u = min(max((t - DWELL) / (1 - 2 * DWELL), 0), 1)
+    k = min(int(u * CLICKS), CLICKS - 1)
+    click = smootherstep((u * CLICKS - k) / SNAP)
+    return CREEP * t + (1 - CREEP) * (k + click) / CLICKS
+
+
+def state(t):
+    th = 2 * math.pi * t
+    s = math.sin(th)
+    return {
+        "ring": 360 * ring_turn(t),
+        "x": R / 2 * (1 + math.cos(th)),
+        "head": 1 + DEPTH * s,
+        # The tail is the orbit just behind the head, seen edge-on, so it never
+        # leaves the edge-centre line and shrinks to nothing at both ends.
+        "tail": R / 2 * (1 + math.cos(th - LAG * abs(s))) - R / 2 * (1 + math.cos(th)),
+        "opacity": 0.78 + 0.22 * s,
+        "front": t < 0.5,
+    }
+
+
+def f(v):
+    return f"{v:.2f}".rstrip("0").rstrip(".")
+
+
+def polar(a, r=R):
+    a = math.radians(a)
+    return C + r * math.cos(a), C + r * math.sin(a)
+
+
+def ring_markup():
+    span = 360 - 2 * GAP
+    step = span / SEGMENTS
+    parts = []
+    for i in range(SEGMENTS):
+        a0 = GAP + i * step
+        a1 = min(a0 + step + 1.2, 360 - GAP)
+        x0, y0 = polar(a0)
+        x1, y1 = polar(a1)
+        col = ring_color((i + 0.5) / SEGMENTS)
+        parts.append(f'<path d="M{f(x0)} {f(y0)}A{R} {R} 0 0 1 {f(x1)} {f(y1)}" stroke="{col}"/>')
+    xs, ys = polar(GAP)
+    xe, ye = polar(360 - GAP)
+    parts.append(f'<circle cx="{f(xs)}" cy="{f(ys)}" r="{BAND / 2}" fill="{ring_color(0)}" stroke="none"/>')
+    parts.append(f'<circle cx="{f(xe)}" cy="{f(ye)}" r="{BAND / 2}" fill="{ring_color(1)}" stroke="none"/>')
+    return "\n      ".join(parts)
+
+
+DEFS = f"""<defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="60%">
+      <stop offset="0" stop-color="#16233f"/>
+      <stop offset="1" stop-color="#0b1120"/>
+    </radialGradient>
+    <radialGradient id="glow">
+      <stop offset="0" stop-color="#fff7e6"/>
+      <stop offset="0.3" stop-color="#fef3c7" stop-opacity="0.7"/>
+      <stop offset="1" stop-color="#fbbf24" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="tail" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fffbeb" stop-opacity="0.95"/>
+      <stop offset="0.3" stop-color="#e0f2fe" stop-opacity="0.75"/>
+      <stop offset="1" stop-color="#60a5fa" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="ringGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="7" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <path id="tailShape" d="M0 -1C0.35 -1 0.7 -0.3 1 0C0.7 0.3 0.35 1 0 1Z" fill="url(#tail)"/>
+  </defs>"""
+
+
+def anim(attr, values, kind=None):
+    vals = ";".join(values)
+    if kind:
+        return (f'<animateTransform attributeName="transform" type="{kind}" values="{vals}" '
+                f'dur="{DUR}s" repeatCount="indefinite"/>')
+    return f'<animate attributeName="{attr}" values="{vals}" dur="{DUR}s" repeatCount="indefinite"/>'
+
+
+def comet(layer, animated, st):
+    """One depth layer of the comet. layer: 'front' or 'back'."""
+    if not animated:
+        visible = st["front"] == (layer == "front")
+        return f"""<g transform="translate({C} {C}) rotate({AXIS})" opacity="{1 if visible else 0}">
+    <g transform="translate({f(st['x'])} 0)" opacity="{f(st['opacity'])}">
+      <g transform="scale({f(st['tail'])} {f(6.5 * st['head'])})"><use href="#tailShape"/></g>
+      <g transform="scale({f(st['head'])})">
+        <circle r="22" fill="url(#glow)"/><circle r="6" fill="#ffffff"/>
+      </g>
+    </g>
+  </g>"""
+    ts = [i / SAMPLES for i in range(SAMPLES + 1)]
+    ss = [state(t % 1) for t in ts]
+    flip = ("1;0;1" if layer == "front" else "0;1;0")
+    return f"""<g transform="translate({C} {C}) rotate({AXIS})" opacity="{flip[0]}">
+    <animate attributeName="opacity" values="{flip}" keyTimes="0;0.5;1" calcMode="discrete" dur="{DUR}s" repeatCount="indefinite"/>
+    <g>
+      {anim(None, [f"{f(s['x'])} 0" for s in ss], "translate")}
+      <g>
+        {anim("opacity", [f(s['opacity']) for s in ss])}
+        <g>
+          {anim(None, [f"{f(s['tail'])} {f(6.5 * s['head'])}" for s in ss], "scale")}
+          <use href="#tailShape"/>
+        </g>
+        <g>
+          {anim(None, [f(s['head']) for s in ss], "scale")}
+          <circle r="22" fill="url(#glow)"/><circle r="6" fill="#ffffff"/>
+        </g>
+      </g>
+    </g>
+  </g>"""
+
+
+def build(animated):
+    st = state(STATIC_T)
+    if animated:
+        rots = [f"{f(AXIS + state(i / SAMPLES)['ring'] if i < SAMPLES else AXIS + 360)} {C} {C}"
+                for i in range(SAMPLES + 1)]
+        ring_open = f'<g transform="rotate({AXIS} {C} {C})">\n      {anim(None, rots, "rotate")}'
+    else:
+        ring_open = f'<g transform="rotate({f(AXIS + st["ring"])} {C} {C})">'
+    title = "Halo — AI assistant" + ("" if animated else " (static)")
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {SIZE} {SIZE}" width="{SIZE}" height="{SIZE}" role="img" aria-label="{title}">
+  <title>{title}</title>
+  {DEFS}
+  <rect width="{SIZE}" height="{SIZE}" fill="url(#bg)"/>
+  {comet("back", animated, st)}
+  <g filter="url(#ringGlow)" fill="none" stroke-width="{BAND}">
+    {ring_open}
+      {ring_markup()}
+    </g>
+  </g>
+  {comet("front", animated, st)}
+</svg>
+"""
+
+
+if __name__ == "__main__":
+    out = Path(__file__).resolve().parent.parent / "assets" / "avatar"
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "halo-comet.svg").write_text(build(True))
+    (out / "halo-comet-static.svg").write_text(build(False))
+    print("wrote", out)
