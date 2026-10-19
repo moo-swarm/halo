@@ -33,7 +33,11 @@ SAMPLES = 96
 STATIC_T = 0.25
 SEGMENTS = 90
 
-RING_STOPS = [(0, "#1e3a8a"), (0.55, "#2563eb"), (0.85, "#60a5fa"), (1, "#e0f2fe")]
+# Colour wheel behind the ring, cyclic (first stop == last). It turns the other
+# way at a constant rate, so colour flows against the ring's own motion.
+RING_STOPS = [(0, "#1e3a8a"), (0.25, "#4f46e5"), (0.5, "#2563eb"), (0.7, "#60a5fa"),
+              (0.82, "#e0f2fe"), (0.92, "#60a5fa"), (1, "#1e3a8a")]
+COLOR_TURNS = -1   # colour wheel turns per cycle (negative: against the ring)
 
 
 def lerp_hex(a, b, u):
@@ -89,21 +93,23 @@ def polar(a, r=R):
     return C + r * math.cos(a), C + r * math.sin(a)
 
 
-def ring_markup():
-    span = 360 - 2 * GAP
-    step = span / SEGMENTS
+def ring_mask():
+    """The ring's shape: an arc with round ends, leaving the gap at angle 0."""
+    x0, y0 = polar(GAP)
+    x1, y1 = polar(360 - GAP)
+    return (f'<path d="M{f(x0)} {f(y0)}A{R} {R} 0 1 1 {f(x1)} {f(y1)}" fill="none" '
+            f'stroke="#fff" stroke-width="{BAND}" stroke-linecap="round"/>')
+
+
+def color_wheel():
+    """A full annulus coloured round the circle, seen only through the ring."""
+    step = 360 / SEGMENTS
     parts = []
     for i in range(SEGMENTS):
-        a0 = GAP + i * step
-        a1 = min(a0 + step + 1.2, 360 - GAP)
-        x0, y0 = polar(a0)
-        x1, y1 = polar(a1)
-        col = ring_color((i + 0.5) / SEGMENTS)
-        parts.append(f'<path d="M{f(x0)} {f(y0)}A{R} {R} 0 0 1 {f(x1)} {f(y1)}" stroke="{col}"/>')
-    xs, ys = polar(GAP)
-    xe, ye = polar(360 - GAP)
-    parts.append(f'<circle cx="{f(xs)}" cy="{f(ys)}" r="{BAND / 2}" fill="{ring_color(0)}" stroke="none"/>')
-    parts.append(f'<circle cx="{f(xe)}" cy="{f(ye)}" r="{BAND / 2}" fill="{ring_color(1)}" stroke="none"/>')
+        x0, y0 = polar(i * step)
+        x1, y1 = polar((i + 1) * step + 1.2)
+        parts.append(f'<path d="M{f(x0)} {f(y0)}A{R} {R} 0 0 1 {f(x1)} {f(y1)}" '
+                     f'stroke="{ring_color((i + 0.5) / SEGMENTS)}"/>')
     return "\n      ".join(parts)
 
 
@@ -135,6 +141,9 @@ DEFS = f"""<defs>
     <filter id="ionBlur" filterUnits="userSpaceOnUse" x="-220" y="-40" width="440" height="80">
       <feGaussianBlur stdDeviation="1"/>
     </filter>
+    <mask id="ringMask" maskUnits="userSpaceOnUse" x="0" y="0" width="{SIZE}" height="{SIZE}">
+      RING_SHAPE
+    </mask>
     <filter id="ringGlow" x="-20%" y="-20%" width="140%" height="140%">
       <feGaussianBlur stdDeviation="7" result="b"/>
       <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
@@ -186,18 +195,24 @@ def build(animated):
     if animated:
         rots = [f"{f(AXIS + state(i / SAMPLES)['ring'] if i < SAMPLES else AXIS + 360)} {C} {C}"
                 for i in range(SAMPLES + 1)]
-        ring_open = f'<g transform="rotate({AXIS} {C} {C})">\n      {anim(None, rots, "rotate")}'
+        shape = f'<g>{anim(None, rots, "rotate")}{ring_mask()}</g>'
+        wheel_open = (f'<g><animateTransform attributeName="transform" type="rotate" '
+                      f'values="0 {C} {C};{360 * COLOR_TURNS} {C} {C}" dur="{DUR}s" repeatCount="indefinite"/>')
     else:
-        ring_open = f'<g transform="rotate({f(AXIS + st["ring"])} {C} {C})">'
+        shape = f'<g transform="rotate({f(AXIS + st["ring"])} {C} {C})">{ring_mask()}</g>'
+        wheel_open = f'<g transform="rotate({f(360 * COLOR_TURNS * STATIC_T)} {C} {C})">'
+    defs = DEFS.replace("RING_SHAPE", shape)
     title = "Halo — AI assistant" + ("" if animated else " (static)")
     return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {SIZE} {SIZE}" width="{SIZE}" height="{SIZE}" role="img" aria-label="{title}">
   <title>{title}</title>
-  {DEFS}
+  {defs}
   <rect width="{SIZE}" height="{SIZE}" fill="url(#bg)"/>
   {comet("back", animated, st)}
-  <g filter="url(#ringGlow)" fill="none" stroke-width="{BAND}">
-    {ring_open}
-      {ring_markup()}
+  <g filter="url(#ringGlow)">
+    <g mask="url(#ringMask)" fill="none" stroke-width="{BAND + 8}">
+      {wheel_open}
+      {color_wheel()}
+      </g>
     </g>
   </g>
   {comet("front", animated, st)}
