@@ -25,20 +25,23 @@ Moo Swarm host (cron, hourly)
 
 `scripts/moo-export-data.sh` runs hourly from host cron: it regenerates
 `data/swarm.json`, then commits and pushes it to `main`, where GitHub Pages
-deploys it. Paths are configurable via env (current defaults):
+deploys it. Paths are configurable via env; defaults derive from the host home
+directory, so no host-specific paths are committed:
 
-| Variable | Default |
+| Variable | Purpose |
 |---|---|
-| `HALO_OPENCLAW_DB` | `<HOME>/.openclaw/state/openclaw.sqlite` |
-| `HALO_AGENTS_DIR` | `<HOME>/.openclaw/agents` |
-| `HALO_PROJECTS_DIR` | `<HOME>/.openclaw/workspaces/_align-rail_/projects` |
+| `HALO_OPENCLAW_HOME` | OpenClaw home dir (default `~/.openclaw`) |
+| `HALO_OPENCLAW_DB` | OpenClaw SQLite state DB |
+| `HALO_AGENTS_DIR` | OpenClaw agents directory |
+| `HALO_PROJECTS_DIR` | Projects workspace root |
+| `HALO_EXPORT_HOST` | Host label written to `meta.export_host` |
 | `HALO_REPO_DENYLIST` | `.github` (comma-separated) |
 
 ### Where each section's data comes from
 
 | Section | Status | Source |
 |---|---|---|
-| Active Projects | Live | Filesystem scan of `_align-rail_/projects` (feature dirs, git-log owner); `open_issues` counts come from the same GitHub fetch |
+| Active Projects | Live | Filesystem scan of the configured projects root (feature dirs, git-log owner); `open_issues` counts come from the same GitHub fetch |
 | Pipeline Status | Live | Latest entry headers from each project's `.moo-swarm/features/*/handoff-log.md` |
 | Open Issues & PRs | Live | `gh api` over moo-swarm org repos — one paged repo-list call, then open issues and PRs per repo |
 | Cron Jobs | Live | `cron_jobs` table of `openclaw.sqlite`, opened read-only, whitelisted columns only |

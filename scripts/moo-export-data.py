@@ -29,9 +29,12 @@ HALO_DIR = Path(__file__).resolve().parent.parent
 DATA_FILE = HALO_DIR / "data" / "swarm.json"
 
 # ── CONFIG ────────────────────────────────────────────────────────────────
-DEFAULT_OPENCLAW_DB = "<HOME>/.openclaw/state/openclaw.sqlite"
-DEFAULT_AGENTS_DIR = "<HOME>/.openclaw/agents"
-PROJECTS_DIR = Path("<HOME>/.openclaw/workspaces/_align-rail_/projects")
+# Defaults derive from the host home dir; override via HALO_* env vars.
+# No host-specific absolute paths are committed.
+OPENCLAW_HOME = Path(os.environ.get("HALO_OPENCLAW_HOME", Path.home() / ".openclaw"))
+DEFAULT_OPENCLAW_DB = str(OPENCLAW_HOME / "state" / "openclaw.sqlite")
+DEFAULT_AGENTS_DIR = str(OPENCLAW_HOME / "agents")
+PROJECTS_DIR = OPENCLAW_HOME / "workspaces" / "_align-rail_" / "projects"
 DEFAULT_REPO_DENYLIST = ".github"
 
 ORG = "moo-swarm"
@@ -500,7 +503,7 @@ def sanitize_error(exc: Exception) -> str:
     """Make an exception message safe to publish (gate blocker 1).
 
     Applied AT CAPTURE inside run_source: whitespace collapsed, home prefix
-    (<HOME> → ~) and remaining absolute-path runs redacted, truncated to
+    (host home → ~) and remaining absolute-path runs redacted, truncated to
     ~200 chars.
     """
     msg = " ".join(str(exc).split())
@@ -737,7 +740,7 @@ def main() -> None:
     meta = data.setdefault("meta", {})
     meta["version"] = "2.0"
     meta["generated_by"] = "moo-export-data.sh"
-    meta["export_host"] = meta.get("export_host", "<HOST>")
+    meta["export_host"] = os.environ.get("HALO_EXPORT_HOST", "moo-swarm-host")
     meta["runtime_version"] = meta.get("runtime_version", "24.18.0")
 
     try:

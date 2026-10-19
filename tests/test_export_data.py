@@ -201,7 +201,7 @@ def cron_row(**over):
         "job_json": '{"secret":"x"}',
         "state_json": '{"state":"y"}',
         "description": "private description text",
-        "last_error": "boom at <HOME>/secret/path",
+        "last_error": "boom at /srv/secret/path",
     }
     row.update(over)
     return row
