@@ -18,14 +18,15 @@ from pathlib import Path
 SIZE = 512
 C = SIZE / 2
 R = 168            # ring radius
-BAND = 36          # ring thickness
-GAP = 36           # half-width of the gap, degrees
+BAND = 48          # ring thickness
+GAP = 44           # half-width of the gap, degrees
 AXIS = -45         # screen angle of the comet's line (edge at top-right)
 DWELL = 0.25       # no ratchet clicks while the comet is within this phase of the gap
 CREEP = 0.15       # share of the turn done by the steady creep (the ring never stops)
 CLICKS = 3         # ratchet clicks per turn, all while the comet is near the centre
 SNAP = 0.8         # share of each click slot spent moving; the rest is creep only
-LAG = 0.8          # tail = the orbit arc this far (rad, at full speed) behind the head
+LAG = 0.8          # dust tail = the orbit arc this far (rad, at full speed) behind the head
+ION_LAG = 0.9      # the thinner ion tail trails a little further
 DEPTH = 0.38       # head scale swing front/back
 DUR = 6            # seconds per cycle
 SAMPLES = 96
@@ -72,7 +73,8 @@ def state(t):
         "head": 1 + DEPTH * s,
         # The tail is the orbit just behind the head, seen edge-on, so it never
         # leaves the edge-centre line and shrinks to nothing at both ends.
-        "tail": R / 2 * (1 + math.cos(th - LAG * abs(s))) - R / 2 * (1 + math.cos(th)),
+        "dust": R / 2 * (1 + math.cos(th - LAG * abs(s))) - R / 2 * (1 + math.cos(th)),
+        "ion": R / 2 * (1 + math.cos(th - ION_LAG * abs(s))) - R / 2 * (1 + math.cos(th)),
         "opacity": 0.78 + 0.22 * s,
         "front": t < 0.5,
     }
@@ -110,21 +112,35 @@ DEFS = f"""<defs>
       <stop offset="0" stop-color="#16233f"/>
       <stop offset="1" stop-color="#0b1120"/>
     </radialGradient>
-    <radialGradient id="glow">
-      <stop offset="0" stop-color="#fff7e6"/>
-      <stop offset="0.3" stop-color="#fef3c7" stop-opacity="0.7"/>
-      <stop offset="1" stop-color="#fbbf24" stop-opacity="0"/>
+    <radialGradient id="coma">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.1" stop-color="#fffaf0"/>
+      <stop offset="0.3" stop-color="#ffe9b8" stop-opacity="0.7"/>
+      <stop offset="0.6" stop-color="#f8c977" stop-opacity="0.25"/>
+      <stop offset="1" stop-color="#f59e0b" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="tail" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#fffbeb" stop-opacity="0.95"/>
-      <stop offset="0.3" stop-color="#e0f2fe" stop-opacity="0.75"/>
-      <stop offset="1" stop-color="#60a5fa" stop-opacity="0"/>
+    <linearGradient id="dust" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fff4dc" stop-opacity="0.95"/>
+      <stop offset="0.45" stop-color="#fcd9a0" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#f5b764" stop-opacity="0"/>
     </linearGradient>
+    <linearGradient id="ion" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#f0f9ff" stop-opacity="0.95"/>
+      <stop offset="0.55" stop-color="#7dd3fc" stop-opacity="0.7"/>
+      <stop offset="1" stop-color="#38bdf8" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="dustBlur" filterUnits="userSpaceOnUse" x="-220" y="-90" width="440" height="180">
+      <feGaussianBlur stdDeviation="3.5"/>
+    </filter>
+    <filter id="ionBlur" filterUnits="userSpaceOnUse" x="-220" y="-40" width="440" height="80">
+      <feGaussianBlur stdDeviation="1"/>
+    </filter>
     <filter id="ringGlow" x="-20%" y="-20%" width="140%" height="140%">
       <feGaussianBlur stdDeviation="7" result="b"/>
       <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
-    <path id="tailShape" d="M0 -1C0.35 -1 0.7 -0.3 1 0C0.7 0.3 0.35 1 0 1Z" fill="url(#tail)"/>
+    <path id="dustShape" d="M0 -0.35C0.35 -0.6 0.75 -1 1 -0.9L1 0.9C0.75 1 0.35 0.6 0 0.35Z" fill="url(#dust)"/>
+    <path id="ionShape" d="M0 -1C0.4 -0.6 0.8 -0.2 1 0C0.8 0.2 0.4 0.6 0 1Z" fill="url(#ion)"/>
   </defs>"""
 
 
@@ -137,37 +153,32 @@ def anim(attr, values, kind=None):
 
 
 def comet(layer, animated, st):
-    """One depth layer of the comet. layer: 'front' or 'back'."""
-    if not animated:
-        visible = st["front"] == (layer == "front")
-        return f"""<g transform="translate({C} {C}) rotate({AXIS})" opacity="{1 if visible else 0}">
-    <g transform="translate({f(st['x'])} 0)" opacity="{f(st['opacity'])}">
-      <g transform="scale({f(st['tail'])} {f(9 * st['head'])})"><use href="#tailShape"/></g>
-      <g transform="scale({f(st['head'])})">
-        <circle r="30" fill="url(#glow)"/><circle r="8.5" fill="#ffffff"/>
-      </g>
-    </g>
-  </g>"""
-    ts = [i / SAMPLES for i in range(SAMPLES + 1)]
-    ss = [state(t % 1) for t in ts]
-    flip = ("1;0;1" if layer == "front" else "0;1;0")
-    return f"""<g transform="translate({C} {C}) rotate({AXIS})" opacity="{flip[0]}">
-    <animate attributeName="opacity" values="{flip}" keyTimes="0;0.5;1" calcMode="discrete" dur="{DUR}s" repeatCount="indefinite"/>
-    <g>
-      {anim(None, [f"{f(s['x'])} 0" for s in ss], "translate")}
-      <g>
-        {anim("opacity", [f(s['opacity']) for s in ss])}
-        <g>
-          {anim(None, [f"{f(s['tail'])} {f(9 * s['head'])}" for s in ss], "scale")}
-          <use href="#tailShape"/>
-        </g>
-        <g>
-          {anim(None, [f(s['head']) for s in ss], "scale")}
-          <circle r="30" fill="url(#glow)"/><circle r="8.5" fill="#ffffff"/>
-        </g>
-      </g>
-    </g>
-  </g>"""
+    """One depth layer of the comet. layer: 'front' or 'back'.
+    Nucleus inside a soft coma, a broad warm dust tail and a thin blue ion tail."""
+    ss = [state((i / SAMPLES) % 1) for i in range(SAMPLES + 1)]
+
+    def g(kind, value, body):
+        if animated:
+            return f"<g>{anim(None, [value(x) for x in ss], kind)}{body}</g>"
+        return f'<g transform="{kind}({value(st)})">{body}</g>'
+
+    head = g("scale", lambda x: f(x["head"]),
+             '<circle r="44" fill="url(#coma)"/><circle r="5.5" fill="#ffffff"/>')
+    dust = g("scale", lambda x: f"{f(x['dust'])} {f(18 * x['head'])}", '<use href="#dustShape"/>')
+    ion = g("scale", lambda x: f"{f(x['ion'])} {f(3.5 * x['head'])}", '<use href="#ionShape"/>')
+    body = f'<g filter="url(#dustBlur)">{dust}</g><g filter="url(#ionBlur)">{ion}</g>{head}'
+    if animated:
+        body = f'<g>{anim("opacity", [f(x["opacity"]) for x in ss])}{body}</g>'
+    else:
+        body = f'<g opacity="{f(st["opacity"])}">{body}</g>'
+    moving = g("translate", lambda x: f"{f(x['x'])} 0", body)
+    if animated:
+        flip = "1;0;1" if layer == "front" else "0;1;0"
+        return (f'<g transform="translate({C} {C}) rotate({AXIS})" opacity="{flip[0]}">'
+                f'<animate attributeName="opacity" values="{flip}" keyTimes="0;0.5;1" calcMode="discrete" '
+                f'dur="{DUR}s" repeatCount="indefinite"/>{moving}</g>')
+    visible = st["front"] == (layer == "front")
+    return f'<g transform="translate({C} {C}) rotate({AXIS})" opacity="{1 if visible else 0}">{moving}</g>'
 
 
 def build(animated):
