@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "updated_at": "2026-10-20T18:27:17Z",
+  "updated_at": "2026-10-20T18:53:33Z",
   "refresh_interval": 3600,
   "projects": [
     {
@@ -135,27 +135,27 @@
       "name": "brain-routine-pull",
       "schedule_human": "every 30m",
       "schedule": 1800000,
-      "last_run": "2026-10-20T17:57:19Z",
+      "last_run": "2026-10-20T18:27:40Z",
       "status": "ok",
-      "next_run": "2026-10-20T18:27:19Z",
+      "next_run": "2026-10-20T18:57:40Z",
       "consecutive_errors": 0
     },
     {
       "name": "halo-hourly-export",
       "schedule_human": "every 1h",
       "schedule": 3600000,
-      "last_run": "2026-10-20T17:26:56Z",
+      "last_run": "2026-10-20T18:27:17Z",
       "status": "fail",
-      "next_run": "2026-10-20T18:27:17Z",
-      "consecutive_errors": 27
+      "next_run": "2026-10-20T19:27:38Z",
+      "consecutive_errors": 28
     },
     {
       "name": "pipeline-state-monitor",
       "schedule_human": "every 1h",
       "schedule": 3600000,
-      "last_run": "2026-10-20T17:48:20Z",
+      "last_run": "2026-10-20T18:48:20Z",
       "status": "ok",
-      "next_run": "2026-10-20T18:48:20Z",
+      "next_run": "2026-10-20T19:48:20Z",
       "consecutive_errors": 0
     },
     {
@@ -448,8 +448,8 @@
       "name": "moo",
       "emoji": "\ud83d\udc02",
       "role": "Orchestrator",
-      "last_active": "2026-10-20T18:21:43Z",
-      "sessions_24h": 4,
+      "last_active": "2026-10-20T18:53:47Z",
+      "sessions_24h": 5,
       "status": "active",
       "tokens_24h": null,
       "budget_daily": {
@@ -464,9 +464,9 @@
       "name": "veles",
       "emoji": "\ud83d\udc0d",
       "role": "Research",
-      "last_active": "2026-10-18T00:00:46Z",
-      "sessions_24h": 0,
-      "status": "idle",
+      "last_active": "2026-10-20T18:48:44Z",
+      "sessions_24h": 4,
+      "status": "active",
       "tokens_24h": null,
       "budget_daily": {
         "tokens": 0,
@@ -517,12 +517,12 @@
     "pipeline_owner_agent": "cmok"
   },
   "sections_updated_at": {
-    "issues": "2026-10-20T18:27:17Z",
-    "prs": "2026-10-20T18:27:17Z",
-    "projects": "2026-10-20T18:27:17Z",
-    "pipeline": "2026-10-20T18:27:17Z",
-    "cron_jobs": "2026-10-20T18:27:17Z",
-    "agents": "2026-10-20T18:27:17Z"
+    "issues": "2026-10-20T18:53:33Z",
+    "prs": "2026-10-20T18:53:33Z",
+    "projects": "2026-10-20T18:53:33Z",
+    "pipeline": "2026-10-20T18:53:33Z",
+    "cron_jobs": "2026-10-20T18:53:33Z",
+    "agents": "2026-10-20T18:53:33Z"
   },
   "source_errors": {}
 }
