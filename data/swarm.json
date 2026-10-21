@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "updated_at": "2026-10-21T08:19:25Z",
+  "updated_at": "2026-10-21T09:19:25Z",
   "refresh_interval": 3600,
   "projects": [
     {
@@ -154,27 +154,27 @@
       "name": "brain-routine-pull",
       "schedule_human": "every 30m",
       "schedule": 1800000,
-      "last_run": "2026-10-21T07:58:14Z",
+      "last_run": "2026-10-21T08:58:14Z",
       "status": "ok",
-      "next_run": "2026-10-21T08:28:14Z",
+      "next_run": "2026-10-21T09:28:14Z",
       "consecutive_errors": 0
     },
     {
       "name": "halo-hourly-export",
       "schedule_human": "every 1h",
       "schedule": 3600000,
-      "last_run": "2026-10-21T07:19:24Z",
+      "last_run": "2026-10-21T08:19:24Z",
       "status": "ok",
-      "next_run": "2026-10-21T08:19:24Z",
+      "next_run": "2026-10-21T09:19:24Z",
       "consecutive_errors": 0
     },
     {
       "name": "pipeline-state-monitor",
       "schedule_human": "every 1h",
       "schedule": 3600000,
-      "last_run": "2026-10-21T07:48:20Z",
+      "last_run": "2026-10-21T08:48:20Z",
       "status": "ok",
-      "next_run": "2026-10-21T08:48:20Z",
+      "next_run": "2026-10-21T09:48:20Z",
       "consecutive_errors": 0
     },
     {
@@ -387,7 +387,7 @@
       "name": "bagnik",
       "emoji": "\ud83d\udea8",
       "role": "QA",
-      "last_active": "2026-10-21T08:19:14Z",
+      "last_active": "2026-10-21T08:21:54Z",
       "sessions_24h": 10,
       "status": "active",
       "tokens_24h": null,
@@ -405,7 +405,7 @@
       "role": "Build",
       "last_active": "2026-10-21T07:21:58Z",
       "sessions_24h": 13,
-      "status": "active",
+      "status": "idle",
       "tokens_24h": null,
       "budget_daily": {
         "tokens": 0,
@@ -467,7 +467,7 @@
       "name": "moo",
       "emoji": "\ud83d\udc02",
       "role": "Orchestrator",
-      "last_active": "2026-10-21T07:52:27Z",
+      "last_active": "2026-10-21T09:06:32Z",
       "sessions_24h": 7,
       "status": "active",
       "tokens_24h": null,
@@ -515,9 +515,9 @@
       "name": "zlydni",
       "emoji": "\ud83c\udfe6\ufe0f",
       "role": "Commit",
-      "last_active": "2026-08-23T03:18:20Z",
-      "sessions_24h": 0,
-      "status": "dormant",
+      "last_active": "2026-10-21T09:05:04Z",
+      "sessions_24h": 4,
+      "status": "active",
       "tokens_24h": null,
       "budget_daily": {
         "tokens": 0,
@@ -536,12 +536,12 @@
     "pipeline_owner_agent": "cmok"
   },
   "sections_updated_at": {
-    "issues": "2026-10-21T08:19:25Z",
-    "prs": "2026-10-21T08:19:25Z",
-    "projects": "2026-10-21T08:19:25Z",
-    "pipeline": "2026-10-21T08:19:25Z",
-    "cron_jobs": "2026-10-21T08:19:25Z",
-    "agents": "2026-10-21T08:19:25Z"
+    "issues": "2026-10-21T09:19:25Z",
+    "prs": "2026-10-21T09:19:25Z",
+    "projects": "2026-10-21T09:19:25Z",
+    "pipeline": "2026-10-21T09:19:25Z",
+    "cron_jobs": "2026-10-21T09:19:25Z",
+    "agents": "2026-10-21T09:19:25Z"
   },
   "source_errors": {}
 }
