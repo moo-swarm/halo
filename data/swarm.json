@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "updated_at": "2026-10-21T06:19:25Z",
+  "updated_at": "2026-10-21T07:19:25Z",
   "refresh_interval": 3600,
   "projects": [
     {
@@ -128,34 +128,53 @@
       "last_run": "2026-08-24T15:55:00Z"
     }
   ],
-  "issues": [],
-  "prs": [],
+  "issues": [
+    {
+      "project": "brain-runtime",
+      "number": 1,
+      "title": "Veles autoresearch: judge silent failure, free-model migration, strict improvement, depth-first rounds",
+      "labels": [],
+      "created_at": "2026-10-21T06:40:18Z",
+      "url": "https://github.com/moo-swarm/brain-runtime/issues/1"
+    }
+  ],
+  "prs": [
+    {
+      "project": "brain-runtime",
+      "number": 2,
+      "title": "Fix Veles autoresearch: judge failure, free model, strict improvement, depth-first rounds",
+      "author": "bthos",
+      "status": "open",
+      "created_at": "2026-10-21T06:40:41Z",
+      "url": "https://github.com/moo-swarm/brain-runtime/pull/2"
+    }
+  ],
   "cron_jobs": [
     {
       "name": "brain-routine-pull",
       "schedule_human": "every 30m",
       "schedule": 1800000,
-      "last_run": "2026-10-21T05:58:14Z",
+      "last_run": "2026-10-21T06:58:14Z",
       "status": "ok",
-      "next_run": "2026-10-21T06:28:14Z",
+      "next_run": "2026-10-21T07:28:14Z",
       "consecutive_errors": 0
     },
     {
       "name": "halo-hourly-export",
       "schedule_human": "every 1h",
       "schedule": 3600000,
-      "last_run": "2026-10-21T05:19:24Z",
+      "last_run": "2026-10-21T06:19:24Z",
       "status": "ok",
-      "next_run": "2026-10-21T06:19:24Z",
+      "next_run": "2026-10-21T07:19:24Z",
       "consecutive_errors": 0
     },
     {
       "name": "pipeline-state-monitor",
       "schedule_human": "every 1h",
       "schedule": 3600000,
-      "last_run": "2026-10-21T05:48:20Z",
+      "last_run": "2026-10-21T06:48:20Z",
       "status": "ok",
-      "next_run": "2026-10-21T06:48:20Z",
+      "next_run": "2026-10-21T07:48:20Z",
       "consecutive_errors": 0
     },
     {
@@ -368,7 +387,7 @@
       "name": "bagnik",
       "emoji": "\ud83d\udea8",
       "role": "QA",
-      "last_active": "2026-10-21T06:19:40Z",
+      "last_active": "2026-10-21T06:58:40Z",
       "sessions_24h": 7,
       "status": "active",
       "tokens_24h": null,
@@ -384,8 +403,8 @@
       "name": "cmok",
       "emoji": "\ud83d\udc09",
       "role": "Build",
-      "last_active": "2026-10-21T05:40:22Z",
-      "sessions_24h": 10,
+      "last_active": "2026-10-21T07:19:35Z",
+      "sessions_24h": 13,
       "status": "active",
       "tokens_24h": null,
       "budget_daily": {
@@ -448,7 +467,7 @@
       "name": "moo",
       "emoji": "\ud83d\udc02",
       "role": "Orchestrator",
-      "last_active": "2026-10-21T05:51:58Z",
+      "last_active": "2026-10-21T07:01:13Z",
       "sessions_24h": 7,
       "status": "active",
       "tokens_24h": null,
@@ -517,12 +536,12 @@
     "pipeline_owner_agent": "cmok"
   },
   "sections_updated_at": {
-    "issues": "2026-10-21T06:19:25Z",
-    "prs": "2026-10-21T06:19:25Z",
-    "projects": "2026-10-21T06:19:25Z",
-    "pipeline": "2026-10-21T06:19:25Z",
-    "cron_jobs": "2026-10-21T06:19:25Z",
-    "agents": "2026-10-21T06:19:25Z"
+    "issues": "2026-10-21T07:19:25Z",
+    "prs": "2026-10-21T07:19:25Z",
+    "projects": "2026-10-21T07:19:25Z",
+    "pipeline": "2026-10-21T07:19:25Z",
+    "cron_jobs": "2026-10-21T07:19:25Z",
+    "agents": "2026-10-21T07:19:25Z"
   },
   "source_errors": {}
 }
