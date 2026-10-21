@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "updated_at": "2026-10-21T19:19:25Z",
+  "updated_at": "2026-10-21T20:19:26Z",
   "refresh_interval": 3600,
   "projects": [
     {
@@ -132,30 +132,39 @@
   "prs": [],
   "cron_jobs": [
     {
+      "name": "autoresearch-integrity",
+      "schedule_human": "30 5 * * * (Europe/Madrid)",
+      "schedule": "30 5 * * *",
+      "last_run": "2026-10-21T19:25:54Z",
+      "status": "ok",
+      "next_run": "2026-10-22T03:30:00Z",
+      "consecutive_errors": 0
+    },
+    {
       "name": "brain-routine-pull",
       "schedule_human": "every 30m",
       "schedule": 1800000,
-      "last_run": "2026-10-21T18:24:37Z",
-      "status": "fail",
-      "next_run": "2026-10-21T19:24:38Z",
-      "consecutive_errors": 10
+      "last_run": "2026-10-21T19:54:38Z",
+      "status": "ok",
+      "next_run": "2026-10-21T20:24:38Z",
+      "consecutive_errors": 0
     },
     {
       "name": "halo-hourly-export",
       "schedule_human": "every 1h",
       "schedule": 3600000,
-      "last_run": "2026-10-21T18:19:24Z",
+      "last_run": "2026-10-21T19:19:24Z",
       "status": "ok",
-      "next_run": "2026-10-21T19:19:24Z",
+      "next_run": "2026-10-21T20:19:24Z",
       "consecutive_errors": 0
     },
     {
       "name": "pipeline-state-monitor",
       "schedule_human": "every 1h",
       "schedule": 3600000,
-      "last_run": "2026-10-21T18:48:20Z",
+      "last_run": "2026-10-21T19:48:20Z",
       "status": "ok",
-      "next_run": "2026-10-21T19:48:20Z",
+      "next_run": "2026-10-21T20:48:20Z",
       "consecutive_errors": 0
     },
     {
@@ -432,7 +441,7 @@
       "name": "moo",
       "emoji": "\ud83d\udc02",
       "role": "Orchestrator",
-      "last_active": "2026-10-21T18:51:58Z",
+      "last_active": "2026-10-21T19:52:08Z",
       "sessions_24h": 7,
       "status": "active",
       "tokens_24h": null,
@@ -501,12 +510,12 @@
     "pipeline_owner_agent": "cmok"
   },
   "sections_updated_at": {
-    "issues": "2026-10-21T19:19:25Z",
-    "prs": "2026-10-21T19:19:25Z",
-    "projects": "2026-10-21T19:19:25Z",
-    "pipeline": "2026-10-21T19:19:25Z",
-    "cron_jobs": "2026-10-21T19:19:25Z",
-    "agents": "2026-10-21T19:19:25Z"
+    "issues": "2026-10-21T20:19:26Z",
+    "prs": "2026-10-21T20:19:26Z",
+    "projects": "2026-10-21T20:19:26Z",
+    "pipeline": "2026-10-21T20:19:26Z",
+    "cron_jobs": "2026-10-21T20:19:26Z",
+    "agents": "2026-10-21T20:19:26Z"
   },
   "source_errors": {}
 }
