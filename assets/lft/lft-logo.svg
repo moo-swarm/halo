@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1000" height="1000">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="30%" r="75%">
+      <stop offset="0" stop-color="#4b1f1a"></stop>
+      <stop offset=".55" stop-color="#1c1211"></stop>
+      <stop offset="1" stop-color="#0d0a0a"></stop>
+    </radialGradient>
+    <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff1d0" stop-opacity=".05"></stop>
+      <stop offset=".75" stop-color="#fff1d0" stop-opacity=".32"></stop>
+      <stop offset="1" stop-color="#fff1d0" stop-opacity="0"></stop>
+    </linearGradient>
+    <clipPath id="slotClip"><rect id="slotRect" x="394" y="-200" width="102" height="1400"></rect></clipPath>
+  </defs>
+
+  <rect width="1000" height="1000" fill="url(#bg)"></rect>
+
+  <g id="stage" transform="translate(500 450) scale(1) translate(-500 -450)">
+    <polygon id="beamPoly" fill="url(#beam)" opacity="0" points="408,-60 444,-60 527,640 325,640"></polygon>
+
+    <g id="L" fill="#f5ecdd" transform="translate(179 300)">
+      <rect x="0" y="0" width="62" height="300"></rect>
+      <rect x="0" y="238" width="180" height="62"></rect>
+    </g>
+    <g id="F" fill="#f5ecdd" transform="translate(395 300)">
+      <rect x="0" y="0" width="62" height="300"></rect>
+      <rect x="0" y="0" width="180" height="62"></rect>
+      <rect x="0" y="119" width="150" height="62"></rect>
+    </g>
+    <g id="T" fill="#f5ecdd" transform="translate(611 300)">
+      <rect x="0" y="0" width="210" height="62"></rect>
+      <rect x="74" y="0" width="62" height="300"></rect>
+    </g>
+
+    <!-- средняя буква -->
+    <g id="midI" fill="#e5412f" opacity="0" transform="translate(395 -420)">
+      <rect x="0" y="0" width="62" height="300"></rect>
+    </g>
+    <g clip-path="url(#slotClip)">
+      <g id="midE" fill="#e5412f" opacity="0">
+        <rect id="eSpine" x="0" y="0" width="62" height="300"></rect>
+        <rect id="eBar0" x="0" y="0" width="170" height="62"></rect>
+        <rect id="eBar1" x="0" y="119" width="145" height="62"></rect>
+        <rect id="eBar2" x="0" y="238" width="170" height="62"></rect>
+      </g>
+    </g>
+    <g id="midO" opacity="0">
+      <ellipse id="oRing" cx="0" cy="0" rx="79" ry="119" fill="none" stroke="#e5412f" stroke-width="62"></ellipse>
+    </g>
+
+    <!-- «вставить сюда» -->
+    <polygon id="caret" fill="#e5412f" points="-30,0 30,0 0,42" transform="translate(377 208)" opacity="1"></polygon>
+  </g>
+
+  <text id="sub" x="507" y="742" text-anchor="middle" fill="#e9b44c" font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-weight="600" font-size="54" letter-spacing="14">FORO TEATRO</text>
+</svg>
