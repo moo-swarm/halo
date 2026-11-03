@@ -6,12 +6,14 @@
 <title>LFT Foro Teatro</title>
 <!--
   LFT Foro Teatro — логотип и анимация.
-  Между L и FT по очереди появляется буква, и получается слово:
-    LIFT — «поднять» (занавес): I падает из-под колосников и улетает вверх;
+  Между L и FT по очереди появляется буква, и получается слово.
+  У каждой буквы свой цвет и свой способ появиться:
+    LIFT — «поднять» (занавес): I падает в луче прожектора и улетает вверх;
     LEFT — «stage left», левая кулиса: E собирается и уходит влево;
-    LOFT — колосниковая (fly loft): O появляется как диафрагма прожектора.
-  Полный цикл — 9,6 с (лимит видео-аватарки Telegram — 10 с).
-  ?t=<сек>   — показать статичный кадр;  ?static — логотип без анимации.
+    LOFT — колосниковая (fly loft): O сжимается, как диафрагма прожектора;
+    LUFT — нем. «воздух»: U плавно опускается, покачиваясь, и её сдувает.
+  Полный цикл — 9,8 с (лимит видео-аватарки Telegram — 10 с).
+  ?t=<сек> — показать один кадр;  ?static — логотип без анимации.
 -->
 <style>
   html, body { margin: 0; height: 100%; background: #0d0a0a; }
@@ -22,7 +24,7 @@
 <body>
 <svg id="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">
   <defs>
-    <radialGradient id="bg" cx="50%" cy="30%" r="75%">
+    <radialGradient id="bg" cx="50%" cy="32%" r="75%">
       <stop offset="0" stop-color="#4b1f1a"/>
       <stop offset=".55" stop-color="#1c1211"/>
       <stop offset="1" stop-color="#0d0a0a"/>
@@ -54,12 +56,12 @@
       <rect x="74" y="0" width="62" height="300"/>
     </g>
 
-    <!-- средняя буква -->
+    <!-- средние буквы -->
     <g id="midI" fill="#e5412f" opacity="0">
       <rect x="0" y="0" width="62" height="300"/>
     </g>
     <g clip-path="url(#slotClip)">
-      <g id="midE" fill="#e5412f" opacity="0">
+      <g id="midE" fill="#e9b44c" opacity="0">
         <rect id="eSpine" x="0" y="0" width="62" height="300"/>
         <rect id="eBar0" x="0" y="0" width="170" height="62"/>
         <rect id="eBar1" x="0" y="119" width="145" height="62"/>
@@ -67,31 +69,30 @@
       </g>
     </g>
     <g id="midO" opacity="0">
-      <ellipse id="oRing" cx="0" cy="0" rx="79" ry="119" fill="none" stroke="#e5412f" stroke-width="62"/>
+      <ellipse id="oRing" cx="0" cy="0" rx="79" ry="119" fill="none" stroke="#ff6f91" stroke-width="62"/>
+    </g>
+    <g id="midU" fill="#6cc4ec" opacity="0">
+      <path d="M0,0 H62 V205 Q62,238 95,238 Q128,238 128,205 V0 H190 V205 Q190,300 95,300 Q0,300 0,205 Z"/>
     </g>
 
     <!-- «вставить сюда» -->
     <polygon id="caret" fill="#e5412f" points="-30,0 30,0 0,42"/>
   </g>
-
-  <text id="sub" x="507" y="742" text-anchor="middle" fill="#e9b44c"
-        font-family="Inter, 'Helvetica Neue', Arial, sans-serif" font-weight="600"
-        font-size="54" letter-spacing="14">FORO TEATRO</text>
 </svg>
 
 <script>
 (() => {
   // ---------- геометрия ----------
-  const Y0 = 300, H = 300, GAP = 36;
+  const Y0 = 350, H = 300, GAP = 36;
   const W = { L: 180, F: 180, T: 210 };
-  const MID = { I: 62, E: 170, O: 220 };
+  const MID = { I: 62, E: 170, O: 220, U: 190 };
   const CLOSED = W.L + GAP + W.F + GAP + W.T;     // ширина «LFT»
-  const CX = 500, CY = 450;                        // центр сцены
+  const CX = 500, CY = 500;                        // центр сцены
 
   // ---------- тайминг ----------
-  const SEG = 3.2;                                  // одно слово
-  const WORDS = ['I', 'E', 'O'];                    // LIFT, LEFT, LOFT
-  const TOTAL = SEG * WORDS.length;                 // 9.6 с
+  const SEG = 2.45;                                 // одно слово
+  const WORDS = ['I', 'E', 'O', 'U'];               // LIFT, LEFT, LOFT, LUFT
+  const TOTAL = SEG * WORDS.length;                 // 9.8 с
 
   // ---------- easing ----------
   const clamp = (x) => Math.max(0, Math.min(1, x));
@@ -114,7 +115,7 @@
   const set = (el, attrs) => { for (const k in attrs) el.setAttribute(k, attrs[k]); };
   const el = {
     stage: $('stage'), L: $('L'), F: $('F'), T: $('T'), caret: $('caret'), beam: $('beamPoly'),
-    I: $('midI'), E: $('midE'), O: $('midO'), oRing: $('oRing'), slot: $('slotRect'),
+    I: $('midI'), E: $('midE'), O: $('midO'), U: $('midU'), oRing: $('oRing'), slot: $('slotRect'),
     eSpine: $('eSpine'), eBars: [$('eBar0'), $('eBar1'), $('eBar2')],
   };
 
@@ -126,9 +127,9 @@
     const M = MID[word];
 
     // фазы
-    const open = inOutCubic(span(u, .15, .65)) * (1 - inOutCubic(span(u, 2.75, 3.2)));
-    const enterP = span(u, .55, 1.45);
-    const exitP = span(u, 2.35, 2.85);
+    const open = inOutCubic(span(u, .08, .42)) * (1 - inOutCubic(span(u, 2.02, 2.42)));
+    const enterP = span(u, .38, 1.2);
+    const exitP = span(u, 1.72, 2.08);
 
     // раскладка
     const total = CLOSED + open * (GAP + M);
@@ -136,7 +137,7 @@
     const slotX = x0 + W.L + GAP;
     const fx = slotX + open * (M + GAP);
     const tx = fx + W.F + GAP;
-    const s = Math.min(1, 800 / total);
+    const s = Math.min(1.2, 860 / total);
     set(el.stage, { transform: `translate(${CX} ${CY}) scale(${s}) translate(${-CX} ${-CY})` });
     set(el.L, { transform: `translate(${x0} ${Y0})` });
     set(el.F, { transform: `translate(${fx} ${Y0})` });
@@ -145,55 +146,66 @@
 
     // каретка «сюда»
     const gapCx = (x0 + W.L + fx) / 2;
-    const caretVis = (1 - span(u, .5, .8)) + span(u, 2.85, 3.1);
-    const bob = Math.sin(u / SEG * Math.PI * 4) * 6 * (1 - open);
+    const caretVis = (1 - span(u, .35, .6)) + span(u, 2.15, 2.4);
+    const bob = Math.sin(u / SEG * Math.PI * 2) * 6 * (1 - open);
     set(el.caret, { transform: `translate(${gapCx} ${Y0 - 92 + bob})`, opacity: clamp(caretVis) });
 
     // прожектор
     const midCx = slotX + M / 2;
     let beam = 0;
-    if (word === 'I') beam = span(u, .1, .5) * (1 - span(u, 2.3, 2.8));
-    if (word === 'O') beam = .6 * span(u, 1.2, 1.6) * (1 - span(u, 2.3, 2.7));
+    if (word === 'I') beam = span(u, .05, .4) * (1 - span(u, 1.7, 2.05));
+    if (word === 'O') beam = .6 * span(u, 1.0, 1.3) * (1 - span(u, 1.7, 2.0));
     const bw = M / 2 + 70;
     set(el.beam, {
-      points: `${midCx - 18},-60 ${midCx + 18},-60 ${midCx + bw},${Y0 + H + 40} ${midCx - bw},${Y0 + H + 40}`,
+      points: `${midCx - 18},-160 ${midCx + 18},-160 ${midCx + bw},${Y0 + H + 40} ${midCx - bw},${Y0 + H + 40}`,
       opacity: beam,
     });
 
-    el.I.setAttribute('opacity', 0);
-    el.E.setAttribute('opacity', 0);
-    el.O.setAttribute('opacity', 0);
+    for (const k of WORDS) el[k].setAttribute('opacity', 0);
+    const shown = enterP > 0 ? 1 : 0;
 
     if (word === 'I') {
       // LIFT: падает с колосников с отскоком, потом «поднимается» вверх
-      const drop = (1 - outBounce(enterP)) * -720;
-      const lift = inBack(exitP, 2.2) * -820;
-      set(el.I, { opacity: enterP > 0 ? 1 : 0, transform: `translate(${slotX} ${Y0 + drop + lift})` });
+      const drop = (1 - outBounce(enterP)) * -820;
+      const lift = inBack(exitP, 2.2) * -900;
+      set(el.I, { opacity: shown, transform: `translate(${slotX} ${Y0 + drop + lift})` });
     }
 
     if (word === 'E') {
-      // LEFT: позвоночник растёт снизу, перекладины выезжают слева; уходит влево
-      const grow = outCubic(span(u, .55, .9));
+      // LEFT: вертикаль растёт снизу, перекладины выезжают слева; уходит влево
+      const grow = outCubic(span(u, .38, .66));
       set(el.eSpine, { y: H * (1 - grow), height: H * grow });
       el.eBars.forEach((b, i) => {
-        const p = outBack(span(u, .78 + i * .12, 1.2 + i * .12), 2.2);
+        const p = outBack(span(u, .55 + i * .1, .92 + i * .1), 2.2);
         b.setAttribute('transform', `translate(${(p - 1) * 220} 0)`);
       });
       const leave = inCubic(exitP) * -(M + 60);
-      set(el.E, { opacity: enterP > 0 ? 1 : 0, transform: `translate(${slotX + leave} ${Y0})` });
+      set(el.E, { opacity: shown, transform: `translate(${slotX + leave} ${Y0})` });
     }
 
     if (word === 'O') {
       // LOFT: диафрагма прожектора сжимается в O; уходит, крутясь монеткой
       const p = inOutCubic(enterP);
-      const rx = lerp(760, 79, p), ry = lerp(760, 119, p);
-      const sw = lerp(4, 62, p);
-      set(el.oRing, { rx, ry, 'stroke-width': sw });
+      set(el.oRing, { rx: lerp(760, 79, p), ry: lerp(760, 119, p), 'stroke-width': lerp(4, 62, p) });
       const shrink = 1 - inCubic(exitP);
       const spin = Math.cos(exitP * Math.PI * 3) * shrink;
       set(el.O, {
         opacity: enterP > 0 ? clamp(enterP * 4) : 0,
         transform: `translate(${midCx} ${Y0 + H / 2}) scale(${spin} ${shrink})`,
+      });
+    }
+
+    if (word === 'U') {
+      // LUFT («воздух»): опускается, покачиваясь, как пёрышко; потом её сдувает вправо-вверх
+      const p = span(u, .3, 1.3);
+      const fall = outCubic(p);
+      const sway = Math.sin(p * Math.PI * 3) * (1 - fall);
+      const dx = sway * 70, dy = (1 - fall) * -620, rot = sway * 18;
+      const w = inCubic(exitP);
+      const bx = w * 620, by = w * -380, brot = w * 70;
+      set(el.U, {
+        opacity: p > 0 ? clamp(p * 5) * (1 - span(u, 1.95, 2.08)) : 0,
+        transform: `translate(${slotX + dx + bx} ${Y0 + dy + by}) rotate(${rot + brot} 95 150)`,
       });
     }
   }
