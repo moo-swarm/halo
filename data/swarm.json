@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "updated_at": "2026-11-09T12:31:14Z",
+  "updated_at": "2026-11-09T13:31:13Z",
   "refresh_interval": 3600,
   "projects": [
     {
@@ -135,27 +135,27 @@
       "name": "brain-routine-pull",
       "schedule_human": "every 30m",
       "schedule": 1800000,
-      "last_run": "2026-11-09T12:25:47Z",
+      "last_run": "2026-11-09T13:25:48Z",
       "status": "fail",
-      "next_run": "2026-11-09T13:25:48Z",
-      "consecutive_errors": 38
+      "next_run": "2026-11-09T14:25:50Z",
+      "consecutive_errors": 39
     },
     {
       "name": "halo-hourly-export",
       "schedule_human": "every 1h",
       "schedule": 3600000,
-      "last_run": "2026-11-09T11:31:12Z",
+      "last_run": "2026-11-09T12:31:12Z",
       "status": "ok",
-      "next_run": "2026-11-09T12:31:12Z",
+      "next_run": "2026-11-09T13:31:12Z",
       "consecutive_errors": 0
     },
     {
       "name": "pipeline-state-monitor",
       "schedule_human": "every 1h",
       "schedule": 3600000,
-      "last_run": "2026-11-09T12:31:04Z",
+      "last_run": "2026-11-09T13:31:04Z",
       "status": "ok",
-      "next_run": "2026-11-09T13:31:04Z",
+      "next_run": "2026-11-09T14:31:04Z",
       "consecutive_errors": 0
     },
     {
@@ -423,7 +423,7 @@
       "name": "moo",
       "emoji": "\ud83d\udc02",
       "role": "Orchestrator",
-      "last_active": "2026-11-09T12:22:13Z",
+      "last_active": "2026-11-09T13:22:17Z",
       "sessions_24h": 4,
       "status": "active",
       "tokens_24h": null,
@@ -492,12 +492,12 @@
     "pipeline_owner_agent": "cmok"
   },
   "sections_updated_at": {
-    "issues": "2026-11-09T12:31:14Z",
-    "prs": "2026-11-09T12:31:14Z",
-    "projects": "2026-11-09T12:31:14Z",
-    "pipeline": "2026-11-09T12:31:14Z",
-    "cron_jobs": "2026-11-09T12:31:14Z",
-    "agents": "2026-11-09T12:31:14Z"
+    "issues": "2026-11-09T13:31:13Z",
+    "prs": "2026-11-09T13:31:13Z",
+    "projects": "2026-11-09T13:31:13Z",
+    "pipeline": "2026-11-09T13:31:13Z",
+    "cron_jobs": "2026-11-09T13:31:13Z",
+    "agents": "2026-11-09T13:31:13Z"
   },
   "source_errors": {}
 }
