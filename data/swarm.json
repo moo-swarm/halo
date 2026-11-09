@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "updated_at": "2026-11-09T00:31:13Z",
+  "updated_at": "2026-11-09T01:31:13Z",
   "refresh_interval": 3600,
   "projects": [
     {
@@ -135,27 +135,27 @@
       "name": "brain-routine-pull",
       "schedule_human": "every 30m",
       "schedule": 1800000,
-      "last_run": "2026-11-09T00:25:27Z",
+      "last_run": "2026-11-09T01:25:29Z",
       "status": "fail",
-      "next_run": "2026-11-09T01:25:29Z",
-      "consecutive_errors": 26
+      "next_run": "2026-11-09T02:25:30Z",
+      "consecutive_errors": 27
     },
     {
       "name": "halo-hourly-export",
       "schedule_human": "every 1h",
       "schedule": 3600000,
-      "last_run": "2026-11-08T23:31:11Z",
+      "last_run": "2026-11-09T00:31:11Z",
       "status": "ok",
-      "next_run": "2026-11-09T00:31:11Z",
+      "next_run": "2026-11-09T01:31:11Z",
       "consecutive_errors": 0
     },
     {
       "name": "pipeline-state-monitor",
       "schedule_human": "every 1h",
       "schedule": 3600000,
-      "last_run": "2026-11-09T00:31:04Z",
+      "last_run": "2026-11-09T01:31:04Z",
       "status": "ok",
-      "next_run": "2026-11-09T01:31:04Z",
+      "next_run": "2026-11-09T02:31:04Z",
       "consecutive_errors": 0
     },
     {
@@ -423,7 +423,7 @@
       "name": "moo",
       "emoji": "\ud83d\udc02",
       "role": "Orchestrator",
-      "last_active": "2026-11-09T00:22:15Z",
+      "last_active": "2026-11-09T01:22:13Z",
       "sessions_24h": 4,
       "status": "active",
       "tokens_24h": null,
@@ -440,7 +440,7 @@
       "emoji": "\ud83d\udc0d",
       "role": "Research",
       "last_active": "2026-11-08T01:03:37Z",
-      "sessions_24h": 5,
+      "sessions_24h": 0,
       "status": "idle",
       "tokens_24h": null,
       "budget_daily": {
@@ -492,12 +492,12 @@
     "pipeline_owner_agent": "cmok"
   },
   "sections_updated_at": {
-    "issues": "2026-11-09T00:31:13Z",
-    "prs": "2026-11-09T00:31:13Z",
-    "projects": "2026-11-09T00:31:13Z",
-    "pipeline": "2026-11-09T00:31:13Z",
-    "cron_jobs": "2026-11-09T00:31:13Z",
-    "agents": "2026-11-09T00:31:13Z"
+    "issues": "2026-11-09T01:31:13Z",
+    "prs": "2026-11-09T01:31:13Z",
+    "projects": "2026-11-09T01:31:13Z",
+    "pipeline": "2026-11-09T01:31:13Z",
+    "cron_jobs": "2026-11-09T01:31:13Z",
+    "agents": "2026-11-09T01:31:13Z"
   },
   "source_errors": {}
 }
