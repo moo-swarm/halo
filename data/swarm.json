@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "updated_at": "2026-11-15T01:31:22Z",
+  "updated_at": "2026-11-15T02:31:22Z",
   "refresh_interval": 3600,
   "projects": [
     {
@@ -135,27 +135,27 @@
       "name": "brain-routine-pull",
       "schedule_human": "every 30m",
       "schedule": 1800000,
-      "last_run": "2026-11-15T01:31:09Z",
+      "last_run": "2026-11-15T02:31:11Z",
       "status": "fail",
-      "next_run": "2026-11-15T02:31:11Z",
-      "consecutive_errors": 171
+      "next_run": "2026-11-15T03:31:12Z",
+      "consecutive_errors": 172
     },
     {
       "name": "halo-hourly-export",
       "schedule_human": "every 1h",
       "schedule": 3600000,
-      "last_run": "2026-11-15T00:31:20Z",
+      "last_run": "2026-11-15T01:31:20Z",
       "status": "ok",
-      "next_run": "2026-11-15T01:31:20Z",
+      "next_run": "2026-11-15T02:31:20Z",
       "consecutive_errors": 0
     },
     {
       "name": "pipeline-state-monitor",
       "schedule_human": "every 1h",
       "schedule": 3600000,
-      "last_run": "2026-11-15T01:31:11Z",
+      "last_run": "2026-11-15T02:31:14Z",
       "status": "ok",
-      "next_run": "2026-11-15T02:31:11Z",
+      "next_run": "2026-11-15T03:31:14Z",
       "consecutive_errors": 0
     },
     {
@@ -423,7 +423,7 @@
       "name": "moo",
       "emoji": "\ud83d\udc02",
       "role": "Orchestrator",
-      "last_active": "2026-11-15T01:22:01Z",
+      "last_active": "2026-11-15T02:21:48Z",
       "sessions_24h": 7,
       "status": "active",
       "tokens_24h": null,
@@ -492,12 +492,12 @@
     "pipeline_owner_agent": "cmok"
   },
   "sections_updated_at": {
-    "issues": "2026-11-15T01:31:22Z",
-    "prs": "2026-11-15T01:31:22Z",
-    "projects": "2026-11-15T01:31:22Z",
-    "pipeline": "2026-11-15T01:31:22Z",
-    "cron_jobs": "2026-11-15T01:31:22Z",
-    "agents": "2026-11-15T01:31:22Z"
+    "issues": "2026-11-15T02:31:22Z",
+    "prs": "2026-11-15T02:31:22Z",
+    "projects": "2026-11-15T02:31:22Z",
+    "pipeline": "2026-11-15T02:31:22Z",
+    "cron_jobs": "2026-11-15T02:31:22Z",
+    "agents": "2026-11-15T02:31:22Z"
   },
   "source_errors": {}
 }
